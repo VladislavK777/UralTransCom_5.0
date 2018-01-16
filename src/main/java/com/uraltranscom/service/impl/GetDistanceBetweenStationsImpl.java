@@ -53,7 +53,7 @@ public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetD
                 }
             }
         } catch (SQLException sqlEx) {
-            logger.error("Ошибка запроса " + callableStatement);
+            logger.error("Ошибка запроса {}", callableStatement);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {

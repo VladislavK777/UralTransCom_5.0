@@ -101,13 +101,13 @@ public class MethodOfBasicLogic {
                     } else {
                         if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
                             listOfError.add("Проверьте код станции назначения " + keyOfStationDeparture + " - " + tempMapOfRoute.getValue().getNameOfStationDeparture() + " на марщруте: " + tempMapOfRoute.getValue().toString());
-                            logger.error("Проверьте код станции назначения " + keyOfStationDeparture + " - " + tempMapOfRoute.getValue().getNameOfStationDeparture() + " на марщруте: " + tempMapOfRoute.getValue().toString());
+                            logger.error("Проверьте код станции назначения {} - {} на марщруте: {}", keyOfStationDeparture, tempMapOfRoute.getValue().getNameOfStationDeparture(), tempMapOfRoute.getValue().toString());
                             tempMapOfRoutes.remove(tempMapOfRoute.getKey());
                             break;
                         }
                         if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination)) {
                             listOfError.add("Проверьте код станции назначения " + keyOfStationOfWagonDestination + " - " + tempListOfWagons.get(i).getNameOfStationDestination() + " у вагона " + tempListOfWagons.get(i).toString());
-                            logger.error("Проверьте код станции назначения " + keyOfStationOfWagonDestination + " - " + tempListOfWagons.get(i).getNameOfStationDestination() + " у вагона " + tempListOfWagons.get(i).toString());
+                            logger.error("Проверьте код станции назначения {} - {}  у вагона {}", keyOfStationOfWagonDestination, tempListOfWagons.get(i).getNameOfStationDestination(), tempListOfWagons.get(i).toString());
                             tempListOfWagons.remove(i);
                             countWagons = tempListOfWagons.size();
                             break;
@@ -188,9 +188,9 @@ public class MethodOfBasicLogic {
                                             + tempMapOfRouteForDelete.get(j).toString() + ". Общее время в пути: "
                                             + numberOfDaysOfWagon);
 
-                                    logger.info("Вагон номер " + numberOfWagon + " едет на станцию " + nameOfStationDepartureOfWagon + ": " + mapDistanceSortFirstElement.getValue() + " км.");
-                                    logger.info("Общее время в пути: " + numberOfDaysOfWagon);
-                                    logger.info("Маршрут: " + tempMapOfRouteForDelete.get(j).toString());
+                                    logger.info("Вагон номер {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
+                                    logger.info("Общее время в пути: {}", numberOfDaysOfWagon);
+                                    logger.info("Маршрут: {}", tempMapOfRouteForDelete.get(j).toString());
                                     logger.info("-------------------------------------------------");
 
                                     // Удаляем маршрут, так как он занят вагоном
@@ -199,9 +199,9 @@ public class MethodOfBasicLogic {
                                     // Выходим из цикла, так как с ним больше ничего не сделать
                                     break outer;
                                 } else {
-                                    logger.info("Вагон номер " + numberOfWagon + " должен был ехать на " + nameOfStationDepartureOfWagon + ": " + mapDistanceSortFirstElement.getValue() + " км.");
-                                    logger.info("Общее время в пути: " + numberOfDaysOfWagon);
-                                    logger.info("Далее по маршруту: " + tempMapOfRouteForDelete.get(j).toString());
+                                    logger.info("Вагон номер {} должен был ехать на {}: км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
+                                    logger.info("Общее время в пути: {}", numberOfDaysOfWagon);
+                                    logger.info("Далее по маршруту: {}", tempMapOfRouteForDelete.get(j).toString());
                                     logger.info("-------------------------------------------------");
 
                                     if (!SetOfDistributedWagons.contains(numberOfWagon)) {
