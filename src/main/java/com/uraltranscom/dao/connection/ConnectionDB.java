@@ -13,19 +13,22 @@ package com.uraltranscom.dao.connection;
  *
  */
 
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConnectionDB {
 
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(ConnectionDB.class);
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/restapi";
-    private static final String USER = "postgres";
-    private static final String PASS = "root";
-
-    /*private static ZooKeeper zk;
+    private static ZooKeeper zk;
     private static ZkConnector zkc = new ZkConnector();
 
     // Определяем параметры БД{
@@ -34,7 +37,8 @@ public class ConnectionDB {
     private static final String USER = DATA_SOURCE[1];
     private static final String PASS = DATA_SOURCE[2];
 
-
+    // Открываем соединение с БД
+    private static Connection connection = getConnectDB();
 
     private static String[] getDataFromZK() {
         String[] data = new String[3];
@@ -56,7 +60,28 @@ public class ConnectionDB {
             logger.error("Ошибка подключения к ZooKeeper.");
         }
         return data;
-    }*/
+    }
+
+    private static Connection getConnectDB() {
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(URL, USER, PASS);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.close();
+            } catch (SQLException e1) {
+                logger.error("Ошибка закрытия соединения");
+            }
+            logger.error("Ошибка соединения");
+        }
+        return connection;
+    }
+
+    public static Connection getConnection() {
+        return connection;
+    }
 
     public static String getURL() {
         return URL;

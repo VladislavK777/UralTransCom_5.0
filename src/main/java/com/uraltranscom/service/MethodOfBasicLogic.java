@@ -1,5 +1,7 @@
 package com.uraltranscom.service;
 
+import com.uraltranscom.dao.connection.ConnectionDB;
+import com.uraltranscom.service.additional.PrefixOfDays;
 import com.uraltranscom.service.impl.CheckExistKeyOfStationImpl;
 import com.uraltranscom.service.impl.GetDistanceBetweenStationsImpl;
 import com.uraltranscom.model.Route;
@@ -12,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /*
@@ -46,6 +50,7 @@ public class MethodOfBasicLogic {
 
     private Map<Integer, Route> tempMapOfRoutes = new HashMap<>();
     private List<Wagon> tempListOfWagons = new ArrayList<>();
+    private static final Connection CONNECTION = ConnectionDB.getConnection();
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
@@ -95,7 +100,7 @@ public class MethodOfBasicLogic {
                     String keyOfStationDeparture = tempMapOfRoute.getValue().getKeyOfStationDeparture();
                     list.add(numberOfWagon);
                     list.add(tempMapOfRoute.getValue());
-                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture);
+                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, CONNECTION);
                     if (distance != -1) {
                         mapDistance.put(list, distance);
                     } else {
@@ -168,7 +173,10 @@ public class MethodOfBasicLogic {
                                 getFullMonthCircleOfWagonImpl.fullDays(numberOfWagon, tempListOfWagons.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
                                 // Число дней пройденных вагоном
-                                double numberOfDaysOfWagon = getFullMonthCircleOfWagonImpl.getNumberOfDaysOfWagon(numberOfWagon);
+                                double numberOfDaysOfWagonDouble = getFullMonthCircleOfWagonImpl.getNumberOfDaysOfWagon(numberOfWagon);
+
+                                //Округляем до целого
+                                int numberOfDaysOfWagon = (int) numberOfDaysOfWagonDouble;
 
                                 // Если больше 30 дней, то исключаем вагон, лимит 30 дней
                                 if (numberOfDaysOfWagon < 31) {
@@ -185,11 +193,11 @@ public class MethodOfBasicLogic {
                                     listOfDistributedRoutesAndWagons.add("Вагон номер " + numberOfWagon + " едет на станцию "
                                             + nameOfStationDepartureOfWagon + ": "
                                             + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
-                                            + tempMapOfRouteForDelete.get(j).toString() + ". Общее время в пути: "
-                                            + numberOfDaysOfWagon);
+                                            + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
+                                            + numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
 
                                     logger.info("Вагон номер {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
-                                    logger.info("Общее время в пути: {}", numberOfDaysOfWagon);
+                                    logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
                                     logger.info("Маршрут: {}", tempMapOfRouteForDelete.get(j).toString());
                                     logger.info("-------------------------------------------------");
 
@@ -199,8 +207,8 @@ public class MethodOfBasicLogic {
                                     // Выходим из цикла, так как с ним больше ничего не сделать
                                     break outer;
                                 } else {
-                                    logger.info("Вагон номер {} должен был ехать на {}: км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
-                                    logger.info("Общее время в пути: {}", numberOfDaysOfWagon);
+                                    logger.info("Вагон номер {} должен был ехать на {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
+                                    logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
                                     logger.info("Далее по маршруту: {}", tempMapOfRouteForDelete.get(j).toString());
                                     logger.info("-------------------------------------------------");
 
@@ -226,14 +234,24 @@ public class MethodOfBasicLogic {
                 tempMapOfRouteForDelete.clear();
             }
         }
+
+        // Заполняем итоговые массивы
         tempMapOfRoutes.forEach((k, v) -> {
-            listOfUndistributedRoutes.add(v.toString());
+            listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination());
         });
         SetOfUndistributedWagons.forEach((k) -> {
             listOfUndistributedWagons.add(k.toString());
         });
+
         WriteToFileExcel.writeToFileExcelUnDistributedRoutes(tempMapOfRoutes);
         WriteToFileExcel.writeToFileExcelUnDistributedWagons(SetOfUndistributedWagons);
+
+        // Закрываем соединение
+        try {
+            CONNECTION.close();
+        } catch (SQLException e) {
+            logger.error("Ошибка закрытия соединения");
+        }
     }
 
     public List<String> getListOfDistributedRoutesAndWagons() {

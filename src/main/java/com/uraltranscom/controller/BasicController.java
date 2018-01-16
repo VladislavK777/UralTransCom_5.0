@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @SuppressWarnings("ALL")
 @Controller
@@ -37,13 +38,14 @@ public class BasicController {
         return "welcome";
     }
 
-    @RequestMapping(value = "/reports", method = RequestMethod.GET)
-    public String reportList(Model model) {
+    @RequestMapping(value = "/reports", method = RequestMethod.POST)
+    public String reportList(@RequestParam(value = "routes") String routeFilePath,
+                             @RequestParam(value = "wagons") String wagonFilePath, Model model) {
         methodOfBasicLogic.lookingForOptimalMapOfRoute();
         model.addAttribute("reportListOfDistributedRoutesAndWagons", methodOfBasicLogic.getListOfDistributedRoutesAndWagons());
         model.addAttribute("reportListOfDistributedRoutes", methodOfBasicLogic.getListOfUndistributedRoutes());
         model.addAttribute("reportListOfDistributedWagons", methodOfBasicLogic.getListOfUndistributedWagons());
         model.addAttribute("reportListOfError", methodOfBasicLogic.getListOfError());
-        return "reports";
+        return "welcome";
     }
 }

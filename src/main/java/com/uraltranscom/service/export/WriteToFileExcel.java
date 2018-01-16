@@ -42,7 +42,7 @@ public class WriteToFileExcel {
     private static String fileName = path.toString();
 
     // Метод записи в файл распределенных маршрутов
-    public static synchronized void writeToFileExcelDistributedRoutes(String numberOfWagon, Route listOfRoutes, Integer distance, Double days) {
+    public static synchronized void writeToFileExcelDistributedRoutes(String numberOfWagon, Route listOfRoutes, Integer distance, int days) {
         try {
             if (!Files.exists(path)) {
                 Files.createFile(path);

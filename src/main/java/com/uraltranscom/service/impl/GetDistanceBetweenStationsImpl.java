@@ -1,12 +1,14 @@
 package com.uraltranscom.service.impl;
 
-import com.uraltranscom.dao.connection.ConnectionDB;
 import com.uraltranscom.service.GetDistanceBetweenStations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  *
@@ -19,22 +21,19 @@ import java.sql.*;
  */
 
 @Service
-public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetDistanceBetweenStations {
+public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStations {
 
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetDistanceBetweenStationsImpl.class);
 
-    private static Connection connection;
     private static ResultSet resultSet;
     private static CallableStatement callableStatement;
 
     @Override
-    public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) {
+    public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, Connection connection) {
         int distance = 0;
         try {
-            // Открываем соединение с БД
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(getURL(), getUSER(), getPASS());
+
             // Подготавливаем запрос
             callableStatement = connection.prepareCall(" { call getDistance(?,?) } ");
 
@@ -53,25 +52,7 @@ public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetD
                 }
             }
         } catch (SQLException sqlEx) {
-            logger.error("Ошибка запроса {}", callableStatement);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException se) {
-                logger.error("Ошибка закрытия соединения");
-            }
-            try {
-                resultSet.close();
-            } catch (SQLException se) {
-                logger.error("Ошибка закрытия соединения");
-            }
-            try {
-                callableStatement.close();
-            } catch (SQLException se) {
-                logger.error("Ошибка закрытия соединения");
-            }
+            logger.error("Ошибка запроса {} - {}", callableStatement, sqlEx.getMessage());
         }
         return distance;
     }

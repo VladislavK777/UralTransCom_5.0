@@ -13,7 +13,9 @@ package com.uraltranscom.service;
  *
  */
 
+import java.sql.Connection;
+
 public interface GetDistanceBetweenStations {
-    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination);
+    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, Connection connection);
 
 }
