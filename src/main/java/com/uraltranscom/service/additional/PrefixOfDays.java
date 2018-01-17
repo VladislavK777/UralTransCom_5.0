@@ -5,8 +5,11 @@ package com.uraltranscom.service.additional;
  * Класс для правильного определения окончания в слове День
  *
  * @author Vladislav Klochkov
- * @version 2.0
- * @create 16.01.2018
+ * @version 3.0
+ * @create 12.01.2018
+ *
+ * 12.01.2018
+ *   1. Версия 3.0
  *
  */
 

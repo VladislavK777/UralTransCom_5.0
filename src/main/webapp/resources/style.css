@@ -124,8 +124,6 @@
 }
 
 .table_report {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    font-size: 14px;
     background: white;
     max-width: 70%;
     width: 70%;
@@ -136,13 +134,13 @@
 .th_report {
     font-weight: normal;
     color: #039;
-    border-bottom: 2px solid #6678b1;
+    border-bottom: 2px solid #4B79BB;
     padding: 10px 8px;
 }
 
 .td_report {
     border-bottom: 1px solid #ccc;
-    color: #669;
+    color: #4B79BB;
     padding: 9px 8px;
     transition: .3s linear;
 }

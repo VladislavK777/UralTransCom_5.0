@@ -5,15 +5,16 @@ package com.uraltranscom.controller;
  * Контроллер
  *
  * @author Vladislav Klochkov
- * @version 2.0
- * @create 01.11.2017
+ * @version 3.0
+ * @create 12.01.2018
  *
- * 15.01.2018
- * Версия 2.0
+ * 12.01.2018
+ *   1. Версия 3.0
  *
  */
 
 import com.uraltranscom.service.MethodOfBasicLogic;
+import com.uraltranscom.service.additional.MultipartFileToFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("ALL")
 @Controller
@@ -39,8 +41,10 @@ public class BasicController {
     }
 
     @RequestMapping(value = "/reports", method = RequestMethod.POST)
-    public String reportList(@RequestParam(value = "routes") String routeFilePath,
-                             @RequestParam(value = "wagons") String wagonFilePath, Model model) {
+    public String reportList(@RequestParam(value = "routes") MultipartFile routeFile,
+                             @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
+        methodOfBasicLogic.getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
+        methodOfBasicLogic.getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
         methodOfBasicLogic.lookingForOptimalMapOfRoute();
         model.addAttribute("reportListOfDistributedRoutesAndWagons", methodOfBasicLogic.getListOfDistributedRoutesAndWagons());
         model.addAttribute("reportListOfDistributedRoutes", methodOfBasicLogic.getListOfUndistributedRoutes());

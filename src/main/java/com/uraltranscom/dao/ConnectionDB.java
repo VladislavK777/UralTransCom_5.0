@@ -1,15 +1,17 @@
-package com.uraltranscom.dao.connection;
+package com.uraltranscom.dao;
 
 /*
  *
  * Класс соединения с БД
  *
  * @author Vladislav Klochkov
- * @version 2.0
+ * @version 3.0
  * @create 25.10.2017
  *
  * 13.11.2017
  *   1. Добавление хранения пароля в ZooKeeper
+ * 12.01.2018
+ *   1. Версия 3.0
  *
  */
 
@@ -54,10 +56,10 @@ public class ConnectionDB {
                 data[2] = new String(password, "UTF-8");
 
             } catch (IOException e) {
-                logger.error("Ошибка получения данных из ZooKeeper.");
+                logger.error("Ошибка получения данных из ZooKeeper - {}", e.getMessage());
             }
         } catch (IOException | InterruptedException | KeeperException e) {
-            logger.error("Ошибка подключения к ZooKeeper.");
+            logger.error("Ошибка подключения к ZooKeeper - {}", e.getMessage());
         }
         return data;
     }
@@ -67,14 +69,14 @@ public class ConnectionDB {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL, USER, PASS);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Ошибка соединения - {}", e.getMessage());
         } catch (SQLException e) {
+            logger.error("Ошибка соединения - {}", e.getMessage());
             try {
                 connection.close();
             } catch (SQLException e1) {
-                logger.error("Ошибка закрытия соединения");
+                logger.error("Ошибка закрытия соединения - {}", e1.getMessage());
             }
-            logger.error("Ошибка соединения");
         }
         return connection;
     }

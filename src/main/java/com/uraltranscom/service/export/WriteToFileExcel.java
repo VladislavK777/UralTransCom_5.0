@@ -5,8 +5,11 @@ package com.uraltranscom.service.export;
  * Класс записи в файл Excel
  *
  * @author Vladislav Klochkov
- * @version 2.0
+ * @version 3.0
  * @create 09.11.2017
+ *
+ * 12.01.2018
+ *   1. Версия 3.0
  *
  */
 

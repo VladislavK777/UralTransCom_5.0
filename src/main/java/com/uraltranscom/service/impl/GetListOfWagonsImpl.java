@@ -21,7 +21,7 @@ import java.util.List;
  * Класс получения списка вагонов
  *
  * @author Vladislav Klochkov
- * @version 2.0
+ * @version 3.0
  * @create 25.10.2017
  *
  * 06.11.2017
@@ -30,6 +30,8 @@ import java.util.List;
  *   1. Переделано получения целого числа в поле Номер вагона
  * 17.11.2017
  *   1. Изменен метод заполнения Map
+ * 12.01.2018
+ *   1. Версия 3.0
  *
  */
 
@@ -43,7 +45,8 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private List<Wagon> listOfWagons = new ArrayList<>();
 
     // Переменные для работы с файлами
-    private File file = new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\wagons.xlsx");
+    private File file;
+            //= new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\wagons.xlsx");
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
@@ -51,7 +54,7 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private XSSFSheet sheet;
 
     public GetListOfWagonsImpl() {
-        fillMapOfWagons();
+
     }
 
     // Заполняем Map вагонами
@@ -98,7 +101,7 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
                 listOfWagons.add(new Wagon(numberOfWagon, typeOfWagon, keyOfStationDestination, nameOfStationDestination));
             }
         } catch (IOException e) {
-            logger.error("Ошибка загруки файла");
+            logger.error("Ошибка загруки файла - {}", e.getMessage());
         } catch (OLE2NotOfficeXmlFileException e1) {
             logger.error("Некорректный формат файла, необходим формат xlsx");
         }
@@ -111,5 +114,14 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
 
     public void setListOfWagons(List<Wagon> listOfWagons) {
         this.listOfWagons = listOfWagons;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+        fillMapOfWagons();
     }
 }

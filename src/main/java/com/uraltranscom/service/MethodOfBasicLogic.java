@@ -1,12 +1,10 @@
 package com.uraltranscom.service;
 
-import com.uraltranscom.dao.connection.ConnectionDB;
-import com.uraltranscom.service.additional.PrefixOfDays;
-import com.uraltranscom.service.impl.CheckExistKeyOfStationImpl;
-import com.uraltranscom.service.impl.GetDistanceBetweenStationsImpl;
+import com.uraltranscom.dao.ConnectionDB;
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.additional.CompareMapValue;
+import com.uraltranscom.service.additional.PrefixOfDays;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import com.uraltranscom.service.impl.*;
 import org.slf4j.Logger;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
 /*
@@ -23,11 +20,11 @@ import java.util.*;
  * Основной класс алгоритма расчета
  *
  * @author Vladislav Klochkov
- * @version 2.0
+ * @version 3.0
  * @create 01.11.2017
  *
  * 12.01.2018
- * Версия 2.0
+ *   1. Версия 3.0
  *
  */
 
@@ -38,7 +35,7 @@ public class MethodOfBasicLogic {
     private static Logger logger = LoggerFactory.getLogger(MethodOfBasicLogic.class);
 
     @Autowired
-    private GetBasicListOfRoutesImpl getBasicListOfRoutesImpl;
+    private GetListOfRoutesImpl getListOfRoutesImpl;
     @Autowired
     private GetDistanceBetweenStationsImpl getDistanceBetweenStations;
     @Autowired
@@ -50,7 +47,7 @@ public class MethodOfBasicLogic {
 
     private Map<Integer, Route> tempMapOfRoutes = new HashMap<>();
     private List<Wagon> tempListOfWagons = new ArrayList<>();
-    private static final Connection CONNECTION = ConnectionDB.getConnection();
+    private static Connection connection;
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
@@ -66,8 +63,21 @@ public class MethodOfBasicLogic {
     private List <String> listOfError = new ArrayList<>();
 
     public void lookingForOptimalMapOfRoute() {
-        tempMapOfRoutes = getBasicListOfRoutesImpl.getMapOfRoutes();
+        // Устанавливаем соединение
+        connection = ConnectionDB.getConnection();
+
+        // Заполняем мапы
+        tempMapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
         tempListOfWagons = getListOfWagonsImpl.getListOfWagons();
+
+        // Очищаем массивы итоговые
+        listOfDistributedRoutesAndWagons.clear();
+        listOfUndistributedRoutes.clear();
+        listOfUndistributedWagons.clear();
+        listOfError.clear();
+
+        // Очищаем мапу по количеству дней
+        getFullMonthCircleOfWagonImpl.getMapOfDaysOfWagon().clear();
 
         // Список расстояний
         Map<List<Object>, Integer> mapDistance = new HashMap<>();
@@ -100,7 +110,7 @@ public class MethodOfBasicLogic {
                     String keyOfStationDeparture = tempMapOfRoute.getValue().getKeyOfStationDeparture();
                     list.add(numberOfWagon);
                     list.add(tempMapOfRoute.getValue());
-                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, CONNECTION);
+                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, connection);
                     if (distance != -1) {
                         mapDistance.put(list, distance);
                     } else {
@@ -246,12 +256,13 @@ public class MethodOfBasicLogic {
         WriteToFileExcel.writeToFileExcelUnDistributedRoutes(tempMapOfRoutes);
         WriteToFileExcel.writeToFileExcelUnDistributedWagons(SetOfUndistributedWagons);
 
-        // Закрываем соединение
+        /*// Закрываем соединение
         try {
-            CONNECTION.close();
+            connection.close();
         } catch (SQLException e) {
-            logger.error("Ошибка закрытия соединения");
-        }
+            logger.error("Ошибка закрытия соединения - {}", e.getMessage());
+        }*/
+
     }
 
     public List<String> getListOfDistributedRoutesAndWagons() {
@@ -268,5 +279,21 @@ public class MethodOfBasicLogic {
 
     public List<String> getListOfError() {
         return listOfError;
+    }
+
+    public GetListOfRoutesImpl getGetListOfRoutesImpl() {
+        return getListOfRoutesImpl;
+    }
+
+    public void setGetListOfRoutesImpl(GetListOfRoutesImpl getListOfRoutesImpl) {
+        this.getListOfRoutesImpl = getListOfRoutesImpl;
+    }
+
+    public GetListOfWagonsImpl getGetListOfWagonsImpl() {
+        return getListOfWagonsImpl;
+    }
+
+    public void setGetListOfWagonsImpl(GetListOfWagonsImpl getListOfWagonsImpl) {
+        this.getListOfWagonsImpl = getListOfWagonsImpl;
     }
 }

@@ -21,4 +21,9 @@
 
     <context:component-scan base-package="com.uraltranscom.controller" />
 
+    <!-- Support For File Upload And Download -->
+    <beans:bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <beans:property name="maxUploadSize" value="100000000" />
+    </beans:bean>
+
 </beans:beans>

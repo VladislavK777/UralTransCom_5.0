@@ -11,8 +11,11 @@ import java.util.Map;
  * Класс расчета количества дней, затраченных вагоном за один цикл. По вагонам количесво дней суммируется
  *
  * @author Vladislav Klochkov
- * @version 2.0
+ * @version 3.0
  * @create 08.11.2017
+ *
+ * 12.01.2018
+ *   1. Версия 3.0
  *
  */
 
@@ -68,5 +71,13 @@ public class GetFullMonthCircleOfWagonImpl implements GetFullMonthCircleOfWagon 
 
     public double getNumberOfDaysOfWagon(String numberOfWagon) {
         return mapOfDaysOfWagon.get(numberOfWagon);
+    }
+
+    public Map<String, Double> getMapOfDaysOfWagon() {
+        return mapOfDaysOfWagon;
+    }
+
+    public void setMapOfDaysOfWagon(Map<String, Double> mapOfDaysOfWagon) {
+        this.mapOfDaysOfWagon = mapOfDaysOfWagon;
     }
 }

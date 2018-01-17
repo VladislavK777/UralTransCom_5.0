@@ -19,15 +19,36 @@
     <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
     </script>
+
+    <!-- Вызов лоадера -->
+    <script>
+        jQuery(function ($) {
+            $('#startProcess').on('click', function (e) {
+                $('.content').toggleClass('hide');
+            });
+        });
+    </script>
+
+    <!-- Блокировка экрана -->
+    <script type="text/javascript">
+        function lockScreen()
+        {
+            var lock = document.getElementById('lockPane');
+            if (lock)
+                lock.className = 'lockScreenOn';
+        }
+    </script>
+
     <style>
         body {
             font: 14px/1 "Open Sans", sans-serif;
         }
 
+        /* Настрйоки вкладок*/
         /* Стили секций с содержанием */
         .tabs > section {
             display: none;
-            max-width: 980px;
+            max-width: 100%;
             padding: 15px;
             background: #fff;
             border: 1px solid #ddd;
@@ -132,8 +153,80 @@
                 padding: 15px;
             }
         }
+
+
+        /* Стили лоадера */
+        .hide {
+            display: none;
+        }
+        .content {
+            padding: 15px;
+            margin:0 auto;
+            left:50%;
+            top:50%;
+
+        }
+
+        p {
+            margin: 0;
+            padding: 10px 0;
+            color: #777;
+        }
+
+        .load-wrapp {
+            float: left;
+            width: 100px;
+            height: 100px;
+            margin: 0 10px 10px 0;
+            padding: 20px 20px 20px;
+            border-radius: 5px;
+            text-align: center;
+            background-color: #d8d8d8;
+        }
+
+        .load-wrapp p {padding: 0 0 20px;}
+        .load-wrapp:last-child {margin-right: 0;}
+
+        .line {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 15px;
+            background-color: #4b9cdb;
+        }
+
+        .load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
+        .load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
+        .load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
+
+        @keyframes loadingC {
+            0 {transform: translate(0,0);}
+            50% {transform: translate(0,15px);}
+            100% {transform: translate(0,0);}
+        }
+
+        /* Блокировка экрана */
+        .lockScreenOff {
+            display: none;
+            visibility: hidden;
+        }
+        .lockScreenOn {
+            display: block;
+            visibility: visible;
+            position: absolute;
+            z-index: 999;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: #ccc;
+            text-align: center;
+            filter: alpha(opacity=10);
+            opacity: 0.10;
+        }
     </style>
 </head>
+<div id="lockPane" class="lockScreenOff"></div>
 <script>
     function cop() {
         document.getElementById("copy").innerText = new Date().getFullYear();
@@ -158,14 +251,46 @@
         $(popup).fadeIn(800);
     }
 </script>
-
-<form enctype="multipart/form-data" method="post" action="/reports">
-    <p>
-        <input type="file" name="routes" multiple accept="xlsx">
-        <input type="file" name="wagons" multiple accept="xlsx">
-        <input type="submit" value="Start" class="bot1">
-    </p>
+<input type="button" value="Создать отчет" onclick="showPopup()"
+       class="bot1">
+<form action="/" method="get">
+    <input type="submit" value="Очистить форму"
+           class="bot1">
 </form>
+<table class="table_report">
+    <tr>
+        <td class="td_report">
+            <div id="popup"
+                 style="position: absolute; height: 100%; width: 100%; top: 0; left: 0; display: none;">
+                <div id="popup_bg"
+                     style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
+                </div>
+                <div class="form">
+                    <form enctype="multipart/form-data" method="post" action="/reports">
+                        <p>Файл заявок</p>
+                        <input type="file" name="routes" multiple accept="xlsx">
+                        <p>Файл вагонов</p>
+                        <input type="file" name="wagons" multiple accept="xlsx">
+                        <p>
+                            <input type="submit" value="Start" class="bot2" id="startProcess" onclick="lockScreen();">
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div class="content hide">
+    <div class="load-wrapp">
+        <div class="load-3">
+            <p>Обработка</p>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="tabs">

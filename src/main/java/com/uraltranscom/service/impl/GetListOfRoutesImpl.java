@@ -5,11 +5,14 @@ package com.uraltranscom.service.impl;
  * Класс получения списка маршрутов
  *
  * @author Vladislav Klochkov
- * @version 2.0
+ * @version 3.0
  * @create 25.10.2017
  *
  * 17.11.2017
  *   1. Изменен метод заполнения Map
+ * 12.01.2018
+ *   1. Версия 3.0
+ *
  */
 
 import com.uraltranscom.model.Route;
@@ -29,16 +32,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GetBasicListOfRoutesImpl implements GetBasicListOfRoutes {
+public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
 
     // Подключаем логгер
-    private static Logger logger = LoggerFactory.getLogger(GetBasicListOfRoutesImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
 
     // Основаная мапа, куда записываем все маршруты
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
 
     // Переменные для работы с файлами
-    private File file = new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\test.xlsx");
+    private File file;
+            //= new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\test.xlsx");
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
@@ -46,8 +50,8 @@ public class GetBasicListOfRoutesImpl implements GetBasicListOfRoutes {
     private XSSFSheet sheet;
 
     // Конструктор заполняет основную мапу
-    public GetBasicListOfRoutesImpl() {
-        fillMapOfRoutes();
+    public GetListOfRoutesImpl() {
+
     }
 
     @Override
@@ -111,7 +115,7 @@ public class GetBasicListOfRoutesImpl implements GetBasicListOfRoutes {
                 i++;
             }
         } catch (IOException e) {
-            logger.error("Ошибка загруки файла");
+            logger.error("Ошибка загруки файла - {}", e.getMessage());
         } catch (OLE2NotOfficeXmlFileException e1) {
             logger.error("Некорректный формат файла, необходим формат xlsx");
         }
@@ -123,5 +127,10 @@ public class GetBasicListOfRoutesImpl implements GetBasicListOfRoutes {
 
     public void setMapOfRoutes(Map<Integer, Route> mapOfRoutes) {
         this.mapOfRoutes = mapOfRoutes;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+        fillMapOfRoutes();
     }
 }
