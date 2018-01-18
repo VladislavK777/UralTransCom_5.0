@@ -15,6 +15,7 @@ package com.uraltranscom.controller;
 
 import com.uraltranscom.service.MethodOfBasicLogic;
 import com.uraltranscom.service.additional.MultipartFileToFile;
+import com.uraltranscom.service.export.WriteToFileExcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 @SuppressWarnings("ALL")
 @Controller
 public class BasicController {
@@ -34,6 +37,7 @@ public class BasicController {
 
     @Autowired
     private MethodOfBasicLogic methodOfBasicLogic;
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
@@ -51,5 +55,12 @@ public class BasicController {
         model.addAttribute("reportListOfDistributedWagons", methodOfBasicLogic.getListOfUndistributedWagons());
         model.addAttribute("reportListOfError", methodOfBasicLogic.getListOfError());
         return "welcome";
+    }
+
+    // Выгрузка в Excel
+    @RequestMapping(value = "/export", method = RequestMethod.POST)
+    public void getXLS(HttpServletResponse response, Model model) {
+        WriteToFileExcel.downloadFileExcel(response, methodOfBasicLogic.getListOfDistributedRoutesAndWagons(), methodOfBasicLogic.getListOfUndistributedRoutes(),
+                methodOfBasicLogic.getListOfUndistributedWagons(), methodOfBasicLogic.getListOfError());
     }
 }

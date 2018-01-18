@@ -5,7 +5,6 @@ import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.additional.CompareMapValue;
 import com.uraltranscom.service.additional.PrefixOfDays;
-import com.uraltranscom.service.export.WriteToFileExcel;
 import com.uraltranscom.service.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /*
@@ -115,14 +115,14 @@ public class MethodOfBasicLogic {
                         mapDistance.put(list, distance);
                     } else {
                         if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
-                            listOfError.add("Проверьте код станции назначения " + keyOfStationDeparture + " - " + tempMapOfRoute.getValue().getNameOfStationDeparture() + " на марщруте: " + tempMapOfRoute.getValue().toString());
-                            logger.error("Проверьте код станции назначения {} - {} на марщруте: {}", keyOfStationDeparture, tempMapOfRoute.getValue().getNameOfStationDeparture(), tempMapOfRoute.getValue().toString());
+                            listOfError.add("Проверьте код станции " + keyOfStationDeparture);
+                            logger.error("Проверьте код станции {}", keyOfStationDeparture);
                             tempMapOfRoutes.remove(tempMapOfRoute.getKey());
                             break;
                         }
                         if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination)) {
-                            listOfError.add("Проверьте код станции назначения " + keyOfStationOfWagonDestination + " - " + tempListOfWagons.get(i).getNameOfStationDestination() + " у вагона " + tempListOfWagons.get(i).toString());
-                            logger.error("Проверьте код станции назначения {} - {}  у вагона {}", keyOfStationOfWagonDestination, tempListOfWagons.get(i).getNameOfStationDestination(), tempListOfWagons.get(i).toString());
+                            listOfError.add("Проверьте код станции " + keyOfStationOfWagonDestination);
+                            logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
                             tempListOfWagons.remove(i);
                             countWagons = tempListOfWagons.size();
                             break;
@@ -191,22 +191,19 @@ public class MethodOfBasicLogic {
                                 // Если больше 30 дней, то исключаем вагон, лимит 30 дней
                                 if (numberOfDaysOfWagon < 31) {
 
-                                    // Пишем в файл Excel
-                                    WriteToFileExcel.writeToFileExcelDistributedRoutes(numberOfWagon, tempMapOfRouteForDelete.get(j), mapDistanceSortFirstElement.getValue(), numberOfDaysOfWagon);
-
                                     // Заменяем маршрут вагону
                                     tempListOfWagons.set(getKeyNumber, new Wagon(numberOfWagon, tempListOfWagons.get(getKeyNumber).getTypeOfWagon(), tempMapOfRouteForDelete.get(j).getKeyOfStationDestination(), tempMapOfRouteForDelete.get(j).getNameOfStationDestination()));
 
                                     // Добавляем новый вагон в список
                                     SetOfDistributedWagons.add(numberOfWagon);
 
-                                    listOfDistributedRoutesAndWagons.add("Вагон номер " + numberOfWagon + " едет на станцию "
+                                    listOfDistributedRoutesAndWagons.add("Вагон " + numberOfWagon + " едет на станцию "
                                             + nameOfStationDepartureOfWagon + ": "
                                             + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
                                             + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
                                             + numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
 
-                                    logger.info("Вагон номер {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
+                                    logger.info("Вагон {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
                                     logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
                                     logger.info("Маршрут: {}", tempMapOfRouteForDelete.get(j).toString());
                                     logger.info("-------------------------------------------------");
@@ -217,7 +214,7 @@ public class MethodOfBasicLogic {
                                     // Выходим из цикла, так как с ним больше ничего не сделать
                                     break outer;
                                 } else {
-                                    logger.info("Вагон номер {} должен был ехать на {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
+                                    logger.info("Вагон {} должен был ехать на {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
                                     logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
                                     logger.info("Далее по маршруту: {}", tempMapOfRouteForDelete.get(j).toString());
                                     logger.info("-------------------------------------------------");
@@ -249,19 +246,17 @@ public class MethodOfBasicLogic {
         tempMapOfRoutes.forEach((k, v) -> {
             listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination());
         });
+
         SetOfUndistributedWagons.forEach((k) -> {
             listOfUndistributedWagons.add(k.toString());
         });
 
-        WriteToFileExcel.writeToFileExcelUnDistributedRoutes(tempMapOfRoutes);
-        WriteToFileExcel.writeToFileExcelUnDistributedWagons(SetOfUndistributedWagons);
-
-        /*// Закрываем соединение
+        // Закрываем соединение
         try {
             connection.close();
         } catch (SQLException e) {
             logger.error("Ошибка закрытия соединения - {}", e.getMessage());
-        }*/
+        }
 
     }
 

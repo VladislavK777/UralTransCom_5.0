@@ -14,8 +14,6 @@
     <title>UralTransCom</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="resources/style.css" rel="stylesheet" type="text/css"/>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700&subset=latin,cyrillic" rel="stylesheet"
-          type="text/css">
     <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
     </script>
@@ -31,11 +29,32 @@
 
     <!-- Блокировка экрана -->
     <script type="text/javascript">
-        function lockScreen()
-        {
+        function lockScreen() {
             var lock = document.getElementById('lockPane');
             if (lock)
                 lock.className = 'lockScreenOn';
+        }
+    </script>
+
+    <!-- Скрипт всплывающего окна -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(popup_bg).click(function () {
+                $(popup).fadeOut(800);
+            });
+
+        });
+
+        function showPopup() {
+            $(popup).fadeIn(800);
+        }
+    </script>
+
+    <!-- Копирайт -->
+    <script>
+        function cop() {
+            document.getElementById("copy").innerText = new Date().getFullYear();
         }
     </script>
 
@@ -44,7 +63,7 @@
             font: 14px/1 "Open Sans", sans-serif;
         }
 
-        /* Настрйоки вкладок*/
+        /* Настрйка вкладок*/
         /* Стили секций с содержанием */
         .tabs > section {
             display: none;
@@ -154,55 +173,26 @@
             }
         }
 
-
         /* Стили лоадера */
         .hide {
             display: none;
         }
-        .content {
-            padding: 15px;
-            margin:0 auto;
-            left:50%;
-            top:50%;
 
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #4B79BB;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            position: relative;
+            top: 40%;
+            left: 45%;
         }
 
-        p {
-            margin: 0;
-            padding: 10px 0;
-            color: #777;
-        }
-
-        .load-wrapp {
-            float: left;
-            width: 100px;
-            height: 100px;
-            margin: 0 10px 10px 0;
-            padding: 20px 20px 20px;
-            border-radius: 5px;
-            text-align: center;
-            background-color: #d8d8d8;
-        }
-
-        .load-wrapp p {padding: 0 0 20px;}
-        .load-wrapp:last-child {margin-right: 0;}
-
-        .line {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-radius: 15px;
-            background-color: #4b9cdb;
-        }
-
-        .load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
-        .load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
-        .load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
-
-        @keyframes loadingC {
-            0 {transform: translate(0,0);}
-            50% {transform: translate(0,15px);}
-            100% {transform: translate(0,0);}
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Блокировка экрана */
@@ -210,6 +200,7 @@
             display: none;
             visibility: hidden;
         }
+
         .lockScreenOn {
             display: block;
             visibility: visible;
@@ -221,42 +212,29 @@
             height: 100%;
             background-color: #ccc;
             text-align: center;
-            filter: alpha(opacity=10);
-            opacity: 0.10;
+            filter: alpha(opacity=75);
+            opacity: 0.75;
         }
     </style>
 </head>
-<div id="lockPane" class="lockScreenOff"></div>
-<script>
-    function cop() {
-        document.getElementById("copy").innerText = new Date().getFullYear();
-    }
-</script>
+
 <body onload="cop()">
+<div id="lockPane" class="lockScreenOff">
+    <div class="loader" hide></div>
+</div>
+
 <div class="one">
     <h1>Сервис распределения вагонов</h1>
     <img src="resources/logo.jpg">
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $(popup_bg).click(function () {
-            $(popup).fadeOut(800);
-        });
-
-    });
-
-    function showPopup() {
-        $(popup).fadeIn(800);
-    }
-</script>
 <input type="button" value="Создать отчет" onclick="showPopup()"
        class="bot1">
 <form action="/" method="get">
     <input type="submit" value="Очистить форму"
            class="bot1">
 </form>
+
 <table class="table_report">
     <tr>
         <td class="td_report">
@@ -280,17 +258,6 @@
         </td>
     </tr>
 </table>
-
-<div class="content hide">
-    <div class="load-wrapp">
-        <div class="load-3">
-            <p>Обработка</p>
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-        </div>
-    </div>
-</div>
 
 <div class="container">
     <div class="tabs">
@@ -359,11 +326,16 @@
             </p>
         </section>
     </div>
-
-    <div align="center" id="footer">
-        Copyright &copy; ООО "Уральская транспортная компания" <span id="copy"></span>.
-        Create by Vladislav Klochkov. All rights reserved
-    </div>
 </div>
+<br>
+<form action="/export" method="post">
+    <input type="submit" value="Скачать отчет" id="download" class="bot1">
+</form>
+
+<div align="center" id="footer">
+    Copyright &copy; ООО "Уральская транспортная компания" <span id="copy"></span>.
+    Create by Vladislav Klochkov. All rights reserved
+</div>
+
 </body>
 </html>
