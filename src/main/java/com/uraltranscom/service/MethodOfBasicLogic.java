@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
 /*
@@ -251,12 +250,12 @@ public class MethodOfBasicLogic {
             listOfUndistributedWagons.add(k.toString());
         });
 
-        // Закрываем соединение
+        /*// Закрываем соединение
         try {
             connection.close();
         } catch (SQLException e) {
             logger.error("Ошибка закрытия соединения - {}", e.getMessage());
-        }
+        }*/
 
     }
 
