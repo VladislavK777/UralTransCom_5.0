@@ -141,7 +141,7 @@
         /* Стили для активной вкладки */
         .tabs > input:checked + label {
             color: #555;
-            border-top: 1px solid #4B79BB;
+            border-top: 1px solid #364274;
             border-bottom: 1px solid #fff;
             background: #fff;
         }
@@ -180,7 +180,7 @@
 
         .loader {
             border: 16px solid #f3f3f3;
-            border-top: 16px solid #4B79BB;
+            border-top: 16px solid #364274;
             border-radius: 50%;
             width: 120px;
             height: 120px;
@@ -219,118 +219,126 @@
 </head>
 
 <body onload="cop()">
+
 <div id="lockPane" class="lockScreenOff">
     <div class="loader" hide></div>
 </div>
 
 <div class="one">
-    <h1>Сервис распределения вагонов</h1>
-    <img src="resources/logo.jpg">
+    <h1>сервис распределения вагонов</h1>
 </div>
 
-<input type="button" value="Создать отчет" onclick="showPopup()"
-       class="bot1">
-<form action="/" method="get">
-    <input type="submit" value="Очистить форму"
+<div>
+    <img style="position: relative; left: 15%;" src="resources/logo.jpg">
+</div>
+
+<br><br><br>
+
+<div>
+    <input type="button" value="Создать отчет" onclick="showPopup()"
            class="bot1">
-</form>
+    <form action="/" method="get">
+        <input type="submit" value="Очистить форму"
+               class="bot1">
+    </form>
 
-<table class="table_report">
-    <tr>
-        <td class="td_report">
-            <div id="popup"
-                 style="position: absolute; height: 100%; width: 100%; top: 0; left: 0; display: none;">
-                <div id="popup_bg"
-                     style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
+    <table class="table_report">
+        <tr>
+            <td class="td_report">
+                <div id="popup"
+                     style="position: absolute; height: 100%; width: 100%; top: 0; left: 0; display: none;">
+                    <div id="popup_bg"
+                         style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
+                    </div>
+                    <div class="form">
+                        <form enctype="multipart/form-data" method="post" action="/reports">
+                            <p>Файл заявок</p>
+                            <input type="file" name="routes" multiple accept="xlsx">
+                            <p>Файл дислокации вагонов</p>
+                            <input type="file" name="wagons" multiple accept="xlsx">
+                            <p>
+                                <input type="submit" value="Start" class="bot2" id="startProcess" onclick="lockScreen();">
+                            </p>
+                        </form>
+                    </div>
                 </div>
-                <div class="form">
-                    <form enctype="multipart/form-data" method="post" action="/reports">
-                        <p>Файл заявок</p>
-                        <input type="file" name="routes" multiple accept="xlsx">
-                        <p>Файл вагонов</p>
-                        <input type="file" name="wagons" multiple accept="xlsx">
-                        <p>
-                            <input type="submit" value="Start" class="bot2" id="startProcess" onclick="lockScreen();">
-                        </p>
-                    </form>
-                </div>
-            </div>
-        </td>
-    </tr>
-</table>
+            </td>
+        </tr>
+    </table>
 
-<div class="container">
-    <div class="tabs">
-        <input id="tab1" type="radio" name="tabs" checked>
-        <label for="tab1" title="Распределенные рейсы">Распределенные рейсы</label>
+    <div class="container">
+        <div class="tabs">
+            <input id="tab1" type="radio" name="tabs" checked>
+            <label for="tab1" title="Распределенные рейсы">Распределенные рейсы</label>
 
-        <input id="tab2" type="radio" name="tabs">
-        <label for="tab2" title="Нераспределенные рейсы">Нераспределенные рейсы</label>
+            <input id="tab2" type="radio" name="tabs">
+            <label for="tab2" title="Нераспределенные рейсы">Нераспределенные рейсы</label>
 
-        <input id="tab3" type="radio" name="tabs">
-        <label for="tab3" title="Нераспределенные вагоны">Нераспределенные вагоны</label>
+            <input id="tab3" type="radio" name="tabs">
+            <label for="tab3" title="Нераспределенные вагоны">Нераспределенные вагоны</label>
 
-        <input id="tab4" type="radio" name="tabs">
-        <label for="tab4" title="Ошибки">Ошибки</label>
+            <input id="tab4" type="radio" name="tabs">
+            <label for="tab4" title="Ошибки">Ошибки</label>
 
-        <section id="content-tab1">
-            <p>
-                <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
-            <table>
-                <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
-                    <tr>
-                        <td>${reportList}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-            </c:if>
-            </p>
-        </section>
-        <section id="content-tab2">
-            <p>
-                <c:if test="${!empty reportListOfDistributedRoutes}">
-            <table>
-                <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNo">
-                    <tr>
-                        <td>${reportListNo}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-            </c:if>
-            </p>
-        </section>
-        <section id="content-tab3">
-            <p>
-                <c:if test="${!empty reportListOfDistributedWagons}">
-            <table>
-                <c:forEach items="${reportListOfDistributedWagons}" var="reportListNoWagon">
-                    <tr>
-                        <td>${reportListNoWagon}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-            </c:if>
-            </p>
-        </section>
-        <section id="content-tab4">
-            <p>
-                <c:if test="${!empty reportListOfError}">
-            <table>
-                <c:forEach items="${reportListOfError}" var="Error">
-                    <tr>
-                        <td>${Error}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-            </c:if>
-            </p>
-        </section>
+            <section id="content-tab1">
+                <p>
+                    <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+                <table>
+                    <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
+                        <tr>
+                            <td>${reportList}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                </c:if>
+                </p>
+            </section>
+            <section id="content-tab2">
+                <p>
+                    <c:if test="${!empty reportListOfDistributedRoutes}">
+                <table>
+                    <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNo">
+                        <tr>
+                            <td>${reportListNo}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                </c:if>
+                </p>
+            </section>
+            <section id="content-tab3">
+                <p>
+                    <c:if test="${!empty reportListOfDistributedWagons}">
+                <table>
+                    <c:forEach items="${reportListOfDistributedWagons}" var="reportListNoWagon">
+                        <tr>
+                            <td>${reportListNoWagon}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                </c:if>
+                </p>
+            </section>
+            <section id="content-tab4">
+                <p>
+                    <c:if test="${!empty reportListOfError}">
+                <table>
+                    <c:forEach items="${reportListOfError}" var="Error">
+                        <tr>
+                            <td>${Error}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                </c:if>
+                </p>
+            </section>
+        </div>
     </div>
+    <br>
+    <form action="/export" method="post">
+        <input type="submit" value="Скачать отчет" id="download" class="bot1">
+    </form>
 </div>
-<br>
-<form action="/export" method="post">
-    <input type="submit" value="Скачать отчет" id="download" class="bot1">
-</form>
 
 <div align="center" id="footer">
     Copyright &copy; ООО "Уральская транспортная компания" <span id="copy"></span>.

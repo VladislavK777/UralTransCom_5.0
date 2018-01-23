@@ -116,12 +116,14 @@ public class MethodOfBasicLogic {
                         if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
                             listOfError.add("Проверьте код станции " + keyOfStationDeparture);
                             logger.error("Проверьте код станции {}", keyOfStationDeparture);
+                            listOfUndistributedRoutes.add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " + tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination());
                             tempMapOfRoutes.remove(tempMapOfRoute.getKey());
                             break;
                         }
                         if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination)) {
                             listOfError.add("Проверьте код станции " + keyOfStationOfWagonDestination);
                             logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
+                            listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
                             tempListOfWagons.remove(i);
                             countWagons = tempListOfWagons.size();
                             break;
