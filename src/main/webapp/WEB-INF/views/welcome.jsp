@@ -297,9 +297,9 @@
                 <p>
                     <c:if test="${!empty reportListOfDistributedRoutes}">
                 <table>
-                    <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNo">
+                    <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNoRoute">
                         <tr>
-                            <td>${reportListNo}</td>
+                            <td>${reportListNoRoute}</td>
                         </tr>
                     </c:forEach>
                 </table>
