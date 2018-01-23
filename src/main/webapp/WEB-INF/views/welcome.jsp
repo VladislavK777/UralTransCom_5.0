@@ -237,7 +237,7 @@
 <div>
     <input type="button" value="Создать отчет" onclick="showPopup()"
            class="bot1">
-    <form action="/" method="get">
+    <form action="/uraltranscom" method="get">
         <input type="submit" value="Очистить форму"
                class="bot1">
     </form>
@@ -251,7 +251,7 @@
                          style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
                     </div>
                     <div class="form">
-                        <form enctype="multipart/form-data" method="post" action="/reports">
+                        <form enctype="multipart/form-data" method="post" action="reports">
                             <p>Файл заявок</p>
                             <input type="file" name="routes" multiple accept="xlsx">
                             <p>Файл дислокации вагонов</p>
@@ -335,7 +335,7 @@
         </div>
     </div>
     <br>
-    <form action="/export" method="post">
+    <form action="export" method="post">
         <input type="submit" value="Скачать отчет" id="download" class="bot1">
     </form>
 </div>
