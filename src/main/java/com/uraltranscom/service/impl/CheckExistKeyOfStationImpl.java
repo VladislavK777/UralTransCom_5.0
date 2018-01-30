@@ -13,28 +13,27 @@ package com.uraltranscom.service.impl;
  *
  */
 
-import com.uraltranscom.dao.ConnectionDB;
 import com.uraltranscom.service.CheckExistKeyOfStation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Service
-public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExistKeyOfStation {
+public class CheckExistKeyOfStationImpl implements CheckExistKeyOfStation {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(CheckExistKeyOfStationImpl.class);
 
-    private static Connection connection;
     private static ResultSet resultSet;
     private static PreparedStatement preparedStatement;
 
-    public boolean checkExistKey(String keyOfStation) {
+    public boolean checkExistKey(String keyOfStation, Connection connection) {
         Boolean isExist = false;
         try {
-            // Открываем соединение с БД
-            connection = DriverManager.getConnection(getURL(), getUSER(), getPASS());
 
             // Подготавливаем запрос
             preparedStatement = connection.prepareStatement("select distinct 1 from distances where (station_id1 = ? or station_id2 = ?)");
@@ -54,23 +53,7 @@ public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExi
             }
         } catch (SQLException ex) {
             logger.error("Ошибка запроса");
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException se) {
-                logger.error("Ошибка закрытия соединения");
-            }
-            try {
-                resultSet.close();
-            } catch (SQLException se) {
-                logger.error("Ошибка закрытия соединения");
-            }
-            try {
-                preparedStatement.close();
-            } catch (SQLException se) {
-                logger.error("Ошибка закрытия соединения");
-            }
-            return isExist;
         }
+        return isExist;
     }
 }

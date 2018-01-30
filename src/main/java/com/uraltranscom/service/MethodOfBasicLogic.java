@@ -113,14 +113,14 @@ public class MethodOfBasicLogic {
                     if (distance != -1) {
                         mapDistance.put(list, distance);
                     } else {
-                        if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
+                        if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture, connection)) {
                             listOfError.add("Проверьте код станции " + keyOfStationDeparture);
                             logger.error("Проверьте код станции {}", keyOfStationDeparture);
                             listOfUndistributedRoutes.add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " + tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination());
                             tempMapOfRoutes.remove(tempMapOfRoute.getKey());
                             break;
                         }
-                        if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination)) {
+                        if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination, connection)) {
                             listOfError.add("Проверьте код станции " + keyOfStationOfWagonDestination);
                             logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
                             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());

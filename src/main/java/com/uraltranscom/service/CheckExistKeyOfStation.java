@@ -13,7 +13,9 @@ package com.uraltranscom.service;
  *
  */
 
+import java.sql.Connection;
+
 public interface CheckExistKeyOfStation {
-    boolean checkExistKey(String keyOfStation);
+    boolean checkExistKey(String keyOfStation, Connection connection);
 }
 
