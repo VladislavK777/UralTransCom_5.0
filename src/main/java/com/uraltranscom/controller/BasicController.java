@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
+@SuppressWarnings("unchecked")
 @Controller
 public class BasicController {
 

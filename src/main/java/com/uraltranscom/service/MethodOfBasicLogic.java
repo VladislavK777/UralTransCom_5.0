@@ -50,16 +50,16 @@ public class MethodOfBasicLogic {
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
-    private List <String> listOfDistributedRoutesAndWagons = new ArrayList<>();
+    private List<String> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
     // Массив нераспределенных маршрутов
-    private List <String> listOfUndistributedRoutes = new ArrayList<>();
+    private List<String> listOfUndistributedRoutes = new ArrayList<>();
 
     // Массив нераспределенных вагонов
-    private List <String> listOfUndistributedWagons = new ArrayList<>();
+    private List<String> listOfUndistributedWagons = new ArrayList<>();
 
     // Массив ошибок
-    private List <String> listOfError = new ArrayList<>();
+    private List<String> listOfError = new ArrayList<>();
 
     public void lookingForOptimalMapOfRoute() {
         // Очищаем массивы итоговые
@@ -134,7 +134,7 @@ public class MethodOfBasicLogic {
                             if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination, connection)) {
                                 listOfError.add("Проверьте код станции " + keyOfStationOfWagonDestination);
                                 logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
-                                if (getFullMonthCircleOfWagonImpl.getMapOfDaysOfWagon().containsKey(tempListOfWagons.get(i).getNumberOfWagon())) {
+                                if (!getFullMonthCircleOfWagonImpl.getMapOfDaysOfWagon().containsKey(tempListOfWagons.get(i).getNumberOfWagon())) {
                                     listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
                                 }
                                 tempListOfWagons.remove(i);
