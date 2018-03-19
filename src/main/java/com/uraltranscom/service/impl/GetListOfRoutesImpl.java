@@ -1,22 +1,24 @@
 package com.uraltranscom.service.impl;
 
-/*
+/**
  *
  * Класс получения списка маршрутов
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 25.10.2017
  *
  * 17.11.2017
  *   1. Изменен метод заполнения Map
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
 import com.uraltranscom.model.Route;
-import com.uraltranscom.service.GetBasicListOfRoutes;
+import com.uraltranscom.service.GetListOfRoutes;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -32,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
+public class GetListOfRoutesImpl implements GetListOfRoutes {
 
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
@@ -41,22 +43,21 @@ public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
 
     // Переменные для работы с файлами
-    private File file;
-            //= new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\test.xlsx");
+    private File file = new File("c:\\Users\\Vladislav.Klochkov\\Desktop\\UralTrancsCom\\EXCEL\\test.xlsx");
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
 
-    // Конструктор заполняет основную мапу
     public GetListOfRoutesImpl() {
-
+        fillMap();
     }
 
+    // Заполняем Map вагонами
+    // TODO Переписать метод, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
-    public void fillMapOfRoutes() {
-
+    public void fillMap() {
         // Получаем файл формата xls
         try {
             fileInputStream = new FileInputStream(this.file);
@@ -131,6 +132,6 @@ public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
 
     public void setFile(File file) {
         this.file = file;
-        fillMapOfRoutes();
+        fillMap();
     }
 }

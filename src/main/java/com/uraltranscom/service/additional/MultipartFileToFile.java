@@ -1,6 +1,6 @@
 package com.uraltranscom.service.additional;
 
-/*
+/**
  *
  * Класс для конвертации из MultipartFile в File
  *

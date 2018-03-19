@@ -1,6 +1,6 @@
 package com.uraltranscom.service.additional;
 
-/*
+/**
  *
  * Класс для правильного определения окончания в слове День
  *

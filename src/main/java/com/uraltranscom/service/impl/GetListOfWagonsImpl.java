@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+/**
  *
  * Класс получения списка вагонов
  *
@@ -45,8 +45,7 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private List<Wagon> listOfWagons = new ArrayList<>();
 
     // Переменные для работы с файлами
-    private File file;
-            //= new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\wagons.xlsx");
+    private File file = new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\UralTrancsCom\\EXCEL\\wagons.xlsx");
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
@@ -54,12 +53,13 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private XSSFSheet sheet;
 
     public GetListOfWagonsImpl() {
-
+        fillMap();
     }
 
     // Заполняем Map вагонами
+    // TODO Переписать метод, отвязать от количества строк, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
-    public void fillMapOfWagons() {
+    public void fillMap() {
         // Получаем файл формата xls
         try {
             fileInputStream = new FileInputStream(this.file);
@@ -122,6 +122,6 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
 
     public void setFile(File file) {
         this.file = file;
-        fillMapOfWagons();
+        fillMap();
     }
 }

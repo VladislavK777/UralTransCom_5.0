@@ -1,6 +1,6 @@
 package com.uraltranscom.service;
 
-/*
+/**
  *
  * Интерфейс проверки корректности кода станции
  *

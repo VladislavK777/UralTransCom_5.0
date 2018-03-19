@@ -1,6 +1,6 @@
 package com.uraltranscom.service.impl;
 
-/*
+/**
  *
  * Класс проверки корректности кода станции
  *

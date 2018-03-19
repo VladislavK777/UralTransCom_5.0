@@ -1,6 +1,6 @@
 package com.uraltranscom.service;
 
-/*
+/**
  *
  * Интерфейс получения списка вагонов
  *
@@ -17,6 +17,6 @@ package com.uraltranscom.service;
  *
  */
 
-public interface GetListOfWagons {
-    void fillMapOfWagons();
+public interface GetListOfWagons extends GetList {
+    void fillMap();
 }

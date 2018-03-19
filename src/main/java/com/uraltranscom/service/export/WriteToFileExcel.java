@@ -1,6 +1,6 @@
 package com.uraltranscom.service.export;
 
-/*
+/**
  *
  * Класс записи в файл Excel
  *

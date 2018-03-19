@@ -14,16 +14,18 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.util.*;
 
-/*
+/**
  *
  * Основной класс алгоритма расчета
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 01.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
@@ -34,15 +36,13 @@ public class MethodOfBasicLogic {
     private static Logger logger = LoggerFactory.getLogger(MethodOfBasicLogic.class);
 
     @Autowired
-    private GetListOfRoutesImpl getListOfRoutesImpl;
-    @Autowired
     private GetDistanceBetweenStationsImpl getDistanceBetweenStations;
-    @Autowired
-    private GetListOfWagonsImpl getListOfWagonsImpl;
     @Autowired
     private GetFullMonthCircleOfWagonImpl getFullMonthCircleOfWagonImpl;
     @Autowired
     private CheckExistKeyOfStationImpl checkExistKeyOfStationImpl;
+    @Autowired
+    private GetListOfDistanceImpl getListOfDistance;
 
     private Map<Integer, Route> tempMapOfRoutes = new HashMap<>();
     private List<Wagon> tempListOfWagons = new ArrayList<>();
@@ -62,13 +62,6 @@ public class MethodOfBasicLogic {
     private List <String> listOfError = new ArrayList<>();
 
     public void lookingForOptimalMapOfRoute() {
-        // Устанавливаем соединение
-        connection = ConnectionDB.getConnection();
-
-        // Заполняем мапы
-        tempMapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
-        tempListOfWagons = getListOfWagonsImpl.getListOfWagons();
-
         // Очищаем массивы итоговые
         listOfDistributedRoutesAndWagons.clear();
         listOfUndistributedRoutes.clear();
@@ -77,6 +70,17 @@ public class MethodOfBasicLogic {
 
         // Очищаем мапу по количеству дней
         getFullMonthCircleOfWagonImpl.getMapOfDaysOfWagon().clear();
+
+        // Устанавливаем соединение
+        connection = ConnectionDB.getConnection();
+
+        // Запускаем метод заполненеия первоначальной мапы расстояний
+        getListOfDistance.setConnection(connection);
+        getListOfDistance.fillMap();
+
+        // Заполняем мапы
+        tempMapOfRoutes = getListOfDistance.getMapOfRoutes();
+        tempListOfWagons = getListOfDistance.getListOfWagons();
 
         // Список расстояний
         Map<List<Object>, Integer> mapDistance = new HashMap<>();
@@ -104,29 +108,39 @@ public class MethodOfBasicLogic {
 
                 // По каждому вагону высчитываем расстояние до каждой начальной станнции маршрутов
                 // Цикл расчета расстояния и заполнения мапы
-                for (Map.Entry<Integer, Route> tempMapOfRoute : tempMapOfRoutes.entrySet()) {
+                Iterator<Map.Entry<Integer, Route>> iterator = tempMapOfRoutes.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<Integer, Route> tempMapOfRoute = iterator.next();
                     List<Object> list = new ArrayList<>();
                     String keyOfStationDeparture = tempMapOfRoute.getValue().getKeyOfStationDeparture();
                     list.add(numberOfWagon);
                     list.add(tempMapOfRoute.getValue());
-                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, connection);
-                    if (distance != -1) {
-                        mapDistance.put(list, distance);
+                    String key = tempListOfWagons.get(i).getNameOfStationDestination().trim() + "_" + tempMapOfRoute.getValue().getNameOfStationDeparture().trim();
+                    if (getListOfDistance.getRootMapWithDistances().containsKey(key)) {
+                        mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key));
                     } else {
-                        if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture, connection)) {
-                            listOfError.add("Проверьте код станции " + keyOfStationDeparture);
-                            logger.error("Проверьте код станции {}", keyOfStationDeparture);
-                            listOfUndistributedRoutes.add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " + tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination());
-                            tempMapOfRoutes.remove(tempMapOfRoute.getKey());
-                            break;
-                        }
-                        if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination, connection)) {
-                            listOfError.add("Проверьте код станции " + keyOfStationOfWagonDestination);
-                            logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
-                            listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
-                            tempListOfWagons.remove(i);
-                            countWagons = tempListOfWagons.size();
-                            break;
+                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, connection);
+                        if (distance != -1) {
+                            getListOfDistance.getRootMapWithDistances().put(key, distance);
+                            mapDistance.put(list, distance);
+                        } else {
+                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture, connection)) {
+                                listOfError.add("Проверьте код станции " + keyOfStationDeparture);
+                                logger.error("Проверьте код станции {}", keyOfStationDeparture);
+                                listOfUndistributedRoutes.add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " + tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination());
+                                iterator.remove();
+                                break;
+                            }
+                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination, connection)) {
+                                listOfError.add("Проверьте код станции " + keyOfStationOfWagonDestination);
+                                logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
+                                if (getFullMonthCircleOfWagonImpl.getMapOfDaysOfWagon().containsKey(tempListOfWagons.get(i).getNumberOfWagon())) {
+                                    listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
+                                }
+                                tempListOfWagons.remove(i);
+                                countWagons = tempListOfWagons.size();
+                                break;
+                            }
                         }
                     }
                 }
@@ -261,35 +275,83 @@ public class MethodOfBasicLogic {
 
     }
 
+    public GetDistanceBetweenStationsImpl getGetDistanceBetweenStations() {
+        return getDistanceBetweenStations;
+    }
+
+    public void setGetDistanceBetweenStations(GetDistanceBetweenStationsImpl getDistanceBetweenStations) {
+        this.getDistanceBetweenStations = getDistanceBetweenStations;
+    }
+
+    public GetFullMonthCircleOfWagonImpl getGetFullMonthCircleOfWagonImpl() {
+        return getFullMonthCircleOfWagonImpl;
+    }
+
+    public void setGetFullMonthCircleOfWagonImpl(GetFullMonthCircleOfWagonImpl getFullMonthCircleOfWagonImpl) {
+        this.getFullMonthCircleOfWagonImpl = getFullMonthCircleOfWagonImpl;
+    }
+
+    public CheckExistKeyOfStationImpl getCheckExistKeyOfStationImpl() {
+        return checkExistKeyOfStationImpl;
+    }
+
+    public void setCheckExistKeyOfStationImpl(CheckExistKeyOfStationImpl checkExistKeyOfStationImpl) {
+        this.checkExistKeyOfStationImpl = checkExistKeyOfStationImpl;
+    }
+
+    public Map<Integer, Route> getTempMapOfRoutes() {
+        return tempMapOfRoutes;
+    }
+
+    public void setTempMapOfRoutes(Map<Integer, Route> tempMapOfRoutes) {
+        this.tempMapOfRoutes = tempMapOfRoutes;
+    }
+
+    public List<Wagon> getTempListOfWagons() {
+        return tempListOfWagons;
+    }
+
+    public void setTempListOfWagons(List<Wagon> tempListOfWagons) {
+        this.tempListOfWagons = tempListOfWagons;
+    }
+
     public List<String> getListOfDistributedRoutesAndWagons() {
         return listOfDistributedRoutesAndWagons;
+    }
+
+    public void setListOfDistributedRoutesAndWagons(List<String> listOfDistributedRoutesAndWagons) {
+        this.listOfDistributedRoutesAndWagons = listOfDistributedRoutesAndWagons;
     }
 
     public List<String> getListOfUndistributedRoutes() {
         return listOfUndistributedRoutes;
     }
 
+    public void setListOfUndistributedRoutes(List<String> listOfUndistributedRoutes) {
+        this.listOfUndistributedRoutes = listOfUndistributedRoutes;
+    }
+
     public List<String> getListOfUndistributedWagons() {
         return listOfUndistributedWagons;
+    }
+
+    public void setListOfUndistributedWagons(List<String> listOfUndistributedWagons) {
+        this.listOfUndistributedWagons = listOfUndistributedWagons;
     }
 
     public List<String> getListOfError() {
         return listOfError;
     }
 
-    public GetListOfRoutesImpl getGetListOfRoutesImpl() {
-        return getListOfRoutesImpl;
+    public void setListOfError(List<String> listOfError) {
+        this.listOfError = listOfError;
     }
 
-    public void setGetListOfRoutesImpl(GetListOfRoutesImpl getListOfRoutesImpl) {
-        this.getListOfRoutesImpl = getListOfRoutesImpl;
+    public GetListOfDistanceImpl getGetListOfDistance() {
+        return getListOfDistance;
     }
 
-    public GetListOfWagonsImpl getGetListOfWagonsImpl() {
-        return getListOfWagonsImpl;
-    }
-
-    public void setGetListOfWagonsImpl(GetListOfWagonsImpl getListOfWagonsImpl) {
-        this.getListOfWagonsImpl = getListOfWagonsImpl;
+    public void setGetListOfDistance(GetListOfDistanceImpl getListOfDistance) {
+        this.getListOfDistance = getListOfDistance;
     }
 }

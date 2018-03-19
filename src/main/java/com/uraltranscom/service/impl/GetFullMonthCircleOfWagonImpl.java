@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
+/**
  *
  * Класс расчета количества дней, затраченных вагоном за один цикл. По вагонам количесво дней суммируется
  *
