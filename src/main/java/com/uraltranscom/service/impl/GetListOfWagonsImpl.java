@@ -47,16 +47,12 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private List<Wagon> listOfWagons = new ArrayList<>();
 
     // Переменные для работы с файлами
-    private File file = new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\UralTrancsCom\\EXCEL\\wagons.xlsx");
+    private File file ;
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
-
-    public GetListOfWagonsImpl() {
-        fillMap();
-    }
 
     // Заполняем Map вагонами
     // TODO Переписать метод, отвязать от количества строк, избавиться от формата жесткого, необходимо и XLSX и XLS
@@ -69,8 +65,8 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
 
             // Заполняем мапу данными
             sheet = xssfWorkbook.getSheetAt(0);
-            for (int j = 5; j < sheet.getLastRowNum() + 1; j++) {
-                XSSFRow row = sheet.getRow(4);
+            for (int j = 1; j < sheet.getLastRowNum() + 1; j++) {
+                XSSFRow row = sheet.getRow(0);
 
                 String numberOfWagon = null;
                 String typeOfWagon = null;
@@ -78,7 +74,7 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
                 String nameOfStationDestination = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().equals("Вагон №")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Вагон №")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
                         double valueDouble = xssfRow.getCell(c).getNumericCellValue();
@@ -87,15 +83,15 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
                         }
                         numberOfWagon = val;
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Тип вагона")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Тип вагона")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         typeOfWagon = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Станция назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Код станции назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }

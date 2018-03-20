@@ -43,16 +43,12 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
 
     // Переменные для работы с файлами
-    private File file = new File("c:\\Users\\Vladislav.Klochkov\\Desktop\\UralTrancsCom\\EXCEL\\test.xlsx");
+    private File file;
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
-
-    public GetListOfRoutesImpl() {
-        fillMap();
-    }
 
     // Заполняем Map вагонами
     // TODO Переписать метод, избавиться от формата жесткого, необходимо и XLSX и XLS
@@ -77,23 +73,23 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
                 String VIP = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().equals("Код станции отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции отправления")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Станция отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Станция отправления")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Код станции назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Станция назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Расстояние, км.")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
                         double valueDouble = xssfRow.getCell(c).getNumericCellValue();

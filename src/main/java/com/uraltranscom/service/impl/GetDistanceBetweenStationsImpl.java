@@ -56,6 +56,7 @@ public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStation
                     distance = -1;
                 }
             }
+            logger.debug("Get distance for: {}", keyOfStationDeparture + "_" + keyOfStationDestination + ": " + distance);
         } catch (SQLException sqlEx) {
             logger.error("Ошибка запроса {} - {}", callableStatement, sqlEx.getMessage());
         }

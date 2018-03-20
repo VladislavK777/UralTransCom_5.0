@@ -51,6 +51,8 @@ public class GetListOfDistanceImpl implements GetListOfDistance {
 
     @Override
     public void fillMap() {
+        logger.info("Start process fill map with distances");
+
         mapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
         listOfWagons = getListOfWagonsImpl.getListOfWagons();
 
@@ -82,6 +84,7 @@ public class GetListOfDistanceImpl implements GetListOfDistance {
                 }
             }
         }
+        logger.info("Stop process fill map with distances");
     }
 
     public GetListOfRoutesImpl getGetListOfRoutesImpl() {

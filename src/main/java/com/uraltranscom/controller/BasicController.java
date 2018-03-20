@@ -16,6 +16,7 @@ package com.uraltranscom.controller;
  */
 
 import com.uraltranscom.service.MethodOfBasicLogic;
+import com.uraltranscom.service.additional.MultipartFileToFile;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("unchecked")
 @Controller
 public class BasicController {
 
@@ -48,7 +48,8 @@ public class BasicController {
     @RequestMapping(value = "/reports", method = RequestMethod.POST)
     public String reportList(@RequestParam(value = "routes") MultipartFile routeFile,
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
-
+        methodOfBasicLogic.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
+        methodOfBasicLogic.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
         methodOfBasicLogic.lookingForOptimalMapOfRoute();
         model.addAttribute("reportListOfDistributedRoutesAndWagons", methodOfBasicLogic.getListOfDistributedRoutesAndWagons());
         model.addAttribute("reportListOfDistributedRoutes", methodOfBasicLogic.getListOfUndistributedRoutes());
