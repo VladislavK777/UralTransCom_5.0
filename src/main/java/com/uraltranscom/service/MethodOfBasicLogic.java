@@ -64,6 +64,9 @@ public class MethodOfBasicLogic {
     // Массив ошибок
     private List<String> listOfError = new ArrayList<>();
 
+    // Мапа для записи в файл Вагона + Станция назначения.
+    private Map<String, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
+
     public void lookingForOptimalMapOfRoute() {
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".lookingForOptimalMapOfRoute");
 
@@ -222,7 +225,7 @@ public class MethodOfBasicLogic {
                                             + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
                                             + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
                                             + numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
-
+                                    totalMapWithWagonNumberAndRoute.put(numberOfWagon, tempMapOfRouteForDelete.get(j));
                                     /*logger.info("Вагон {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
                                     logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
                                     logger.info("Маршрут: {}", tempMapOfRouteForDelete.get(j).toString());
@@ -359,5 +362,13 @@ public class MethodOfBasicLogic {
 
     public void setGetListOfDistance(GetListOfDistanceImpl getListOfDistance) {
         this.getListOfDistance = getListOfDistance;
+    }
+
+    public Map<String, Route> getTotalMapWithWagonNumberAndRoute() {
+        return totalMapWithWagonNumberAndRoute;
+    }
+
+    public void setTotalMapWithWagonNumberAndRoute(Map<String, Route> totalMapWithWagonNumberAndRoute) {
+        this.totalMapWithWagonNumberAndRoute = totalMapWithWagonNumberAndRoute;
     }
 }

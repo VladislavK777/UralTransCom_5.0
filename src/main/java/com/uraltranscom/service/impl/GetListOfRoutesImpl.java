@@ -71,6 +71,7 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
                 String nameOfStationDestination = null;
                 String distanceOfWay = null;
                 String VIP = null;
+                String customer = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals("Код станции отправления")) {
@@ -107,10 +108,15 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
                             VIP = "0";
                         }
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Заказчик")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        customer = xssfRow.getCell(c).getStringCellValue();
+                    }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP));
+                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer));
                 i++;
             }
+            logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {
             logger.error("Ошибка загруки файла - {}", e.getMessage());
         } catch (OLE2NotOfficeXmlFileException e1) {

@@ -61,7 +61,6 @@ public class BasicController {
     // Выгрузка в Excel
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void getXLS(HttpServletResponse response, Model model) {
-        WriteToFileExcel.downloadFileExcel(response, methodOfBasicLogic.getListOfDistributedRoutesAndWagons(), methodOfBasicLogic.getListOfUndistributedRoutes(),
-                methodOfBasicLogic.getListOfUndistributedWagons(), methodOfBasicLogic.getListOfError());
+        WriteToFileExcel.downloadFileExcel(response, methodOfBasicLogic.getTotalMapWithWagonNumberAndRoute());
     }
 }

@@ -1,5 +1,7 @@
 package com.uraltranscom.service.additional;
 
+import org.springframework.stereotype.Service;
+
 /**
  *
  * Класс для правильного определения окончания в слове День
@@ -15,6 +17,7 @@ package com.uraltranscom.service.additional;
  *
  */
 
+@Service
 public class PrefixOfDays {
     private static final String PREFIX_ONE_DAY = "день";
     private static final String PREFIX_2_4_DAYS = "дня";

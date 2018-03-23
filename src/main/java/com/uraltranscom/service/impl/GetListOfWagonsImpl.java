@@ -2,6 +2,7 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.GetListOfWagons;
+import com.uraltranscom.service.export.WriteToFileExcel;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -54,10 +55,12 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
 
+
     // Заполняем Map вагонами
     // TODO Переписать метод, отвязать от количества строк, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
     public void fillMap() {
+        WriteToFileExcel.setFile(file);
         // Получаем файл формата xls
         try {
             fileInputStream = new FileInputStream(this.file);
@@ -98,6 +101,7 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
                 }
                 listOfWagons.add(new Wagon(numberOfWagon, typeOfWagon, keyOfStationDestination, nameOfStationDestination));
             }
+            logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {
             logger.error("Ошибка загруки файла - {}", e.getMessage());
         } catch (OLE2NotOfficeXmlFileException e1) {
