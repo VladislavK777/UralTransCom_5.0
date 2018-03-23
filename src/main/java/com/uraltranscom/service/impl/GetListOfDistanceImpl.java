@@ -3,7 +3,6 @@ package com.uraltranscom.service.impl;
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.GetListOfDistance;
-import com.uraltranscom.service.MethodOfBasicLogic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class GetListOfDistanceImpl implements GetListOfDistance {
     @Autowired
     private CheckExistKeyOfStationImpl checkExistKeyOfStationImpl;
     @Autowired
-    private MethodOfBasicLogic methodOfBasicLogic;
+    private BasicClassLookingForImpl basicClassLookingForImpl;
 
 
     // Основная мапа
@@ -66,16 +65,16 @@ public class GetListOfDistanceImpl implements GetListOfDistance {
                         rootMapWithDistances.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
                     } else {
                         if (!checkExistKeyOfStationImpl.checkExistKey(entry.getValue().getKeyOfStationDeparture(), connection)) {
-                            methodOfBasicLogic.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
+                            basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                            methodOfBasicLogic.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " + entry.getValue().getNameOfStationDestination());
+                            basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " + entry.getValue().getNameOfStationDestination());
                             iterator.remove();
                             break;
                         }
                         if (!checkExistKeyOfStationImpl.checkExistKey(listOfWagons.get(i).getKeyOfStationDestination(), connection)) {
-                            methodOfBasicLogic.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
+                            basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
                             logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination());
-                            methodOfBasicLogic.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
+                            basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
                             listOfWagons.remove(i);
                             break;
 
@@ -119,12 +118,12 @@ public class GetListOfDistanceImpl implements GetListOfDistance {
         this.checkExistKeyOfStationImpl = checkExistKeyOfStationImpl;
     }
 
-    public MethodOfBasicLogic getMethodOfBasicLogic() {
-        return methodOfBasicLogic;
+    public BasicClassLookingForImpl getBasicClassLookingForImpl() {
+        return basicClassLookingForImpl;
     }
 
-    public void setMethodOfBasicLogic(MethodOfBasicLogic methodOfBasicLogic) {
-        this.methodOfBasicLogic = methodOfBasicLogic;
+    public void setBasicClassLookingForImpl(BasicClassLookingForImpl basicClassLookingForImpl) {
+        this.basicClassLookingForImpl = basicClassLookingForImpl;
     }
 
     public Map<String, Integer> getRootMapWithDistances() {

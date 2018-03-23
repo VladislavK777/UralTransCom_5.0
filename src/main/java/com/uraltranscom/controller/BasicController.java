@@ -15,7 +15,7 @@ package com.uraltranscom.controller;
  *
  */
 
-import com.uraltranscom.service.MethodOfBasicLogic;
+import com.uraltranscom.service.impl.BasicClassLookingForImpl;
 import com.uraltranscom.service.additional.MultipartFileToFile;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class BasicController {
     private static Logger logger = LoggerFactory.getLogger(BasicController.class);
 
     @Autowired
-    private MethodOfBasicLogic methodOfBasicLogic;
+    private BasicClassLookingForImpl basicClassLookingForImpl;
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -48,19 +48,19 @@ public class BasicController {
     @RequestMapping(value = "/reports", method = RequestMethod.POST)
     public String reportList(@RequestParam(value = "routes") MultipartFile routeFile,
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
-        methodOfBasicLogic.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
-        methodOfBasicLogic.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
-        methodOfBasicLogic.lookingForOptimalMapOfRoute();
-        model.addAttribute("reportListOfDistributedRoutesAndWagons", methodOfBasicLogic.getListOfDistributedRoutesAndWagons());
-        model.addAttribute("reportListOfDistributedRoutes", methodOfBasicLogic.getListOfUndistributedRoutes());
-        model.addAttribute("reportListOfDistributedWagons", methodOfBasicLogic.getListOfUndistributedWagons());
-        model.addAttribute("reportListOfError", methodOfBasicLogic.getListOfError());
+        basicClassLookingForImpl.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
+        basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
+        basicClassLookingForImpl.lookingForOptimalMapOfRoute();
+        model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getListOfDistributedRoutesAndWagons());
+        model.addAttribute("reportListOfDistributedRoutes", basicClassLookingForImpl.getListOfUndistributedRoutes());
+        model.addAttribute("reportListOfDistributedWagons", basicClassLookingForImpl.getListOfUndistributedWagons());
+        model.addAttribute("reportListOfError", basicClassLookingForImpl.getListOfError());
         return "welcome";
     }
 
     // Выгрузка в Excel
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void getXLS(HttpServletResponse response, Model model) {
-        WriteToFileExcel.downloadFileExcel(response, methodOfBasicLogic.getTotalMapWithWagonNumberAndRoute());
+        WriteToFileExcel.downloadFileExcel(response, basicClassLookingForImpl.getTotalMapWithWagonNumberAndRoute());
     }
 }

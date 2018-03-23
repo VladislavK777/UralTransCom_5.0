@@ -1,14 +1,11 @@
-package com.uraltranscom.service;
+package com.uraltranscom.service.impl;
 
 import com.uraltranscom.dao.ConnectionDB;
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
+import com.uraltranscom.service.BasicClassLookingFor;
 import com.uraltranscom.service.additional.CompareMapValue;
 import com.uraltranscom.service.additional.PrefixOfDays;
-import com.uraltranscom.service.impl.CheckExistKeyOfStationImpl;
-import com.uraltranscom.service.impl.GetDistanceBetweenStationsImpl;
-import com.uraltranscom.service.impl.GetFullMonthCircleOfWagonImpl;
-import com.uraltranscom.service.impl.GetListOfDistanceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +30,9 @@ import java.util.*;
  */
 
 @Service
-public class MethodOfBasicLogic {
-
+public class BasicClassLookingForImpl implements BasicClassLookingFor{
     // Подключаем логгер
-    private static Logger logger = LoggerFactory.getLogger(MethodOfBasicLogic.class);
+    private static Logger logger = LoggerFactory.getLogger(BasicClassLookingForImpl.class);
 
     @Autowired
     private GetDistanceBetweenStationsImpl getDistanceBetweenStations;
@@ -67,6 +63,7 @@ public class MethodOfBasicLogic {
     // Мапа для записи в файл Вагона + Станция назначения.
     private Map<String, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
+    @Override
     public void lookingForOptimalMapOfRoute() {
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".lookingForOptimalMapOfRoute");
 
@@ -225,11 +222,8 @@ public class MethodOfBasicLogic {
                                             + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
                                             + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
                                             + numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
+
                                     totalMapWithWagonNumberAndRoute.put(numberOfWagon, tempMapOfRouteForDelete.get(j));
-                                    /*logger.info("Вагон {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
-                                    logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
-                                    logger.info("Маршрут: {}", tempMapOfRouteForDelete.get(j).toString());
-                                    logger.info("-------------------------------------------------");*/
 
                                     // Удаляем маршрут, так как он занят вагоном
                                     it.remove();
@@ -237,11 +231,6 @@ public class MethodOfBasicLogic {
                                     // Выходим из цикла, так как с ним больше ничего не сделать
                                     break outer;
                                 } else {
-                                    /*logger.info("Вагон {} должен был ехать на {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
-                                    logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
-                                    logger.info("Далее по маршруту: {}", tempMapOfRouteForDelete.get(j).toString());
-                                    logger.info("-------------------------------------------------");*/
-
                                     if (!SetOfDistributedWagons.contains(numberOfWagon)) {
                                         SetOfUndistributedWagons.add(numberOfWagon);
                                     }
