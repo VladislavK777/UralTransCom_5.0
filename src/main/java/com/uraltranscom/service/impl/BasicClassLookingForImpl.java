@@ -96,10 +96,10 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
         Map<List<Object>, Integer> mapDistance = new HashMap<>();
 
         // Список распределенных вагонов
-        Set<String> SetOfDistributedWagons = new HashSet<>();
+        Set<String> setOfDistributedWagons = new HashSet<>();
 
         // Список нераспределенных вагонов
-        Set<String> SetOfUndistributedWagons = new HashSet<>();
+        Set<String> setOfUndistributedWagons = new HashSet<>();
 
         // Запускаем цикл
         while (!tempMapOfRoutes.isEmpty() && !tempListOfWagons.isEmpty()) {
@@ -206,6 +206,9 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                                         getKeyNumber = i;
                                     }
                                 }
+                                if (!setOfDistributedWagons.contains(numberOfWagon)) {
+                                    getFullMonthCircleOfWagonImpl.deleteFromMap(numberOfWagon);
+                                }
                                 // Расчет дней затраченных одним вагоном на один цикл
                                 getFullMonthCircleOfWagonImpl.fullDays(numberOfWagon, tempListOfWagons.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
@@ -215,6 +218,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                                 //Округляем до целого
                                 int numberOfDaysOfWagon = (int) numberOfDaysOfWagonDouble;
 
+                                logger.info("Number: {}" + numberOfWagon + "_" + numberOfDaysOfWagon);
                                 // Если больше 30 дней, то исключаем вагон, лимит 30 дней
                                 if (numberOfDaysOfWagon < 31) {
 
@@ -222,11 +226,18 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                                     tempListOfWagons.set(getKeyNumber, new Wagon(numberOfWagon, tempListOfWagons.get(getKeyNumber).getTypeOfWagon(), tempMapOfRouteForDelete.get(j).getKeyOfStationDestination(), tempMapOfRouteForDelete.get(j).getNameOfStationDestination()));
 
                                     // Добавляем новый вагон в список
-                                    SetOfDistributedWagons.add(numberOfWagon);
+                                    setOfDistributedWagons.add(numberOfWagon);
 
                                     // Уменьшаем количество рейсов у маршрута
-                                    int tempCountOrdersOfRoute = tempMapOfRouteForDelete.get(j).getCountOrders();
-                                    tempMapOfRouteForDelete.get(j).setCountOrders(tempCountOrdersOfRoute--);
+                                    //mapOfRoutesForDelete.computeIfPresent(entry.getKey(), (k, v) -> v.setCountOrders(v.getCountOrders()+1));
+                                    mapOfRoutesForDelete.put(entry.getKey(), new Route(mapOfRoutesForDelete.get(entry.getKey()).getKeyOfStationDeparture(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getNameOfStationDeparture(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getKeyOfStationDestination(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getNameOfStationDestination(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getDistanceOfWay(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getVIP(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getCustomer(),
+                                            mapOfRoutesForDelete.get(entry.getKey()).getCountOrders() - 1));
 
                                     listOfDistributedRoutesAndWagons.add("Вагон " + numberOfWagon + " едет на станцию "
                                             + nameOfStationDepartureOfWagon + ": "
@@ -237,14 +248,18 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                                     totalMapWithWagonNumberAndRoute.put(numberOfWagon, tempMapOfRouteForDelete.get(j));
 
                                     // Удаляем маршрут, если по нему 0 рейсов
-                                    if (tempMapOfRouteForDelete.get(j).getCountOrders() == 0) {
+                                    if (mapOfRoutesForDelete.get(entry.getKey()).getCountOrders() == 0) {
                                         it.remove();
                                     }
                                     // Выходим из цикла, так как с ним больше ничего не сделать
                                     break outer;
                                 } else {
-                                    if (!SetOfDistributedWagons.contains(numberOfWagon)) {
-                                        SetOfUndistributedWagons.add(numberOfWagon);
+                                    logger.info("Вагон {} должен был ехать на {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
+                                    logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
+                                    logger.info("Далее по маршруту: {}", tempMapOfRouteForDelete.get(j).toString());
+                                    logger.info("-------------------------------------------------");
+                                    if (!setOfDistributedWagons.contains(numberOfWagon)) {
+                                        setOfUndistributedWagons.add(numberOfWagon);
                                     }
 
                                     // Удаляем вагон
@@ -257,22 +272,20 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                         }
                     }
                 }
-
                 // Обновляем мапу маршрутов
                 tempMapOfRoutes = mapOfRoutesForDelete;
-                logger.info("tempMapOfRoutes {}", tempMapOfRoutes);
 
                 // Очищаем временный массив рейсов
                 tempMapOfRouteForDelete.clear();
             }
         }
-
+        logger.info("tempMapOfRoutes2 {}", tempMapOfRoutes);
         // Заполняем итоговые массивы
         tempMapOfRoutes.forEach((k, v) -> {
             listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
         });
 
-        SetOfUndistributedWagons.forEach((k) -> {
+        setOfUndistributedWagons.forEach((k) -> {
             listOfUndistributedWagons.add(k.toString());
         });
 

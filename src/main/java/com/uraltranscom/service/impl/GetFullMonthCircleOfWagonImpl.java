@@ -1,9 +1,12 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.service.GetFullMonthCircleOfWagon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -23,6 +26,8 @@ import java.util.Map;
 
 @Service
 public class GetFullMonthCircleOfWagonImpl implements GetFullMonthCircleOfWagon {
+    // Подключаем логгер
+    private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
 
     // Параметры загрузки вагонов
     // Крытый вагон
@@ -73,6 +78,17 @@ public class GetFullMonthCircleOfWagonImpl implements GetFullMonthCircleOfWagon 
 
     public double getNumberOfDaysOfWagon(String numberOfWagon) {
         return mapOfDaysOfWagon.get(numberOfWagon);
+    }
+
+    public void deleteFromMap(String numberOfWagon) {
+        Iterator<Map.Entry<String, Double>> it = mapOfDaysOfWagon.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Double> entry = it.next();
+            if (entry.getKey().equals(numberOfWagon)) {
+                logger.info("Удалено: {}" + numberOfWagon);
+                it.remove();
+            }
+        }
     }
 
     public Map<String, Double> getMapOfDaysOfWagon() {
