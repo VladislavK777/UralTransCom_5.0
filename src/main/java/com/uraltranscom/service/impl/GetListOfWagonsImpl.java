@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -55,12 +56,16 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
 
+    @Autowired
+    private WriteToFileExcel writeToFileExcel;
 
     // Заполняем Map вагонами
     // TODO Переписать метод, отвязать от количества строк, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
     public void fillMap() {
-        WriteToFileExcel.setFile(file);
+
+        writeToFileExcel.setFile(file);
+
         // Получаем файл формата xls
         try {
             fileInputStream = new FileInputStream(this.file);

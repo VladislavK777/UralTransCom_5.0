@@ -31,8 +31,10 @@ public class Route implements Comparable<Object> {
     private String distanceOfWay; // Расстояние маршрута
     private String VIP; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
     private String customer; // Заказчик
+    private int countOrders; // Количество заявок на маршрут
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String VIP, String customer) {
+
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String VIP, String customer, int countOrders) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;
@@ -40,6 +42,7 @@ public class Route implements Comparable<Object> {
         this.distanceOfWay = distanceOfWay;
         this.VIP = VIP;
         this.customer = customer;
+        this.countOrders = countOrders;
     }
 
     public String getKeyOfStationDeparture() {
@@ -98,13 +101,21 @@ public class Route implements Comparable<Object> {
         this.customer = customer;
     }
 
+    public int getCountOrders() {
+        return countOrders;
+    }
+
+    public void setCountOrders(int countOrders) {
+        this.countOrders = countOrders;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Route route = (Route) o;
-        return Objects.equals(keyOfStationDeparture, route.keyOfStationDeparture) &&
+        return countOrders == route.countOrders &&
+                Objects.equals(keyOfStationDeparture, route.keyOfStationDeparture) &&
                 Objects.equals(nameOfStationDeparture, route.nameOfStationDeparture) &&
                 Objects.equals(keyOfStationDestination, route.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, route.nameOfStationDestination) &&
@@ -116,7 +127,7 @@ public class Route implements Comparable<Object> {
     @Override
     public int hashCode() {
 
-        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer);
+        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders);
     }
 
     @Override
@@ -127,7 +138,8 @@ public class Route implements Comparable<Object> {
                 ", " + nameOfStationDestination +
                 ", " + distanceOfWay +
                 ", " + VIP +
-                ", " + customer;
+                ", " + customer +
+                ", " + countOrders;
     }
 
     @Override

@@ -28,8 +28,11 @@ public class CompareMapValue implements Comparable {
     public List<Object> wagon;
     public Integer distance;
 
-    @Autowired
-    public static Route r;
+    @Autowired(required=false)
+    private Route r;
+
+    public CompareMapValue() {
+    }
 
     public CompareMapValue(List<Object> wagon, Integer distance) {
         this.wagon = wagon;
@@ -45,7 +48,7 @@ public class CompareMapValue implements Comparable {
         }
     }
 
-    public static Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
+    public Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
         Map<List<Object>, Integer> sortedMap = new LinkedHashMap<>(mapDistanceSort.size());
 
         mapDistanceSort.forEach((k, v) -> {
@@ -60,21 +63,4 @@ public class CompareMapValue implements Comparable {
 
         return sortedMap;
     }
-
-    /*Map<List<String>, Integer> sortedMap = mapDistance.entrySet().stream()
-                    .sorted(
-                            Comparator.<Map.Entry<List<String>, Integer>, String>
-                                    comparing(e -> e.getKey().get(2)).reversed()
-                                    .thenComparingInt(Map.Entry::getValue)
-                    ).collect(
-                            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
-                    );
-
-            mapDistance.entrySet().stream()
-                    .sorted(
-                            Comparator.<Map.Entry<List<String>, Integer>, String>
-                                    comparing(e -> e.getKey().get(2)).reversed()
-                                    .thenComparingInt(Map.Entry::getValue)
-                    ).forEach(System.out::println);
-*/
 }

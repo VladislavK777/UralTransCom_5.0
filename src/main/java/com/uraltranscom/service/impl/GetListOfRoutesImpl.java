@@ -72,6 +72,7 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
                 String distanceOfWay = null;
                 String VIP = null;
                 String customer = null;
+                int countOrders = 0;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals("Код станции отправления")) {
@@ -112,8 +113,12 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Заявка, в/о")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
+                    }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer));
+                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders));
                 i++;
             }
             logger.debug("Body route: {}", mapOfRoutes);

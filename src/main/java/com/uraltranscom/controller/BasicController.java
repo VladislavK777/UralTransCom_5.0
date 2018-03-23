@@ -39,7 +39,6 @@ public class BasicController {
     @Autowired
     private BasicClassLookingForImpl basicClassLookingForImpl;
 
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
         return "welcome";

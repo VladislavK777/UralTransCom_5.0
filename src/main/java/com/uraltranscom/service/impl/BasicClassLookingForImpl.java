@@ -42,6 +42,8 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
     private CheckExistKeyOfStationImpl checkExistKeyOfStationImpl;
     @Autowired
     private GetListOfDistanceImpl getListOfDistance;
+    @Autowired
+    private CompareMapValue compareMapValue;
 
     private Map<Integer, Route> tempMapOfRoutes = new HashMap<>();
     private List<Wagon> tempListOfWagons = new ArrayList<>();
@@ -62,6 +64,9 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
 
     // Мапа для записи в файл Вагона + Станция назначения.
     private Map<String, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
+
+    public BasicClassLookingForImpl() {
+    }
 
     @Override
     public void lookingForOptimalMapOfRoute() {
@@ -132,7 +137,9 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                             if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture, connection)) {
                                 listOfError.add("Проверьте код станции " + keyOfStationDeparture);
                                 logger.error("Проверьте код станции {}", keyOfStationDeparture);
-                                listOfUndistributedRoutes.add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " + tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination());
+                                listOfUndistributedRoutes.add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " +
+                                        tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination() + ". Оставшиеся количество рейсов: " +
+                                        tempMapOfRoutes.get(tempMapOfRoute.getKey()).getCountOrders());
                                 iterator.remove();
                                 break;
                             }
@@ -165,7 +172,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                 mapDistanceSort.put(cmv.wagon, cmv.distance);
             }
 
-            Map<List<Object>, Integer> mapDistanceSortWithPriority = CompareMapValue.sortMap(mapDistanceSort);
+            Map<List<Object>, Integer> mapDistanceSortWithPriority = compareMapValue.sortMap(mapDistanceSort);
 
             // Мапа для удаления использованных маршрутов
             Map<Integer, Route> mapOfRoutesForDelete = tempMapOfRoutes;
@@ -217,6 +224,10 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                                     // Добавляем новый вагон в список
                                     SetOfDistributedWagons.add(numberOfWagon);
 
+                                    // Уменьшаем количество рейсов у маршрута
+                                    int tempCountOrdersOfRoute = tempMapOfRouteForDelete.get(j).getCountOrders();
+                                    tempMapOfRouteForDelete.get(j).setCountOrders(tempCountOrdersOfRoute--);
+
                                     listOfDistributedRoutesAndWagons.add("Вагон " + numberOfWagon + " едет на станцию "
                                             + nameOfStationDepartureOfWagon + ": "
                                             + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
@@ -225,9 +236,10 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
 
                                     totalMapWithWagonNumberAndRoute.put(numberOfWagon, tempMapOfRouteForDelete.get(j));
 
-                                    // Удаляем маршрут, так как он занят вагоном
-                                    it.remove();
-
+                                    // Удаляем маршрут, если по нему 0 рейсов
+                                    if (tempMapOfRouteForDelete.get(j).getCountOrders() == 0) {
+                                        it.remove();
+                                    }
                                     // Выходим из цикла, так как с ним больше ничего не сделать
                                     break outer;
                                 } else {
@@ -248,6 +260,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
 
                 // Обновляем мапу маршрутов
                 tempMapOfRoutes = mapOfRoutesForDelete;
+                logger.info("tempMapOfRoutes {}", tempMapOfRoutes);
 
                 // Очищаем временный массив рейсов
                 tempMapOfRouteForDelete.clear();
@@ -256,7 +269,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
 
         // Заполняем итоговые массивы
         tempMapOfRoutes.forEach((k, v) -> {
-            listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination());
+            listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
         });
 
         SetOfUndistributedWagons.forEach((k) -> {
@@ -271,30 +284,6 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
         }*/
 
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".lookingForOptimalMapOfRoute");
-    }
-
-    public GetDistanceBetweenStationsImpl getGetDistanceBetweenStations() {
-        return getDistanceBetweenStations;
-    }
-
-    public void setGetDistanceBetweenStations(GetDistanceBetweenStationsImpl getDistanceBetweenStations) {
-        this.getDistanceBetweenStations = getDistanceBetweenStations;
-    }
-
-    public GetFullMonthCircleOfWagonImpl getGetFullMonthCircleOfWagonImpl() {
-        return getFullMonthCircleOfWagonImpl;
-    }
-
-    public void setGetFullMonthCircleOfWagonImpl(GetFullMonthCircleOfWagonImpl getFullMonthCircleOfWagonImpl) {
-        this.getFullMonthCircleOfWagonImpl = getFullMonthCircleOfWagonImpl;
-    }
-
-    public CheckExistKeyOfStationImpl getCheckExistKeyOfStationImpl() {
-        return checkExistKeyOfStationImpl;
-    }
-
-    public void setCheckExistKeyOfStationImpl(CheckExistKeyOfStationImpl checkExistKeyOfStationImpl) {
-        this.checkExistKeyOfStationImpl = checkExistKeyOfStationImpl;
     }
 
     public Map<Integer, Route> getTempMapOfRoutes() {
