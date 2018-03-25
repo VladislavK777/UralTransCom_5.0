@@ -1,6 +1,7 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.service.GetFullMonthCircleOfWagon;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,19 +26,11 @@ import java.util.Map;
  */
 
 @Service
-public class GetFullMonthCircleOfWagonImpl implements GetFullMonthCircleOfWagon {
+public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements GetFullMonthCircleOfWagon {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
 
-    // Параметры загрузки вагонов
-    // Крытый вагон
-    private final int LOADING_OF_WAGON_KR = 7;
 
-    // Полувагон
-    private final int LOADING_OF_WAGON_PV = 4;
-
-    // Выгрузка вагонов
-    private final int UNLOADING_OF_WAGON = 4;
 
     Map<String, Double> mapOfDaysOfWagon = new HashMap<>();
 
@@ -45,12 +38,13 @@ public class GetFullMonthCircleOfWagonImpl implements GetFullMonthCircleOfWagon 
      * Метод расчета дней, пройденных вагоном за один цикл
      * По вагонам количесво дней суммируется
      */
+
     @Override
     public void fullDays(String numberOfWagon, String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
         double fullMonthCircle = 0;
         if (mapOfDaysOfWagon.get(numberOfWagon) == null) {
             fullMonthCircle += Double.valueOf(distanceOfEmpty) / 300 + 1;
-            if (typeOfWagon.equals("КР")) {
+            if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
                 fullMonthCircle += LOADING_OF_WAGON_KR;
             } else {
                 fullMonthCircle += LOADING_OF_WAGON_PV;
@@ -63,7 +57,7 @@ public class GetFullMonthCircleOfWagonImpl implements GetFullMonthCircleOfWagon 
                 if (map.getKey().equals(numberOfWagon)) {
                     double tempDays = map.getValue();
                     tempDays += Double.valueOf(distanceOfEmpty) / 300 + 1;
-                    if (typeOfWagon.equals("КР")) {
+                    if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
                         tempDays += LOADING_OF_WAGON_KR;
                     } else {
                         tempDays += LOADING_OF_WAGON_PV;

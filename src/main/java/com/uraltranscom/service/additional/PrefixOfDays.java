@@ -1,5 +1,8 @@
 package com.uraltranscom.service.additional;
 
+import com.uraltranscom.service.impl.BasicClassLookingForImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +21,10 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class PrefixOfDays {
-    private static final String PREFIX_ONE_DAY = "день";
-    private static final String PREFIX_2_4_DAYS = "дня";
-    private static final String PREFIX_5_10_DAYS = "дней";
+public class PrefixOfDays extends JavaHelperBase {
+
+    // Подключаем логгер
+    private static Logger logger = LoggerFactory.getLogger(PrefixOfDays.class);
 
     private static String finishPrefix = null;
 

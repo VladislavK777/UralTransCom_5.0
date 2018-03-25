@@ -5,6 +5,7 @@ import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.BasicClassLookingFor;
 import com.uraltranscom.service.additional.CompareMapValue;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import com.uraltranscom.service.additional.PrefixOfDays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -30,7 +32,7 @@ import java.util.*;
  */
 
 @Service
-public class BasicClassLookingForImpl implements BasicClassLookingFor{
+public class BasicClassLookingForImpl extends JavaHelperBase implements BasicClassLookingFor {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(BasicClassLookingForImpl.class);
 
@@ -69,7 +71,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
     }
 
     @Override
-    public void lookingForOptimalMapOfRoute() {
+    public void lookingForOptimalMapOfRoute() throws SQLException, ClassNotFoundException {
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".lookingForOptimalMapOfRoute");
 
         // Устанавливаем соединение
@@ -131,8 +133,12 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
                     } else {
                         int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, connection);
                         if (distance != -1) {
-                            getListOfDistance.getRootMapWithDistances().put(key, distance);
-                            mapDistance.put(list, distance);
+                            if (distance <= MAX_DISTANCE) {
+                                getListOfDistance.getRootMapWithDistances().put(key, distance);
+                                mapDistance.put(list, distance);
+                            } else {
+                                break;
+                            }
                         } else {
                             if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture, connection)) {
                                 listOfError.add("Проверьте код станции " + keyOfStationDeparture);
@@ -173,6 +179,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
             }
 
             Map<List<Object>, Integer> mapDistanceSortWithPriority = compareMapValue.sortMap(mapDistanceSort);
+            logger.info("mapDistanceSortWithPriority: {}", mapDistanceSortWithPriority);
 
             // Мапа для удаления использованных маршрутов
             Map<Integer, Route> mapOfRoutesForDelete = tempMapOfRoutes;
@@ -220,7 +227,7 @@ public class BasicClassLookingForImpl implements BasicClassLookingFor{
 
                                 logger.info("Number: {}" + numberOfWagon + "_" + numberOfDaysOfWagon);
                                 // Если больше 30 дней, то исключаем вагон, лимит 30 дней
-                                if (numberOfDaysOfWagon < 31) {
+                                if (numberOfDaysOfWagon < MAX_FULL_CIRCLE_DAYS) {
 
                                     // Заменяем маршрут вагону
                                     tempListOfWagons.set(getKeyNumber, new Wagon(numberOfWagon, tempListOfWagons.get(getKeyNumber).getTypeOfWagon(), tempMapOfRouteForDelete.get(j).getKeyOfStationDestination(), tempMapOfRouteForDelete.get(j).getNameOfStationDestination()));
