@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  */
 
-public class Route implements Comparable<Object> {
+public class Route {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(Route.class);
 
@@ -142,6 +142,7 @@ public class Route implements Comparable<Object> {
                 ", " + countOrders;
     }
 
+    /*
     @Override
     public int compareTo(Object o) {
         try {
@@ -158,4 +159,5 @@ public class Route implements Comparable<Object> {
             return 1;
         }
     }
+    */
 }

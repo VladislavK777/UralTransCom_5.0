@@ -1,9 +1,7 @@
 package com.uraltranscom.service.additional;
 
-import com.uraltranscom.service.impl.BasicClassLookingForImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
  *
  */
 
-@Service
 public class PrefixOfDays extends JavaHelperBase {
 
     // Подключаем логгер

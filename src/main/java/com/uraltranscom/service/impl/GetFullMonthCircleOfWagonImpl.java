@@ -6,10 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 /**
  *
  * Класс расчета количества дней, затраченных вагоном за один цикл. По вагонам количесво дней суммируется
@@ -32,7 +28,10 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
 
 
 
-    Map<String, Double> mapOfDaysOfWagon = new HashMap<>();
+    //Map<String, Integer> mapOfDaysOfWagon = new HashMap<>();
+
+    private GetFullMonthCircleOfWagonImpl() {
+    }
 
     /*
      * Метод расчета дней, пройденных вагоном за один цикл
@@ -40,56 +39,34 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
      */
 
     @Override
-    public void fullDays(String numberOfWagon, String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
-        double fullMonthCircle = 0;
-        if (mapOfDaysOfWagon.get(numberOfWagon) == null) {
-            fullMonthCircle += Double.valueOf(distanceOfEmpty) / 300 + 1;
-            if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
-                fullMonthCircle += LOADING_OF_WAGON_KR;
-            } else {
-                fullMonthCircle += LOADING_OF_WAGON_PV;
-            }
-            fullMonthCircle += Double.valueOf(distanceOfRoute) / 300 + 1;
-            fullMonthCircle += UNLOADING_OF_WAGON;
-            mapOfDaysOfWagon.put(numberOfWagon, fullMonthCircle);
+    public int fullDays(String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
+        int fullMonthCircle = 0;
+
+        fullMonthCircle += Math.round(distanceOfEmpty / 300f + 1);
+        if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
+            fullMonthCircle += LOADING_OF_WAGON_KR;
         } else {
-            for (Map.Entry<String, Double> map : mapOfDaysOfWagon.entrySet()) {
-                if (map.getKey().equals(numberOfWagon)) {
-                    double tempDays = map.getValue();
-                    tempDays += Double.valueOf(distanceOfEmpty) / 300 + 1;
-                    if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
-                        tempDays += LOADING_OF_WAGON_KR;
-                    } else {
-                        tempDays += LOADING_OF_WAGON_PV;
-                    }
-                    tempDays += Double.valueOf(distanceOfRoute) / 300 + 1;
-                    tempDays += UNLOADING_OF_WAGON;
-                    mapOfDaysOfWagon.replace(map.getKey(), tempDays);
-                }
-            }
+            fullMonthCircle += LOADING_OF_WAGON_PV;
         }
+        fullMonthCircle += Math.round(Integer.parseInt(distanceOfRoute) / 300f + 1);
+        fullMonthCircle += UNLOADING_OF_WAGON;
+
+        return fullMonthCircle;
     }
 
-    public double getNumberOfDaysOfWagon(String numberOfWagon) {
+    /*
+    public int getNumberOfDaysOfWagon(String numberOfWagon) {
         return mapOfDaysOfWagon.get(numberOfWagon);
     }
 
     public void deleteFromMap(String numberOfWagon) {
-        Iterator<Map.Entry<String, Double>> it = mapOfDaysOfWagon.entrySet().iterator();
+        Iterator<Map.Entry<String, Integer>> it = mapOfDaysOfWagon.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Double> entry = it.next();
+            Map.Entry<String, Integer> entry = it.next();
             if (entry.getKey().equals(numberOfWagon)) {
-                logger.info("Удалено: {}" + numberOfWagon);
                 it.remove();
             }
         }
     }
-
-    public Map<String, Double> getMapOfDaysOfWagon() {
-        return mapOfDaysOfWagon;
-    }
-
-    public void setMapOfDaysOfWagon(Map<String, Double> mapOfDaysOfWagon) {
-        this.mapOfDaysOfWagon = mapOfDaysOfWagon;
-    }
+    */
 }

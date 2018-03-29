@@ -43,6 +43,9 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     // Основная мапа
     private static Map<String, Integer> rootMapWithDistances = new HashMap<>();
 
+    // Мапа с расстояниями больше 3000км
+    private static Map<String, Integer> rootMapWithDistanceMoreDist3000 = new HashMap<>();
+
     // Заполненные мапы Вагонов и Маршрутов
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
     private List<Wagon> listOfWagons = new ArrayList<>();
@@ -66,7 +69,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                         if (distance <= MAX_DISTANCE) {
                             rootMapWithDistances.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
                         } else {
-                            break;
+                            rootMapWithDistanceMoreDist3000.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
                         }
                     } else {
                         if (!checkExistKeyOfStationImpl.checkExistKey(entry.getValue().getKeyOfStationDeparture(), connection)) {
@@ -88,55 +91,24 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                 }
             }
         }
+        logger.info("distance {}", rootMapWithDistances);
         logger.info("Stop process fill map with distances");
     }
 
-    public GetListOfRoutesImpl getGetListOfRoutesImpl() {
-        return getListOfRoutesImpl;
-    }
-
-    public void setGetListOfRoutesImpl(GetListOfRoutesImpl getListOfRoutesImpl) {
-        this.getListOfRoutesImpl = getListOfRoutesImpl;
-    }
-
-    public GetDistanceBetweenStationsImpl getGetDistanceBetweenStations() {
-        return getDistanceBetweenStations;
-    }
-
-    public void setGetDistanceBetweenStations(GetDistanceBetweenStationsImpl getDistanceBetweenStations) {
-        this.getDistanceBetweenStations = getDistanceBetweenStations;
-    }
-
-    public GetListOfWagonsImpl getGetListOfWagonsImpl() {
-        return getListOfWagonsImpl;
-    }
-
-    public void setGetListOfWagonsImpl(GetListOfWagonsImpl getListOfWagonsImpl) {
-        this.getListOfWagonsImpl = getListOfWagonsImpl;
-    }
-
-    public CheckExistKeyOfStationImpl getCheckExistKeyOfStationImpl() {
-        return checkExistKeyOfStationImpl;
-    }
-
-    public void setCheckExistKeyOfStationImpl(CheckExistKeyOfStationImpl checkExistKeyOfStationImpl) {
-        this.checkExistKeyOfStationImpl = checkExistKeyOfStationImpl;
-    }
-
-    public BasicClassLookingForImpl getBasicClassLookingForImpl() {
-        return basicClassLookingForImpl;
-    }
-
-    public void setBasicClassLookingForImpl(BasicClassLookingForImpl basicClassLookingForImpl) {
-        this.basicClassLookingForImpl = basicClassLookingForImpl;
-    }
-
-    public Map<String, Integer> getRootMapWithDistances() {
+    public static Map<String, Integer> getRootMapWithDistances() {
         return rootMapWithDistances;
     }
 
-    public void setRootMapWithDistances(Map<String, Integer> rootMapWithDistances) {
-        this.rootMapWithDistances = rootMapWithDistances;
+    public static void setRootMapWithDistances(Map<String, Integer> rootMapWithDistances) {
+        GetListOfDistanceImpl.rootMapWithDistances = rootMapWithDistances;
+    }
+
+    public static Map<String, Integer> getRootMapWithDistanceMoreDist3000() {
+        return rootMapWithDistanceMoreDist3000;
+    }
+
+    public static void setRootMapWithDistanceMoreDist3000(Map<String, Integer> rootMapWithDistanceMoreDist3000) {
+        GetListOfDistanceImpl.rootMapWithDistanceMoreDist3000 = rootMapWithDistanceMoreDist3000;
     }
 
     public Map<Integer, Route> getMapOfRoutes() {
@@ -155,11 +127,23 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
         this.listOfWagons = listOfWagons;
     }
 
-    public static Connection getConnection() {
-        return connection;
-    }
-
     public static void setConnection(Connection connection) {
         GetListOfDistanceImpl.connection = connection;
+    }
+
+    public GetListOfRoutesImpl getGetListOfRoutesImpl() {
+        return getListOfRoutesImpl;
+    }
+
+    public void setGetListOfRoutesImpl(GetListOfRoutesImpl getListOfRoutesImpl) {
+        this.getListOfRoutesImpl = getListOfRoutesImpl;
+    }
+
+    public GetListOfWagonsImpl getGetListOfWagonsImpl() {
+        return getListOfWagonsImpl;
+    }
+
+    public void setGetListOfWagonsImpl(GetListOfWagonsImpl getListOfWagonsImpl) {
+        this.getListOfWagonsImpl = getListOfWagonsImpl;
     }
 }

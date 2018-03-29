@@ -24,12 +24,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Service
 public class MultipartFileToFile {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(MultipartFileToFile.class);
 
     public static File convertToFile;
+
     public static File multipartToFile(MultipartFile multipart) {
         try {
             convertToFile = new File(multipart.getOriginalFilename());

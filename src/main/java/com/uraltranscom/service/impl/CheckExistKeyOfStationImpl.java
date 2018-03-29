@@ -33,6 +33,9 @@ public class CheckExistKeyOfStationImpl implements CheckExistKeyOfStation {
     private static ResultSet resultSet;
     private static PreparedStatement preparedStatement;
 
+    private CheckExistKeyOfStationImpl() {
+    }
+
     public boolean checkExistKey(String keyOfStation, Connection connection) {
         Boolean isExist = false;
         try {

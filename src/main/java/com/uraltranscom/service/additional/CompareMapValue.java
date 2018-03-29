@@ -1,12 +1,6 @@
 package com.uraltranscom.service.additional;
 
-import com.uraltranscom.model.Route;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -23,16 +17,9 @@ import java.util.Map;
  *
  */
 
-@Service
 public class CompareMapValue implements Comparable {
     public List<Object> wagon;
     public Integer distance;
-
-    @Autowired(required=false)
-    private Route r;
-
-    public CompareMapValue() {
-    }
 
     public CompareMapValue(List<Object> wagon, Integer distance) {
         this.wagon = wagon;
@@ -48,6 +35,7 @@ public class CompareMapValue implements Comparable {
         }
     }
 
+    /*
     public Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
         Map<List<Object>, Integer> sortedMap = new LinkedHashMap<>(mapDistanceSort.size());
 
@@ -63,4 +51,5 @@ public class CompareMapValue implements Comparable {
 
         return sortedMap;
     }
+    */
 }

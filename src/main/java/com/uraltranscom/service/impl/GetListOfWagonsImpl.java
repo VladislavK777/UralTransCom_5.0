@@ -59,6 +59,9 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     @Autowired
     private WriteToFileExcel writeToFileExcel;
 
+    private GetListOfWagonsImpl() {
+    }
+
     // Заполняем Map вагонами
     // TODO Переписать метод, отвязать от количества строк, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override

@@ -34,6 +34,9 @@ public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStation
     private static ResultSet resultSet;
     private static CallableStatement callableStatement;
 
+    private GetDistanceBetweenStationsImpl() {
+    }
+
     @Override
     public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, Connection connection) {
         int distance = 0;

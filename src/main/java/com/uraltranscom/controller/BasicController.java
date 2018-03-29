@@ -49,7 +49,7 @@ public class BasicController {
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
         basicClassLookingForImpl.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
         basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
-        basicClassLookingForImpl.lookingForOptimalMapOfRoute();
+        basicClassLookingForImpl.fillMapRouteIsOptimal();
         model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getListOfDistributedRoutesAndWagons());
         model.addAttribute("reportListOfDistributedRoutes", basicClassLookingForImpl.getListOfUndistributedRoutes());
         model.addAttribute("reportListOfDistributedWagons", basicClassLookingForImpl.getListOfUndistributedWagons());
