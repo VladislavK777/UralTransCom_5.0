@@ -43,10 +43,10 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     private BasicClassLookingForImpl basicClassLookingFor;
 
     // Список распределенных вагонов
-    private Set<String> setOfDistributedWagons = new HashSet<>();
+   // private Set<String> setOfDistributedWagons = new HashSet<>();
 
     // Список нераспределенных вагонов
-    private Set<String> setOfUndistributedWagons = new HashSet<>();
+   // private Set<String> setOfUndistributedWagons = new HashSet<>();
 
     private ClassHandlerLookingForImpl() {
     }
@@ -56,8 +56,8 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
 
         // Очищаем маппы и сеты
-        setOfDistributedWagons.clear();
-        setOfUndistributedWagons.clear();
+        /*setOfDistributedWagons.clear();
+        setOfUndistributedWagons.clear();*/
 
         // Заполняем мапы
         List<Wagon> copyListOfWagon = new ArrayList<>();
@@ -187,7 +187,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                     if (numberOfDaysOfWagon < MAX_FULL_CIRCLE_DAYS) {
 
                                         // Добавляем новый вагон в список
-                                        setOfDistributedWagons.add(numberOfWagon);
+                                       // setOfDistributedWagons.add(numberOfWagon);
 
                                         // Удаляем вагон
                                         for (int i = 0; i < tempListOfWagons.size(); i++) {
@@ -223,7 +223,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         break outer;
                                     } else {
 
-                                        if (!setOfDistributedWagons.contains(numberOfWagon)) {
+                                        /*if (!setOfDistributedWagons.contains(numberOfWagon)) {
                                             setOfUndistributedWagons.add("Вагон " +
                                                     numberOfWagon + " должен был ехать на станцию " +
                                                     nameOfStationDepartureOfWagon + ": " +
@@ -232,7 +232,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                                     tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Клиент: " + "\"" +
                                                     tempMapOfRouteForDelete.get(j).getCustomer() + "\"" + ". " + "Общее время в пути: " +
                                                     numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon) + ".");
-                                        }
+                                        }*/
 
                                         // Удаляем вагон
                                         copyListOfWagon.remove(getKeyNumber);
@@ -261,7 +261,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
 
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
     }
-
+    /*
     public Set<String> getSetOfDistributedWagons() {
         return setOfDistributedWagons;
     }
@@ -277,5 +277,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     public void setSetOfUndistributedWagons(Set<String> setOfUndistributedWagons) {
         this.setOfUndistributedWagons = setOfUndistributedWagons;
     }
+    */
 
 }
