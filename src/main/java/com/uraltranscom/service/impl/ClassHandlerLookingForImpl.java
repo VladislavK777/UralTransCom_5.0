@@ -189,15 +189,13 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         // Добавляем новый вагон в список
                                         setOfDistributedWagons.add(numberOfWagon);
 
-                                        // Затем удаляем
+                                        // Удаляем вагон
+                                        for (int i = 0; i < tempListOfWagons.size(); i++) {
+                                            if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
+                                                tempListOfWagons.remove(i);
+                                            }
+                                        }
                                         copyListOfWagon.remove(getKeyNumber);
-                                        tempListOfWagons.remove(getKeyNumber);
-
-                                        logger.info("Вагон {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
-                                        logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
-                                        logger.info("Маршрут: {}", tempMapOfRouteForDelete.get(j).toString());
-                                        logger.info("-------------------------------------------------");
-
 
                                         // Уменьшаем количество рейсов у маршрута
                                         mapOfRoutesForDelete.put(entry.getKey(), new Route(mapOfRoutesForDelete.get(entry.getKey()).getKeyOfStationDeparture(),
@@ -224,10 +222,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         // Выходим из цикла, так как с ним больше ничего не сделать
                                         break outer;
                                     } else {
-                                        logger.info("Вагон {} должен был ехать на {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
-                                        logger.info("Общее время в пути: {} {}.", numberOfDaysOfWagon, PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon));
-                                        logger.info("Далее по маршруту: {}", tempMapOfRouteForDelete.get(j).toString());
-                                        logger.info("-------------------------------------------------");
 
                                         if (!setOfDistributedWagons.contains(numberOfWagon)) {
                                             setOfUndistributedWagons.add("Вагон " +
@@ -265,7 +259,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
             basicClassLookingFor.getListOfUndistributedRoutes().add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
         });
 
-        logger.info("setOfDistributedWagons: {}", setOfDistributedWagons);
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
     }
 

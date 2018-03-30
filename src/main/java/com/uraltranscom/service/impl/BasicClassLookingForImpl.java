@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -92,11 +89,17 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
 
         // Запускаем распределение для VIP
         classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons, connection);
-        logger.info("tempListOfWagons_after_met {}", tempListOfWagons);
+
         // Запускаем распределение для неVIP
         classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons, connection);
 
-        logger.info("tempListOfWagons2 {}", tempListOfWagons);
+
+        Iterator iterator = classHandlerLookingFor.getSetOfUndistributedWagons().iterator();
+        while (iterator.hasNext()) {
+            Object o = iterator.next();
+            listOfUndistributedWagons.add((String) o);
+        }
+
 
         for (int i = 0; i < tempListOfWagons.size(); i++) {
             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());

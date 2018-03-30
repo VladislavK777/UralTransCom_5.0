@@ -232,7 +232,7 @@
     <img style="position: relative; left: 15%;" src="resources/logo.jpg">
 </div>
 
-<br><br><br>
+<br><br><br><br><br>
 
 <div>
     <input type="button" value="Создать отчет" onclick="showPopup()"
