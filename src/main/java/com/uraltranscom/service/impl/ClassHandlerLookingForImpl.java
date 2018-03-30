@@ -48,31 +48,32 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     // Список нераспределенных вагонов
     private Set<String> setOfUndistributedWagons = new HashSet<>();
 
-    private Map<Integer, Route> totalMap = new HashMap<>();
-
     private ClassHandlerLookingForImpl() {
     }
 
     @Override
-    public void lookingForOptimalMapOfRoute(Map<Integer, Route> mapOfRoutes, List<Wagon> listOfWagons, Connection connection) {
+    public void lookingForOptimalMapOfRoute(Map<Integer, Route> mapOfRoutes, List<Wagon> tempListOfWagons, Connection connection) {
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
-        logger.info("start_wagon: {}", listOfWagons);
+
         // Очищаем маппы и сеты
         setOfDistributedWagons.clear();
         setOfUndistributedWagons.clear();
 
         // Заполняем мапы
-        List<Wagon> tempListOfWagons = listOfWagons;
-        logger.info("start_tempListOfWagons: {}", tempListOfWagons);
-        Map<Integer, Route> tempMapOfRoutes = mapOfRoutes;
+        List<Wagon> copyListOfWagon = new ArrayList<>();
+        Map<Integer, Route> tempMapOfRoutes = new HashMap<>();
+        for (Wagon wagon : tempListOfWagons) {
+            copyListOfWagon.add(wagon);
+        }
+        tempMapOfRoutes.putAll(mapOfRoutes);
 
         // Список расстояний
         Map<List<Object>, Integer> mapDistance = new HashMap<>();
 
         // Запускаем цикл
         Boolean isOk = true;
-        while (!tempMapOfRoutes.isEmpty() && !tempListOfWagons.isEmpty()) {
-            int countWagons = tempListOfWagons.size();
+        while (!tempMapOfRoutes.isEmpty() && !copyListOfWagon.isEmpty()) {
+            int countWagons = copyListOfWagon.size();
 
             // Очищаем массивы
             mapDistance.clear();
@@ -80,10 +81,10 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
             for (int i = 0; i < countWagons; i++) {
 
                 // Поулчаем номер вагона
-                String numberOfWagon = tempListOfWagons.get(i).getNumberOfWagon().trim();
+                String numberOfWagon = copyListOfWagon.get(i).getNumberOfWagon().trim();
 
                 // Получаем код станции назначения вагона
-                String keyOfStationOfWagonDestination = tempListOfWagons.get(i).getKeyOfStationDestination().trim();
+                String keyOfStationOfWagonDestination = copyListOfWagon.get(i).getKeyOfStationDestination().trim();
 
                 // По каждому вагону высчитываем расстояние до каждой начальной станнции маршрутов
                 // Цикл расчета расстояния и заполнения мапы
@@ -94,7 +95,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                     String keyOfStationDeparture = tempMapOfRoute.getValue().getKeyOfStationDeparture();
                     list.add(numberOfWagon);
                     list.add(tempMapOfRoute.getValue());
-                    String key = tempListOfWagons.get(i).getNameOfStationDestination().trim() + "_" + tempMapOfRoute.getValue().getNameOfStationDeparture().trim();
+                    String key = copyListOfWagon.get(i).getNameOfStationDestination().trim() + "_" + tempMapOfRoute.getValue().getNameOfStationDeparture().trim();
                     if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().containsKey(key)) {
                         mapDistance.put(list, basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().get(key));
                     } else if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreDist3000().containsKey(key)) {
@@ -121,8 +122,8 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                             if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination, connection)) {
                                 basicClassLookingFor.getListOfError().add("Проверьте код станции " + keyOfStationOfWagonDestination);
                                 logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
-                                tempListOfWagons.remove(i);
-                                countWagons = tempListOfWagons.size();
+                                copyListOfWagon.remove(i);
+                                countWagons = copyListOfWagon.size();
                                 break;
                             }
                         }
@@ -152,7 +153,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                 // Цикл формирования рейсов
                 // Проверяем на пустоту мап, либо вагоны, либо рейсы
                 outer:
-                if (!mapDistanceSort.isEmpty() && !tempListOfWagons.isEmpty()) {
+                if (!mapDistanceSort.isEmpty() && !copyListOfWagon.isEmpty()) {
                     Map.Entry<List<Object>, Integer> mapDistanceSortFirstElement = mapDistanceSort.entrySet().iterator().next();
                     List<Object> listRouteMinDistance = mapDistanceSortFirstElement.getKey();
                     Route r = (Route) listRouteMinDistance.get(1);
@@ -173,14 +174,14 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                             if (tempMapOfRouteForDelete.get(j).equals(r)) {
                                 if (tempMapOfRouteForDelete.get(j).equals(entry.getValue())) {
                                     int getKeyNumber = 0;
-                                    for (int i = 0; i < tempListOfWagons.size(); i++) {
-                                        if (tempListOfWagons.get(i).getNumberOfWagon().equals(numberOfWagon)) {
+                                    for (int i = 0; i < copyListOfWagon.size(); i++) {
+                                        if (copyListOfWagon.get(i).getNumberOfWagon().equals(numberOfWagon)) {
                                             getKeyNumber = i;
                                         }
                                     }
 
                                     // Число дней пройденных вагоном
-                                    int numberOfDaysOfWagon = getFullMonthCircleOfWagonImpl.fullDays(tempListOfWagons.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
+                                    int numberOfDaysOfWagon = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
                                     // Если больше 30 дней, то исключаем вагон, лимит 30 дней
                                     if (numberOfDaysOfWagon < MAX_FULL_CIRCLE_DAYS) {
@@ -189,6 +190,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         setOfDistributedWagons.add(numberOfWagon);
 
                                         // Затем удаляем
+                                        copyListOfWagon.remove(getKeyNumber);
                                         tempListOfWagons.remove(getKeyNumber);
 
                                         logger.info("Вагон {} едет на станцию {}: {} км.", numberOfWagon, nameOfStationDepartureOfWagon, mapDistanceSortFirstElement.getValue());
@@ -239,7 +241,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         }
 
                                         // Удаляем вагон
-                                        tempListOfWagons.remove(getKeyNumber);
+                                        copyListOfWagon.remove(getKeyNumber);
 
                                         // Выходим из цикла, так как с ним больше ничего не сделать
                                         break outer;
@@ -257,9 +259,13 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                 break;
             }
         }
-        totalMap.putAll(tempMapOfRoutes);
+
+        // Заполняем итоговый массив маршрутов
+        tempMapOfRoutes.forEach((k, v) -> {
+            basicClassLookingFor.getListOfUndistributedRoutes().add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
+        });
+
         logger.info("setOfDistributedWagons: {}", setOfDistributedWagons);
-        logger.info("wagon: {}", tempListOfWagons);
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
     }
 
@@ -279,11 +285,4 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
         this.setOfUndistributedWagons = setOfUndistributedWagons;
     }
 
-    public Map<Integer, Route> getTotalMap() {
-        return totalMap;
-    }
-
-    public void setTotalMap(Map<Integer, Route> totalMap) {
-        this.totalMap = totalMap;
-    }
 }

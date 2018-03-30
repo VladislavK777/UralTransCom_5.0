@@ -47,6 +47,10 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
 
     private static Connection connection;
 
+    private Map<Integer, Route> tempMapRoutesVip = new HashMap<>();
+    private Map<Integer, Route> tempMapRoutesNotVip = new HashMap<>();
+    private List<Wagon> tempListOfWagons = new ArrayList<>();
+
     // Мапа для записи в файл Вагона + Станция назначения.
     private Map<String, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
@@ -82,49 +86,15 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         getListOfDistance.fillMap();
 
         // Заполняем мапы
-        Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
-        Map<Integer, Route> tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
+        tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
+        tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
+        tempListOfWagons = getListOfDistance.getListOfWagons();
 
         // Запускаем распределение для VIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, getListOfDistance.getListOfWagons(), connection);
-        List<Wagon> tempListOfWagons = getListOfDistance.getListOfWagons();
-        logger.info("tempListOfWagons_after_met {}", getListOfDistance.getListOfWagons());
-
-        // Заполняем итоговые массивы
-        classHandlerLookingFor.getTotalMap().forEach((k, v) -> {
-            listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
-        });
-
-        // Обновляем мапу вагонов
-        for (Wagon listWagon : tempListOfWagons) {
-            for (String listDistributedWagon : classHandlerLookingFor.getSetOfDistributedWagons()) {
-                logger.info("listDistributedWagon: {}; listWagon.getNumberOfWagon(): {}", listDistributedWagon, listWagon.getNumberOfWagon());
-                if (listWagon.getNumberOfWagon().equals(listDistributedWagon)) {
-                    tempListOfWagons.remove(listDistributedWagon);
-                    logger.info("delete {}", listDistributedWagon);
-                }
-            }
-        }
-
-        logger.info("tempListOfWagons_after2 {}", tempListOfWagons);
-        logger.info("tempMapRoutesNotVip {}", tempMapRoutesNotVip);
-
+        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons, connection);
+        logger.info("tempListOfWagons_after_met {}", tempListOfWagons);
         // Запускаем распределение для неVIP
         classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons, connection);
-
-        // Заполняем итоговые массивы
-        classHandlerLookingFor.getTotalMap().forEach((k, v) -> {
-            listOfUndistributedRoutes.add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
-        });
-
-        // Обновляем мапу вагонов
-        for (Wagon listWagon : tempListOfWagons) {
-            for (String listDistributedWagon : classHandlerLookingFor.getSetOfDistributedWagons()) {
-                if (listWagon.getNumberOfWagon().contains(listDistributedWagon)) {
-                    tempListOfWagons.remove(listWagon.getNumberOfWagon());
-                }
-            }
-        }
 
         logger.info("tempListOfWagons2 {}", tempListOfWagons);
 
