@@ -50,9 +50,9 @@ public class ConnectionDB {
             zkc.connect("localhost");
             zk = zkc.getZooKeeper();
             try {
-                byte[] database = database = zk.getData("/zookeeper/DB_CONNECT/database", false, null);
-                byte[] user = user = zk.getData("/zookeeper/DB_CONNECT/user", false, null);
-                byte[] password = password = zk.getData("/zookeeper/DB_CONNECT/password", false, null);
+                byte[] database = zk.getData("/zookeeper/DB_CONNECT/database", false, null);
+                byte[] user = zk.getData("/zookeeper/DB_CONNECT/user", false, null);
+                byte[] password = zk.getData("/zookeeper/DB_CONNECT/password", false, null);
                 data[0] = new String(database, "UTF-8");
                 data[1] = new String(user, "UTF-8");
                 data[2] = new String(password, "UTF-8");

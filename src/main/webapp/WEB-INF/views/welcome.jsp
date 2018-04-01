@@ -340,6 +340,8 @@
     </form>
 </div>
 
+<br><br><br>
+
 <div align="center" id="footer">
     Copyright &copy; ООО "Уральская транспортная компания" <span id="copy"></span>.
     Create by Vladislav Klochkov. All rights reserved
