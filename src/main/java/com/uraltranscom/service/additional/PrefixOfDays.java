@@ -1,22 +1,27 @@
 package com.uraltranscom.service.additional;
 
-/*
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
  *
  * Класс для правильного определения окончания в слове День
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 12.01.2018
  *
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
-public class PrefixOfDays {
-    private static final String PREFIX_ONE_DAY = "день";
-    private static final String PREFIX_2_4_DAYS = "дня";
-    private static final String PREFIX_5_10_DAYS = "дней";
+public class PrefixOfDays extends JavaHelperBase {
+
+    // Подключаем логгер
+    private static Logger logger = LoggerFactory.getLogger(PrefixOfDays.class);
 
     private static String finishPrefix = null;
 

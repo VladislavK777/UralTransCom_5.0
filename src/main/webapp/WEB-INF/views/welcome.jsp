@@ -232,7 +232,7 @@
     <img style="position: relative; left: 15%;" src="resources/logo.jpg">
 </div>
 
-<br><br><br>
+<br><br><br><br><br>
 
 <div>
     <input type="button" value="Создать отчет" onclick="showPopup()"
@@ -339,6 +339,8 @@
         <input type="submit" value="Скачать отчет" id="download" class="bot1">
     </form>
 </div>
+
+<br><br><br>
 
 <div align="center" id="footer">
     Copyright &copy; ООО "Уральская транспортная компания" <span id="copy"></span>.

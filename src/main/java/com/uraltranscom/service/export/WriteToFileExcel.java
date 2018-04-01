@@ -1,32 +1,41 @@
 package com.uraltranscom.service.export;
 
-/*
+/**
  *
  * Класс записи в файл Excel
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 09.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
+import com.uraltranscom.model.Route;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+@Service
 public class WriteToFileExcel {
 
     private WriteToFileExcel() {
@@ -39,6 +48,8 @@ public class WriteToFileExcel {
     private static boolean isOk = false;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat();
     private static XSSFWorkbook xssfWorkbook;
+
+    static File file;
 
     public static void downloadFileExcel(HttpServletResponse response, List<String>... listOfFinal) {
         try {
@@ -61,6 +72,66 @@ public class WriteToFileExcel {
             isOk = false;
         }
 
+    }
+
+    public static void downloadFileExcel(HttpServletResponse response, Map<String, Route> map) {
+        try {
+            String fileName = "Report_" + dateFormat.format(new Date()) + ".xlsx";
+            response.setHeader("Content-Disposition", "inline; filename=" + fileName);
+            response.setContentType("application/vnd.ms-excel");
+
+            writeToFileExcel(response, map);
+
+            isOk = true;
+        } catch (Exception e) {
+            logger.error("Ошибка записи в файл - {}", e.getMessage());
+            isOk = false;
+        }
+
+    }
+
+    public static synchronized void writeToFileExcel(HttpServletResponse response, Map<String, Route> map) {
+        try {
+            ServletOutputStream outputStream = response.getOutputStream();
+
+            try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file))) {
+
+                XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fis);
+                XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
+                for (int j = 1; j < sheet.getLastRowNum() + 1; j++) {
+                    XSSFRow row = sheet.getRow(0);
+                    for (int c = 0; c < row.getLastCellNum(); c++) {
+                        if (row.getCell(c).getStringCellValue().trim().equals("Вагон №")) {
+                            XSSFRow xssfRow = sheet.getRow(j);
+                            String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
+                            double valueDouble = xssfRow.getCell(c).getNumericCellValue();
+                            if ((valueDouble - (int) valueDouble) * 1000 == 0) {
+                                val = (int) valueDouble + "";
+                            }
+                            for (Map.Entry<String, Route> mapForAdd : map.entrySet()) {
+                                if (val.equals(mapForAdd.getKey())) {
+                                    for (int q = 0; q < row.getLastCellNum(); q++) {
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Станция")) {
+                                            Cell cell = xssfRow.createCell(q);
+                                            cell.setCellValue(mapForAdd.getValue().getNameOfStationDeparture());
+                                        }
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Клиент")) {
+                                            Cell cell = xssfRow.createCell(q);
+                                            cell.setCellValue(mapForAdd.getValue().getCustomer());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            xssfWorkbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            }
+        } catch (IOException e) {
+            logger.error("Ошибка записи в файл - {}", e.getMessage());
+        }
     }
 
     // Метод записи в файл
@@ -88,104 +159,15 @@ public class WriteToFileExcel {
         }
     }
 
-/*    // Метод записи в файл нераспределенных маршрутов
-    public static synchronized void writeToFileExcelUnDistributedRoutes(HttpServletResponse response, List<String> listOfUnDistributedRoutes) {
-        try {
-
-            XSSFSheet sheet = xssfWorkbook.getSheetAt(1);
-            XSSFRow rowHead = sheet.createRow(0);
-            XSSFRow row;
-            Cell cell;
-
-            // Заголовки столбцов
-            cell = rowHead.createCell(0, CellType.STRING);
-            cell.setCellValue("Маршрут");
-
-            // Заполняем данными
-            for (String unDistributedRoute : listOfUnDistributedRoutes) {
-                int rowCount = sheet.getPhysicalNumberOfRows() - 1;
-                row = sheet.createRow(rowCount + 1);
-                cell = row.createCell(0);
-                cell.setCellValue(unDistributedRoute);
-            }
-
-            ServletOutputStream outputStream = response.getOutputStream();
-            sheet.getWorkbook().write(outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (IOException e) {
-            logger.error("Ошибка записи в файл - {}", e.getMessage());
-        }
-    }
-
-    // Метод записи в файл нераспределенных вагонов
-    public static synchronized void writeToFileExcelUnDistributedWagons(HttpServletResponse response, List<String> listOfUnDistributedWagons) {
-        try {
-
-            XSSFSheet sheet = xssfWorkbook.getSheetAt(2);
-            XSSFRow rowHead = sheet.createRow(0);
-            XSSFRow row;
-            Cell cell;
-
-            // Заголовки столбцов
-            cell = rowHead.createCell(0, CellType.STRING);
-            cell.setCellValue("Номер вагона");
-
-            // Заполняем данными
-            for (String unDistributedWagon : listOfUnDistributedWagons) {
-                int rowCount = sheet.getPhysicalNumberOfRows() - 1;
-                row = sheet.createRow(rowCount + 1);
-                cell = row.createCell(0);
-                cell.setCellValue(unDistributedWagon);
-            }
-
-            ServletOutputStream outputStream = response.getOutputStream();
-            sheet.getWorkbook().write(outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (IOException e) {
-            logger.error("Ошибка записи в файл - {}", e.getMessage());
-        }
-    }
-
-    // Метод записи в файл ошибок
-    public static synchronized void writeToFileExcelError(HttpServletResponse response, List<String> listOfError) {
-        try {
-
-            XSSFSheet sheet = xssfWorkbook.getSheetAt(3);
-            XSSFRow rowHead = sheet.createRow(0);
-            XSSFRow row;
-            Cell cell;
-
-            // Заголовки столбцов
-            cell = rowHead.createCell(0, CellType.STRING);
-            cell.setCellValue("Ошибки");
-
-            // Заполняем данными
-            for (String error : listOfError) {
-                int rowCount = sheet.getPhysicalNumberOfRows() - 1;
-                row = sheet.createRow(rowCount + 1);
-                cell = row.createCell(0);
-                cell.setCellValue(error);
-            }
-
-            ServletOutputStream outputStream = response.getOutputStream();
-            sheet.getWorkbook().write(outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (IOException e) {
-            logger.error("Ошибка записи в файл - {}", e.getMessage());
-        }
-    }*/
-
     public static boolean isIsOk() {
         return isOk;
     }
 
     public static void setIsOk(boolean isOk) {
         WriteToFileExcel.isOk = isOk;
+    }
+
+    public static void setFile(File file) {
+        WriteToFileExcel.file = file;
     }
 }

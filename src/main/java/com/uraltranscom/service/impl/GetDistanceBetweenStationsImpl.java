@@ -10,16 +10,18 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/*
+/**
  *
  * Класс получения расстояния между станциями
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 25.10.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
@@ -31,6 +33,9 @@ public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStation
 
     private static ResultSet resultSet;
     private static CallableStatement callableStatement;
+
+    private GetDistanceBetweenStationsImpl() {
+    }
 
     @Override
     public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, Connection connection) {
@@ -54,6 +59,7 @@ public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStation
                     distance = -1;
                 }
             }
+            logger.debug("Get distance for: {}", keyOfStationDeparture + "_" + keyOfStationDestination + ": " + distance);
         } catch (SQLException sqlEx) {
             logger.error("Ошибка запроса {} - {}", callableStatement, sqlEx.getMessage());
         }

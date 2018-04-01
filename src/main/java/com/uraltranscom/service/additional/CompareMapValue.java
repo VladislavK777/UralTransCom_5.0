@@ -1,31 +1,25 @@
 package com.uraltranscom.service.additional;
 
-import com.uraltranscom.model.Route;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-/*
+/**
  *
  * Класс сортировки
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 06.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
 public class CompareMapValue implements Comparable {
     public List<Object> wagon;
     public Integer distance;
-
-    @Autowired
-    public static Route r;
 
     public CompareMapValue(List<Object> wagon, Integer distance) {
         this.wagon = wagon;
@@ -41,7 +35,8 @@ public class CompareMapValue implements Comparable {
         }
     }
 
-    public static Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
+    /*
+    public Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
         Map<List<Object>, Integer> sortedMap = new LinkedHashMap<>(mapDistanceSort.size());
 
         mapDistanceSort.forEach((k, v) -> {
@@ -56,21 +51,5 @@ public class CompareMapValue implements Comparable {
 
         return sortedMap;
     }
-
-    /*Map<List<String>, Integer> sortedMap = mapDistance.entrySet().stream()
-                    .sorted(
-                            Comparator.<Map.Entry<List<String>, Integer>, String>
-                                    comparing(e -> e.getKey().get(2)).reversed()
-                                    .thenComparingInt(Map.Entry::getValue)
-                    ).collect(
-                            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
-                    );
-
-            mapDistance.entrySet().stream()
-                    .sorted(
-                            Comparator.<Map.Entry<List<String>, Integer>, String>
-                                    comparing(e -> e.getKey().get(2)).reversed()
-                                    .thenComparingInt(Map.Entry::getValue)
-                    ).forEach(System.out::println);
-*/
+    */
 }

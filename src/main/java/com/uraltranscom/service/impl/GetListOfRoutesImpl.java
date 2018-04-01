@@ -1,28 +1,32 @@
 package com.uraltranscom.service.impl;
 
-/*
+/**
  *
  * Класс получения списка маршрутов
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 25.10.2017
  *
  * 17.11.2017
  *   1. Изменен метод заполнения Map
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
 import com.uraltranscom.model.Route;
-import com.uraltranscom.service.GetBasicListOfRoutes;
+import com.uraltranscom.service.GetListOfRoutes;
+import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -32,31 +36,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
+public class GetListOfRoutesImpl implements GetListOfRoutes {
 
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
+
+    @Autowired
+    FillMapsNotVipAndVip fillMapsNotVipAndVip;
 
     // Основаная мапа, куда записываем все маршруты
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
 
     // Переменные для работы с файлами
     private File file;
-            //= new File("C:\\Users\\Vladislav.Klochkov\\Desktop\\test.xlsx");
     private FileInputStream fileInputStream;
 
     // Переменные для работы с Excel файлом(формат XLSX)
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
 
-    // Конструктор заполняет основную мапу
-    public GetListOfRoutesImpl() {
-
+    private GetListOfRoutesImpl() {
     }
 
+    // Заполняем Map вагонами
+    // TODO Переписать метод, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
-    public void fillMapOfRoutes() {
-
+    public void fillMap() {
         // Получаем файл формата xls
         try {
             fileInputStream = new FileInputStream(this.file);
@@ -74,25 +79,27 @@ public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
                 String nameOfStationDestination = null;
                 String distanceOfWay = null;
                 String VIP = null;
+                String customer = null;
+                int countOrders = 0;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().equals("Код станции отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции отправления")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Станция отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Станция отправления")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Код станции назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Станция назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Расстояние, км.")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
                         double valueDouble = xssfRow.getCell(c).getNumericCellValue();
@@ -110,10 +117,26 @@ public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
                             VIP = "0";
                         }
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Заказчик")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        customer = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Заявка, в/о")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
+                    }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP));
+                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders));
                 i++;
             }
+
+            try {
+                fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
+            } catch (NullPointerException e) {
+                logger.error("Map must not empty");
+            }
+
+            logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {
             logger.error("Ошибка загруки файла - {}", e.getMessage());
         } catch (OLE2NotOfficeXmlFileException e1) {
@@ -131,6 +154,6 @@ public class GetListOfRoutesImpl implements GetBasicListOfRoutes {
 
     public void setFile(File file) {
         this.file = file;
-        fillMapOfRoutes();
+        fillMap();
     }
 }

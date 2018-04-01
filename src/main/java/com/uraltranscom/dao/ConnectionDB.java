@@ -1,17 +1,19 @@
 package com.uraltranscom.dao;
 
-/*
+/**
  *
  * Класс соединения с БД
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 25.10.2017
  *
  * 13.11.2017
  *   1. Добавление хранения пароля в ZooKeeper
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
@@ -48,9 +50,9 @@ public class ConnectionDB {
             zkc.connect("localhost");
             zk = zkc.getZooKeeper();
             try {
-                byte[] database = database = zk.getData("/zookeeper/DB_CONNECT/database", false, null);
-                byte[] user = user = zk.getData("/zookeeper/DB_CONNECT/user", false, null);
-                byte[] password = password = zk.getData("/zookeeper/DB_CONNECT/password", false, null);
+                byte[] database = zk.getData("/zookeeper/DB_CONNECT/database", false, null);
+                byte[] user = zk.getData("/zookeeper/DB_CONNECT/user", false, null);
+                byte[] password = zk.getData("/zookeeper/DB_CONNECT/password", false, null);
                 data[0] = new String(database, "UTF-8");
                 data[1] = new String(user, "UTF-8");
                 data[2] = new String(password, "UTF-8");

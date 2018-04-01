@@ -1,31 +1,31 @@
 package com.uraltranscom.model;
 
-/*
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
  *
  * Класс Вагон
  *
  * @author Vladislav Klochkov
- * @version 3.0
+ * @version 4.0
  * @create 17.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
+ * 14.03.2018
+ *   1. Версия 4.0
  *
  */
 
 public class Wagon {
+    // Подключаем логгер
+    private static Logger logger = LoggerFactory.getLogger(Wagon.class);
 
-    // Номер вагона
-    private String numberOfWagon;
-
-    // Тип вагона
-    private String typeOfWagon;
-
-    // Код станции назначения
-    private String keyOfStationDestination;
-
-    // Название станции назначения
-    private String nameOfStationDestination;
+    private String numberOfWagon; // Номер вагона
+    private String typeOfWagon; // Тип вагона
+    private String keyOfStationDestination; // Код станции назначения
+    private String nameOfStationDestination; // Название станции назначения
 
     public Wagon(String numberOfWagon, String typeOfWagon, String keyOfStationDestination, String nameOfStationDestination) {
         this.numberOfWagon = numberOfWagon;
