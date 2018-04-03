@@ -23,7 +23,6 @@ import java.util.Map;
 
 @Service
 public class FillMapsNotVipAndVip {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(FillMapsNotVipAndVip.class);
 

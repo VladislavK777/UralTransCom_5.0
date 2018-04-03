@@ -3,6 +3,7 @@ package com.uraltranscom.service.impl;
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.GetListOfDistance;
+import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ import java.util.*;
 
 @Service
 public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDistance {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfDistanceImpl.class);
 
@@ -40,7 +40,8 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     private CheckExistKeyOfStationImpl checkExistKeyOfStationImpl;
     @Autowired
     private BasicClassLookingForImpl basicClassLookingForImpl;
-
+    @Autowired
+    FillMapsNotVipAndVip fillMapsNotVipAndVip;
 
     // Основная мапа
     private static Map<String, Integer> rootMapWithDistances = new HashMap<>();
@@ -51,8 +52,6 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     // Заполненные мапы Вагонов и Маршрутов
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
     private List<Wagon> listOfWagons = new ArrayList<>();
-
-    //private static Connection connection;
 
     @Override
     public void fillMap() {
@@ -79,6 +78,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                             logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
                                     entry.getValue().getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + entry.getValue().getCountOrders());
+                            logger.info("delete: {}", entry.getValue().toString());
                             iterator.remove();
                             break;
                         }
@@ -93,6 +93,12 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                     }
                 }
             }
+        }
+
+        try {
+            fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
+        } catch (NullPointerException e) {
+            logger.error("Map must not empty");
         }
         logger.info("Stop process fill map with distances");
     }
