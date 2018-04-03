@@ -38,8 +38,8 @@ public class KeyMaster {
         }
 
         public static SecretKey genSecretKey(String key) throws Exception {
-            KeySpec keySpec = new PBEKeySpec(key.toCharArray(), salt, 10);
-            return SecretKeyFactory.getInstance("PBEWithMD5AndDES").generateSecret(keySpec);
+            KeySpec keySpec = new PBEKeySpec(key.toCharArray(), salt, iterationCount);
+            return SecretKeyFactory.getInstance(algorithm).generateSecret(keySpec);
         }
 
         public static String secretKeyToString(SecretKey secretKey) {
@@ -47,24 +47,24 @@ public class KeyMaster {
         }
 
         private static SecretKey getSecretKey(String stringKey) {
-            return new SecretKeySpec(Base64.decodeBase64(stringKey), "PBEWithMD5AndDES");
+            return new SecretKeySpec(Base64.decodeBase64(stringKey), algorithm);
         }
 
         public static String dec(String hash, String stringKey) throws Exception {
             SecretKey secretKey = getSecretKey(stringKey);
-            AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, 10);
-            Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+            AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, iterationCount );
+            Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(2, secretKey, paramSpec);
             byte[] decHash = Base64.decodeBase64(hash);
-            return new String(cipher.doFinal(decHash), "UTF8");
+            return new String(cipher.doFinal(decHash), coding);
         }
 
         public static String enc(String text, String stringKey) throws Exception {
             SecretKey secretKey = getSecretKey(stringKey);
-            AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, 10);
-            Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+            AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, iterationCount);
+            Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(1, secretKey, paramSpec);
-            byte[] encText = cipher.doFinal(text.getBytes("UTF8"));
+            byte[] encText = cipher.doFinal(text.getBytes(coding));
             return new String(Base64.encodeBase64(encText), StandardCharsets.UTF_8);
         }
 }
