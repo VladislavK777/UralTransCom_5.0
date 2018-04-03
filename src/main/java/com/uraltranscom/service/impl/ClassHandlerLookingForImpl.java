@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
 import java.util.*;
 
 /**
@@ -19,11 +18,13 @@ import java.util.*;
  * Класс-обработчик алгоритма расчета
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 28.03.2018
  *
  * 28.03.2018
  *   1. Версия 4.0
+ * 03.04.2018
+ *   1. Версия 4.1
  *
  */
 
@@ -52,7 +53,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     }
 
     @Override
-    public void lookingForOptimalMapOfRoute(Map<Integer, Route> mapOfRoutes, List<Wagon> tempListOfWagons, Connection connection) {
+    public void lookingForOptimalMapOfRoute(Map<Integer, Route> mapOfRoutes, List<Wagon> tempListOfWagons) {
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
 
         // Очищаем маппы и сеты
@@ -101,7 +102,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                     } else if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreDist3000().containsKey(key)) {
                         continue; // Нам не интересны расстояния больше 3000км
                     } else {
-                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture, connection);
+                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture);
                         if (distance != -1) {
                             if (distance <= MAX_DISTANCE) {
                                 basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().put(key, distance);
@@ -110,7 +111,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                 basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreDist3000().put(key, distance);
                             }
                         } else {
-                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture, connection)) {
+                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
                                 basicClassLookingFor.getListOfError().add("Проверьте код станции " + keyOfStationDeparture);
                                 logger.error("Проверьте код станции {}", keyOfStationDeparture);
                                 basicClassLookingFor.getListOfUndistributedRoutes().add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " +
@@ -119,7 +120,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                 iterator.remove();
                                 break;
                             }
-                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination, connection)) {
+                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination)) {
                                 basicClassLookingFor.getListOfError().add("Проверьте код станции " + keyOfStationOfWagonDestination);
                                 logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
                                 copyListOfWagon.remove(i);

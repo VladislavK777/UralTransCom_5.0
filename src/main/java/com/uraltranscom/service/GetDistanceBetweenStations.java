@@ -5,7 +5,7 @@ package com.uraltranscom.service;
  * Интерфейс получения расстояния между станциями
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 25.10.2017
  *
  * 06.11.2017
@@ -14,12 +14,14 @@ package com.uraltranscom.service;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 03.04.2018
+ *   1. Версия 4.1
  *
  */
 
-import java.sql.Connection;
+import java.sql.SQLException;
 
 public interface GetDistanceBetweenStations {
-    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, Connection connection);
+    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) throws SQLException;
 
 }

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
 import java.util.*;
 
 /**
@@ -17,8 +16,11 @@ import java.util.*;
  * Класс получения списка первоначальных расстояний
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 14.03.2018
+ *
+ * 03.04.2018
+ *   1. Версия 4.1
  *
  */
 
@@ -50,7 +52,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
     private List<Wagon> listOfWagons = new ArrayList<>();
 
-    private static Connection connection;
+    //private static Connection connection;
 
     @Override
     public void fillMap() {
@@ -64,7 +66,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
             Map.Entry<Integer, Route> entry = iterator.next();
             for (int i = 0; i < listOfWagons.size(); i++) {
                 if (!rootMapWithDistances.containsKey(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture())) {
-                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(listOfWagons.get(i).getKeyOfStationDestination(), entry.getValue().getKeyOfStationDeparture(), connection);
+                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(listOfWagons.get(i).getKeyOfStationDestination(), entry.getValue().getKeyOfStationDeparture());
                     if (distance != -1) {
                         if (distance <= MAX_DISTANCE) {
                             rootMapWithDistances.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
@@ -72,14 +74,14 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                             rootMapWithDistanceMoreDist3000.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
                         }
                     } else {
-                        if (!checkExistKeyOfStationImpl.checkExistKey(entry.getValue().getKeyOfStationDeparture(), connection)) {
+                        if (!checkExistKeyOfStationImpl.checkExistKey(entry.getValue().getKeyOfStationDeparture())) {
                             basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " + entry.getValue().getNameOfStationDestination());
                             iterator.remove();
                             break;
                         }
-                        if (!checkExistKeyOfStationImpl.checkExistKey(listOfWagons.get(i).getKeyOfStationDestination(), connection)) {
+                        if (!checkExistKeyOfStationImpl.checkExistKey(listOfWagons.get(i).getKeyOfStationDestination())) {
                             basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
                             logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination());
                             basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
@@ -127,9 +129,9 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
         this.listOfWagons = listOfWagons;
     }
 
-    public static void setConnection(Connection connection) {
+    /*public static void setConnection(Connection connection) {
         GetListOfDistanceImpl.connection = connection;
-    }
+    }*/
 
     public GetListOfRoutesImpl getGetListOfRoutesImpl() {
         return getListOfRoutesImpl;
@@ -146,4 +148,6 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     public void setGetListOfWagonsImpl(GetListOfWagonsImpl getListOfWagonsImpl) {
         this.getListOfWagonsImpl = getListOfWagonsImpl;
     }
+
+
 }

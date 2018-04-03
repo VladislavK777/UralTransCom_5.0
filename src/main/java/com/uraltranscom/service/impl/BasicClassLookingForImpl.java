@@ -1,6 +1,5 @@
 package com.uraltranscom.service.impl;
 
-import com.uraltranscom.dao.ConnectionDB;
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.BasicClassLookingFor;
@@ -11,21 +10,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * Основной класс
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 01.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 03.04.2018
+ *   1. Версия 4.1
  *
  */
 
@@ -42,7 +45,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     @Autowired
     private ClassHandlerLookingForImpl classHandlerLookingFor;
 
-    private static Connection connection;
+    //private static Connection connection;
 
     private Map<Integer, Route> tempMapRoutesVip = new HashMap<>();
     private Map<Integer, Route> tempMapRoutesNotVip = new HashMap<>();
@@ -76,10 +79,10 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         listOfError.clear();
 
         // Устанавливаем соединение
-        connection = ConnectionDB.getConnection();
+        //connection = ConnectionDB.getConnection();
 
         // Запускаем метод заполненеия первоначальной мапы расстояний
-        getListOfDistance.setConnection(connection);
+        //getListOfDistance.setConnection(connection);
         getListOfDistance.fillMap();
 
         // Заполняем мапы
@@ -88,10 +91,10 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         tempListOfWagons = getListOfDistance.getListOfWagons();
 
         // Запускаем распределение для VIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons, connection);
+        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons);
 
         // Запускаем распределение для неVIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons, connection);
+        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons);
 
         for (int i = 0; i < tempListOfWagons.size(); i++) {
             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
