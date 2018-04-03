@@ -34,7 +34,6 @@ import java.util.Map;
 
 @Service
 public class BasicClassLookingForImpl extends JavaHelperBase implements BasicClassLookingFor {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(BasicClassLookingForImpl.class);
 
@@ -44,8 +43,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private FillMapsNotVipAndVip fillMapsNotVipAndVip;
     @Autowired
     private ClassHandlerLookingForImpl classHandlerLookingFor;
-
-    //private static Connection connection;
 
     private Map<Integer, Route> tempMapRoutesVip = new HashMap<>();
     private Map<Integer, Route> tempMapRoutesNotVip = new HashMap<>();
@@ -78,11 +75,9 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         listOfUndistributedWagons.clear();
         listOfError.clear();
 
-        // Устанавливаем соединение
-        //connection = ConnectionDB.getConnection();
+        tempListOfWagons.clear();
 
         // Запускаем метод заполненеия первоначальной мапы расстояний
-        //getListOfDistance.setConnection(connection);
         getListOfDistance.fillMap();
 
         // Заполняем мапы

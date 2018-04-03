@@ -19,14 +19,12 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.service.GetListOfRoutes;
-import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -37,12 +35,8 @@ import java.util.Map;
 
 @Service
 public class GetListOfRoutesImpl implements GetListOfRoutes {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
-
-    @Autowired
-    FillMapsNotVipAndVip fillMapsNotVipAndVip;
 
     // Основаная мапа, куда записываем все маршруты
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
@@ -129,13 +123,6 @@ public class GetListOfRoutesImpl implements GetListOfRoutes {
                 mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders));
                 i++;
             }
-
-            try {
-                fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
-            } catch (NullPointerException e) {
-                logger.error("Map must not empty");
-            }
-
             logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {
             logger.error("Ошибка загруки файла - {}", e.getMessage());

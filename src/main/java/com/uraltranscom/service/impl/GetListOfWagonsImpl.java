@@ -66,7 +66,6 @@ public class GetListOfWagonsImpl implements GetListOfWagons {
     // TODO Переписать метод, отвязать от количества строк, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
     public void fillMap() {
-
         writeToFileExcel.setFile(file);
 
         // Получаем файл формата xls
