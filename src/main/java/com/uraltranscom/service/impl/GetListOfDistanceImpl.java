@@ -77,7 +77,8 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                         if (!checkExistKeyOfStationImpl.checkExistKey(entry.getValue().getKeyOfStationDeparture())) {
                             basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                            basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " + entry.getValue().getNameOfStationDestination());
+                            basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
+                                    entry.getValue().getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + entry.getValue().getCountOrders());
                             iterator.remove();
                             break;
                         }
@@ -93,7 +94,6 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                 }
             }
         }
-        logger.info("distance {}", rootMapWithDistances);
         logger.info("Stop process fill map with distances");
     }
 
