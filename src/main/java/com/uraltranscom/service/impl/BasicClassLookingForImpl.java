@@ -75,7 +75,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         listOfUndistributedWagons.clear();
         listOfError.clear();
 
-        tempListOfWagons.clear();
 
         // Запускаем метод заполненеия первоначальной мапы расстояний
         getListOfDistance.fillMap();
