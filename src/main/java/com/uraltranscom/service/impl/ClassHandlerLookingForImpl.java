@@ -175,7 +175,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                     int countCircleDays = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
                                     // Если больше 30 дней, то исключаем вагон, лимит 30 дней
-                                    if (countCircleDays < MAX_FULL_CIRCLE_DAYS) {
+                                   // if (countCircleDays < MAX_FULL_CIRCLE_DAYS) {
                                         // Удаляем вагон
                                         for (int i = 0; i < tempListOfWagons.size(); i++) {
                                             if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
@@ -208,13 +208,13 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         }
                                         // Выходим из цикла, так как с ним больше ничего не сделать
                                         break outer;
-                                    } else {
+                                   /* } else {
                                         // Удаляем вагон
                                         copyListOfWagon.remove(getKeyNumber);
 
                                         // Выходим из цикла, так как с ним больше ничего не сделать
                                         break outer;
-                                    }
+                                    }*/
                                 }
                             }
                         }

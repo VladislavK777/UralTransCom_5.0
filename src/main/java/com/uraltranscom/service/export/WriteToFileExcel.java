@@ -17,6 +17,7 @@ package com.uraltranscom.service.export;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model_ext.WagonFinalInfo;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import com.uraltranscom.service.additional.PrefixOfDays;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class WriteToFileExcel {
+public class WriteToFileExcel extends JavaHelperBase {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(WriteToFileExcel.class);
 
@@ -140,7 +141,11 @@ public class WriteToFileExcel {
     }
 
     private static String buildText(int dist, int countCircle) {
-        return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle));
+        if (countCircle < MAX_FULL_CIRCLE_DAYS ) {
+            return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle));
+        } else {
+            return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle) + "(превышение!)");
+        }
     }
 
     // Метод записи в файл
