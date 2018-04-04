@@ -17,6 +17,7 @@ package com.uraltranscom.service.export;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model_ext.WagonFinalInfo;
+import com.uraltranscom.service.additional.PrefixOfDays;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -121,7 +122,7 @@ public class WriteToFileExcel {
                                         }
                                         if (row.getCell(q).getStringCellValue().trim().equals("Ставка")) {
                                             Cell cell = xssfRow.createCell(q);
-                                            cell.setCellValue(mapForAdd.getKey().getDistanceEmpty() + "км./" + mapForAdd.getKey().getCountCircleDays() + "д.");
+                                            cell.setCellValue(buildText(mapForAdd.getKey().getDistanceEmpty(), mapForAdd.getKey().getCountCircleDays()));
                                         }
                                     }
                                 }
@@ -136,6 +137,10 @@ public class WriteToFileExcel {
         } catch (IOException e) {
             logger.error("Ошибка записи в файл - {}", e.getMessage());
         }
+    }
+
+    private static String buildText(int dist, int countCircle) {
+        return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle));
     }
 
     // Метод записи в файл
