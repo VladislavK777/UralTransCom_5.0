@@ -16,6 +16,7 @@ package com.uraltranscom.service.export;
  */
 
 import com.uraltranscom.model.Route;
+import com.uraltranscom.model_ext.WagonFinalInfo;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -73,7 +74,7 @@ public class WriteToFileExcel {
 
     }
 
-    public static void downloadFileExcel(HttpServletResponse response, Map<String, Route> map) {
+    public static void downloadFileExcel(HttpServletResponse response, Map<WagonFinalInfo, Route> map) {
         try {
             String fileName = "Report_" + dateFormat.format(new Date()) + ".xlsx";
             response.setHeader("Content-Disposition", "inline; filename=" + fileName);
@@ -89,7 +90,7 @@ public class WriteToFileExcel {
 
     }
 
-    public static synchronized void writeToFileExcel(HttpServletResponse response, Map<String, Route> map) {
+    public static synchronized void writeToFileExcel(HttpServletResponse response, Map<WagonFinalInfo, Route> map) {
         try {
             ServletOutputStream outputStream = response.getOutputStream();
 
@@ -107,8 +108,8 @@ public class WriteToFileExcel {
                             if ((valueDouble - (int) valueDouble) * 1000 == 0) {
                                 val = (int) valueDouble + "";
                             }
-                            for (Map.Entry<String, Route> mapForAdd : map.entrySet()) {
-                                if (val.equals(mapForAdd.getKey())) {
+                            for (Map.Entry<WagonFinalInfo, Route> mapForAdd : map.entrySet()) {
+                                if (val.equals(mapForAdd.getKey().getNumberOfWagon())) {
                                     for (int q = 0; q < row.getLastCellNum(); q++) {
                                         if (row.getCell(q).getStringCellValue().trim().equals("Станция")) {
                                             Cell cell = xssfRow.createCell(q);
@@ -117,6 +118,10 @@ public class WriteToFileExcel {
                                         if (row.getCell(q).getStringCellValue().trim().equals("Клиент")) {
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getCustomer());
+                                        }
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Ставка")) {
+                                            Cell cell = xssfRow.createCell(q);
+                                            cell.setCellValue(mapForAdd.getKey().getDistanceEmpty() + "км./" + mapForAdd.getKey().getCountCircleDays() + "д.");
                                         }
                                     }
                                 }

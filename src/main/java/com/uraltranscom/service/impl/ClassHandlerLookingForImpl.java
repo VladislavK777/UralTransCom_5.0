@@ -2,6 +2,7 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
+import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.ClassHandlerLookingFor;
 import com.uraltranscom.service.additional.CompareMapValue;
 import com.uraltranscom.service.additional.JavaHelperBase;
@@ -171,10 +172,10 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                     }
 
                                     // Число дней пройденных вагоном
-                                    int numberOfDaysOfWagon = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
+                                    int countCircleDays = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
                                     // Если больше 30 дней, то исключаем вагон, лимит 30 дней
-                                    if (numberOfDaysOfWagon < MAX_FULL_CIRCLE_DAYS) {
+                                    if (countCircleDays < MAX_FULL_CIRCLE_DAYS) {
                                         // Удаляем вагон
                                         for (int i = 0; i < tempListOfWagons.size(); i++) {
                                             if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
@@ -197,9 +198,9 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                                 + nameOfStationDepartureOfWagon + ": "
                                                 + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
                                                 + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
-                                                + numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon) + ".");
+                                                + countCircleDays + " " + PrefixOfDays.parsePrefixOfDays(countCircleDays) + ".");
 
-                                        basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(numberOfWagon, tempMapOfRouteForDelete.get(j));
+                                        basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(numberOfWagon, countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));
 
                                         // Удаляем маршрут, если по нему 0 рейсов
                                         if (mapOfRoutesForDelete.get(entry.getKey()).getCountOrders() == 0) {
