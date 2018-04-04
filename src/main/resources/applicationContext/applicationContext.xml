@@ -48,5 +48,4 @@
     <bean id="dataSourceInit" class="com.uraltranscom.util.ConnectionDB">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
 </beans>
