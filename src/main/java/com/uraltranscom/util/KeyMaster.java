@@ -27,7 +27,7 @@ import java.security.spec.KeySpec;
  *
  */
 
-public class KeyMaster {
+public final class KeyMaster {
     private static Logger logger = LoggerFactory.getLogger(KeyMaster.class);
         private static final int iterationCount = 10;
         private static final String algorithm = "PBEWithMD5AndDES";

@@ -69,13 +69,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
 
     @Override
     public void fillMapRouteIsOptimal() {
-        // Очищаем массивы итоговые
-        listOfDistributedRoutesAndWagons.clear();
-        listOfUndistributedRoutes.clear();
-        listOfUndistributedWagons.clear();
-        listOfError.clear();
-
-
         // Запускаем метод заполненеия первоначальной мапы расстояний
         getListOfDistance.fillMap();
 
@@ -93,6 +86,17 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         for (int i = 0; i < tempListOfWagons.size(); i++) {
             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
         }
+
+        // Очищаем массивы итоговые
+        listOfDistributedRoutesAndWagons.clear();
+        listOfUndistributedRoutes.clear();
+        listOfUndistributedWagons.clear();
+        listOfError.clear();
+
+        // очищаем мапы
+        tempListOfWagons.clear();
+        tempMapRoutesVip.clear();
+        tempMapRoutesNotVip.clear();
     }
 
     public Map<String, Route> getTotalMapWithWagonNumberAndRoute() {

@@ -41,7 +41,6 @@ import java.util.List;
 
 @Service
 public class GetListOfWagonsImpl implements GetListOfWagons {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfWagonsImpl.class);
 

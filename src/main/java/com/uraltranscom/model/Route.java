@@ -141,23 +141,4 @@ public class Route {
                 ", " + customer +
                 ", " + countOrders;
     }
-
-    /*
-    @Override
-    public int compareTo(Object o) {
-        try {
-            Route p = (Route) o;
-            if (p.getVIP() == this.VIP) {
-                return p.hashCode() - this.hashCode();
-            }
-            if (Integer.parseInt(p.getVIP()) < Integer.parseInt(this.VIP)) {
-                return -1;
-            } else {
-                return 1;
-            }
-        } catch (NullPointerException | ClassCastException e) {
-            return 1;
-        }
-    }
-    */
 }

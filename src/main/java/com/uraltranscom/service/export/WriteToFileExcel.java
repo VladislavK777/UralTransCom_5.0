@@ -37,10 +37,6 @@ import java.util.Map;
 
 @Service
 public class WriteToFileExcel {
-
-    private WriteToFileExcel() {
-    }
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(WriteToFileExcel.class);
 
@@ -50,6 +46,9 @@ public class WriteToFileExcel {
     private static XSSFWorkbook xssfWorkbook;
 
     static File file;
+
+    private WriteToFileExcel() {
+    }
 
     public static void downloadFileExcel(HttpServletResponse response, List<String>... listOfFinal) {
         try {

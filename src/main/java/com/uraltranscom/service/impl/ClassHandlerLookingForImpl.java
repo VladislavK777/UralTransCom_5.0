@@ -30,7 +30,6 @@ import java.util.*;
 
 @Service
 public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassHandlerLookingFor {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(ClassHandlerLookingForImpl.class);
 
@@ -43,22 +42,12 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     @Autowired
     private BasicClassLookingForImpl basicClassLookingFor;
 
-    // Список распределенных вагонов
-   // private Set<String> setOfDistributedWagons = new HashSet<>();
-
-    // Список нераспределенных вагонов
-   // private Set<String> setOfUndistributedWagons = new HashSet<>();
-
     private ClassHandlerLookingForImpl() {
     }
 
     @Override
     public void lookingForOptimalMapOfRoute(Map<Integer, Route> mapOfRoutes, List<Wagon> tempListOfWagons) {
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
-
-        // Очищаем маппы и сеты
-        /*setOfDistributedWagons.clear();
-        setOfUndistributedWagons.clear();*/
 
         // Заполняем мапы
         List<Wagon> copyListOfWagon = new ArrayList<>();
@@ -186,10 +175,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
 
                                     // Если больше 30 дней, то исключаем вагон, лимит 30 дней
                                     if (numberOfDaysOfWagon < MAX_FULL_CIRCLE_DAYS) {
-
-                                        // Добавляем новый вагон в список
-                                       // setOfDistributedWagons.add(numberOfWagon);
-
                                         // Удаляем вагон
                                         for (int i = 0; i < tempListOfWagons.size(); i++) {
                                             if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
@@ -223,18 +208,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         // Выходим из цикла, так как с ним больше ничего не сделать
                                         break outer;
                                     } else {
-
-                                        /*if (!setOfDistributedWagons.contains(numberOfWagon)) {
-                                            setOfUndistributedWagons.add("Вагон " +
-                                                    numberOfWagon + " должен был ехать на станцию " +
-                                                    nameOfStationDepartureOfWagon + ": " +
-                                                    mapDistanceSortFirstElement.getValue() + " км. " + "Далее по маршруту: " +
-                                                    tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " +
-                                                    tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Клиент: " + "\"" +
-                                                    tempMapOfRouteForDelete.get(j).getCustomer() + "\"" + ". " + "Общее время в пути: " +
-                                                    numberOfDaysOfWagon + " " + PrefixOfDays.parsePrefixOfDays(numberOfDaysOfWagon) + ".");
-                                        }*/
-
                                         // Удаляем вагон
                                         copyListOfWagon.remove(getKeyNumber);
 
@@ -262,22 +235,4 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
 
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
     }
-    /*
-    public Set<String> getSetOfDistributedWagons() {
-        return setOfDistributedWagons;
-    }
-
-    public void setSetOfDistributedWagons(Set<String> setOfDistributedWagons) {
-        this.setOfDistributedWagons = setOfDistributedWagons;
-    }
-
-    public Set<String> getSetOfUndistributedWagons() {
-        return setOfUndistributedWagons;
-    }
-
-    public void setSetOfUndistributedWagons(Set<String> setOfUndistributedWagons) {
-        this.setOfUndistributedWagons = setOfUndistributedWagons;
-    }
-    */
-
 }

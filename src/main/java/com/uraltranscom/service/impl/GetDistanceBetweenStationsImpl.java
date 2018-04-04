@@ -30,7 +30,6 @@ import java.sql.SQLException;
 
 @Service
 public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetDistanceBetweenStations {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetDistanceBetweenStationsImpl.class);
 

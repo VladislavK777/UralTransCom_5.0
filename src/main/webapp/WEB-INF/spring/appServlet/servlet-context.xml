@@ -51,18 +51,8 @@
         <property name="password" value="#{decodedPassword}"/>
     </bean>
 
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <constructor-arg ref="dataSource" />
-    </bean>
-
-    <bean id="dataSourceInit" class="com.uraltranscom.service.impl.GetDistanceBetweenStationsImpl">
+    <bean id="dataSourceInit" class="com.uraltranscom.util.ConnectionDB">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
-    <bean id="dataSourceInit2" class="com.uraltranscom.service.impl.CheckExistKeyOfStationImpl">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-
 
 </beans>

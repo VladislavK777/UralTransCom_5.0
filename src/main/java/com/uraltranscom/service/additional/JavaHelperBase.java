@@ -14,7 +14,6 @@ package com.uraltranscom.service.additional;
  */
 
 public class JavaHelperBase {
-
     // Максимальное количетво дней в обороте вагона
     public static final int MAX_FULL_CIRCLE_DAYS = 31;
 

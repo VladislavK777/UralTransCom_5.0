@@ -34,22 +34,4 @@ public class CompareMapValue implements Comparable {
             return 0;
         }
     }
-
-    /*
-    public Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
-        Map<List<Object>, Integer> sortedMap = new LinkedHashMap<>(mapDistanceSort.size());
-
-        mapDistanceSort.forEach((k, v) -> {
-            r = (Route) k.get(1);
-            if ("1".equals(r.getVIP())) sortedMap.put(k, v);
-        });
-
-        mapDistanceSort.forEach((k, v) -> {
-            r = (Route) k.get(1);
-            if ("0".equals(r.getVIP())) sortedMap.put(k, v);
-        });
-
-        return sortedMap;
-    }
-    */
 }
