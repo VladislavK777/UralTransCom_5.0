@@ -12,16 +12,10 @@
 
     <mvc:annotation-driven />
     <mvc:resources mapping="/resources/**" location="/resources/" />
-    <context:component-scan base-package="com.uraltranscom.controller" />
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/views/" />
-        <property name="suffix" value=".jsp" />
-    </bean>
-
-    <!-- Support For File Upload And Download -->
+    <!-- Поддержка загрузки файлов -->
     <bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="10000" />
+        <property name="maxUploadSize" value="100000" />
     </bean>
 
     <!-- Инициализация бина zookeeper -->

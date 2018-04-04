@@ -8,7 +8,8 @@
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:annotation-config />
+    <context:component-scan base-package="com.uraltranscom" />
 
-    <context:component-scan base-package="com.uraltranscom.service" />
+    <import resource="classpath:applicationContext/applicationContext.xml" />
 
 </beans>
