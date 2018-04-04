@@ -18,7 +18,7 @@ package com.uraltranscom.service.impl;
  */
 
 import com.uraltranscom.model.Route;
-import com.uraltranscom.service.GetListOfRoutes;
+import com.uraltranscom.service.GetList;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GetListOfRoutesImpl implements GetListOfRoutes {
+public class GetListOfRoutesImpl implements GetList {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
 

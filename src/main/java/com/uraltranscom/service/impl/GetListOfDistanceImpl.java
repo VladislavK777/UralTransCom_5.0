@@ -2,7 +2,7 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
-import com.uraltranscom.service.GetListOfDistance;
+import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import java.util.*;
  */
 
 @Service
-public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDistance {
+public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfDistanceImpl.class);
 
