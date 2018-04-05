@@ -121,7 +121,7 @@ public class WriteToFileExcel extends JavaHelperBase {
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getCustomer());
                                         }
-                                        if (row.getCell(q).getStringCellValue().trim().equals("Ставка")) {
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Примечание")) {
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(buildText(mapForAdd.getKey().getDistanceEmpty(), mapForAdd.getKey().getCountCircleDays()));
                                         }
