@@ -41,17 +41,24 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
     @Autowired
     private BasicClassLookingForImpl basicClassLookingForImpl;
     @Autowired
-    FillMapsNotVipAndVip fillMapsNotVipAndVip;
+    private FillMapsNotVipAndVip fillMapsNotVipAndVip;
+    @Autowired
+    private GetCountryCodeOfStationImpl getCountryCodeOfStation;
 
     // Основная мапа
     private static Map<String, Integer> rootMapWithDistances = new HashMap<>();
 
-    // Мапа с расстояниями больше 3000км
-    private static Map<String, Integer> rootMapWithDistanceMoreDist3000 = new HashMap<>();
+    // Мапа с расстояниями больше максимального значения
+    private static Map<String, Integer> rootMapWithDistanceMoreMaxDist = new HashMap<>();
 
     // Заполненные мапы Вагонов и Маршрутов
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
     private List<Wagon> listOfWagons = new ArrayList<>();
+
+    // Метки для определения принадлежности станций к странам
+    private Boolean isRusRus = false;
+    private Boolean isCisCis = false;
+    private Boolean isRusCisRus = false;
 
     @Override
     public void fillMap() {
@@ -64,16 +71,22 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Route> entry = iterator.next();
             for (int i = 0; i < listOfWagons.size(); i++) {
-                if (!rootMapWithDistances.containsKey(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture())) {
-                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(listOfWagons.get(i).getKeyOfStationDestination(), entry.getValue().getKeyOfStationDeparture());
+                String stationCode1 = listOfWagons.get(i).getNameOfStationDestination();
+                String stationCode2 = entry.getValue().getNameOfStationDeparture();
+                if (!rootMapWithDistances.containsKey(stationCode1 + "_" + stationCode2)) {
+                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2);
                     if (distance != -1) {
-                        if (distance <= MAX_DISTANCE) {
-                            rootMapWithDistances.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
-                        } else {
-                            rootMapWithDistanceMoreDist3000.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
+                        //TODO перенести в отдельный класс или метод
+                        getResultEqualsCountyCodes(stationCode1, stationCode2);
+                        if (isRusRus) {
+                            if (distance <= MAX_DISTANCE_RUS_TO_RUS) {
+                                rootMapWithDistances.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
+                            } else {
+                                rootMapWithDistanceMoreMaxDist.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
+                            }
                         }
                     } else {
-                        if (!checkExistKeyOfStationImpl.checkExistKey(entry.getValue().getKeyOfStationDeparture())) {
+                        if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
                             basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                             basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
@@ -82,7 +95,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
                             iterator.remove();
                             break;
                         }
-                        if (!checkExistKeyOfStationImpl.checkExistKey(listOfWagons.get(i).getKeyOfStationDestination())) {
+                        if (!checkExistKeyOfStationImpl.checkExistKey(stationCode1)) {
                             basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
                             logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination());
                             basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
@@ -103,6 +116,23 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
         logger.info("Stop process fill map with distances");
     }
 
+    private void getResultEqualsCountyCodes(String stationCode1, String stationCode2) {
+        if (getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) == CODE_IS_RUSSIA &&
+                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) == CODE_IS_RUSSIA) {
+            isRusRus = true;
+        }
+        if (getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) != CODE_IS_RUSSIA &&
+                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) != CODE_IS_RUSSIA) {
+            isCisCis = true;
+        }
+        if ((getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) == CODE_IS_RUSSIA ||
+                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) != CODE_IS_RUSSIA) &&
+                (getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) != CODE_IS_RUSSIA ||
+                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) == CODE_IS_RUSSIA)) {
+            isRusCisRus = true;
+        }
+    }
+
     public static Map<String, Integer> getRootMapWithDistances() {
         return rootMapWithDistances;
     }
@@ -111,12 +141,12 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
         GetListOfDistanceImpl.rootMapWithDistances = rootMapWithDistances;
     }
 
-    public static Map<String, Integer> getRootMapWithDistanceMoreDist3000() {
-        return rootMapWithDistanceMoreDist3000;
+    public static Map<String, Integer> getRootMapWithDistanceMoreMaxDist() {
+        return rootMapWithDistanceMoreMaxDist;
     }
 
-    public static void setRootMapWithDistanceMoreDist3000(Map<String, Integer> rootMapWithDistanceMoreDist3000) {
-        GetListOfDistanceImpl.rootMapWithDistanceMoreDist3000 = rootMapWithDistanceMoreDist3000;
+    public static void setRootMapWithDistanceMoreMaxDist(Map<String, Integer> rootMapWithDistanceMoreMaxDist) {
+        GetListOfDistanceImpl.rootMapWithDistanceMoreMaxDist = rootMapWithDistanceMoreMaxDist;
     }
 
     public Map<Integer, Route> getMapOfRoutes() {

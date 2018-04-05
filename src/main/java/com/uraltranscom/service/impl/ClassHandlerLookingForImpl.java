@@ -89,7 +89,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                     String key = copyListOfWagon.get(i).getNameOfStationDestination().trim() + "_" + tempMapOfRoute.getValue().getNameOfStationDeparture().trim();
                     if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().containsKey(key)) {
                         mapDistance.put(list, basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().get(key));
-                    } else if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreDist3000().containsKey(key)) {
+                    } else if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreMaxDist().containsKey(key)) {
                         continue; // Нам не интересны расстояния больше 3000км
                     } else {
                         int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture);
@@ -98,7 +98,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                 basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().put(key, distance);
                                 mapDistance.put(list, distance);
                             } else {
-                                basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreDist3000().put(key, distance);
+                                basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreMaxDist().put(key, distance);
                             }
                         } else {
                             if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
