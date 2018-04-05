@@ -2,6 +2,7 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
+import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.BasicClassLookingFor;
 import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import com.uraltranscom.service.additional.JavaHelperBase;
@@ -49,7 +50,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private List<Wagon> tempListOfWagons = new ArrayList<>();
 
     // Мапа для записи в файл Вагона + Станция назначения.
-    private Map<String, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
+    private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
@@ -75,7 +76,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         listOfUndistributedWagons.clear();
         listOfError.clear();
 
-
         // Запускаем метод заполненеия первоначальной мапы расстояний
         getListOfDistance.fillMap();
 
@@ -93,13 +93,18 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         for (int i = 0; i < tempListOfWagons.size(); i++) {
             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
         }
+
+        // очищаем мапы
+        tempListOfWagons.clear();
+        tempMapRoutesVip.clear();
+        tempMapRoutesNotVip.clear();
     }
 
-    public Map<String, Route> getTotalMapWithWagonNumberAndRoute() {
+    public Map<WagonFinalInfo, Route> getTotalMapWithWagonNumberAndRoute() {
         return totalMapWithWagonNumberAndRoute;
     }
 
-    public void setTotalMapWithWagonNumberAndRoute(Map<String, Route> totalMapWithWagonNumberAndRoute) {
+    public void setTotalMapWithWagonNumberAndRoute(Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute) {
         this.totalMapWithWagonNumberAndRoute = totalMapWithWagonNumberAndRoute;
     }
 

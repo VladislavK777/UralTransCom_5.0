@@ -16,6 +16,9 @@ package com.uraltranscom.service.export;
  */
 
 import com.uraltranscom.model.Route;
+import com.uraltranscom.model_ext.WagonFinalInfo;
+import com.uraltranscom.service.additional.JavaHelperBase;
+import com.uraltranscom.service.additional.PrefixOfDays;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -36,11 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class WriteToFileExcel {
-
-    private WriteToFileExcel() {
-    }
-
+public class WriteToFileExcel extends JavaHelperBase {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(WriteToFileExcel.class);
 
@@ -50,6 +49,9 @@ public class WriteToFileExcel {
     private static XSSFWorkbook xssfWorkbook;
 
     static File file;
+
+    private WriteToFileExcel() {
+    }
 
     public static void downloadFileExcel(HttpServletResponse response, List<String>... listOfFinal) {
         try {
@@ -74,7 +76,7 @@ public class WriteToFileExcel {
 
     }
 
-    public static void downloadFileExcel(HttpServletResponse response, Map<String, Route> map) {
+    public static void downloadFileExcel(HttpServletResponse response, Map<WagonFinalInfo, Route> map) {
         try {
             String fileName = "Report_" + dateFormat.format(new Date()) + ".xlsx";
             response.setHeader("Content-Disposition", "inline; filename=" + fileName);
@@ -90,7 +92,7 @@ public class WriteToFileExcel {
 
     }
 
-    public static synchronized void writeToFileExcel(HttpServletResponse response, Map<String, Route> map) {
+    public static synchronized void writeToFileExcel(HttpServletResponse response, Map<WagonFinalInfo, Route> map) {
         try {
             ServletOutputStream outputStream = response.getOutputStream();
 
@@ -108,8 +110,8 @@ public class WriteToFileExcel {
                             if ((valueDouble - (int) valueDouble) * 1000 == 0) {
                                 val = (int) valueDouble + "";
                             }
-                            for (Map.Entry<String, Route> mapForAdd : map.entrySet()) {
-                                if (val.equals(mapForAdd.getKey())) {
+                            for (Map.Entry<WagonFinalInfo, Route> mapForAdd : map.entrySet()) {
+                                if (val.equals(mapForAdd.getKey().getNumberOfWagon())) {
                                     for (int q = 0; q < row.getLastCellNum(); q++) {
                                         if (row.getCell(q).getStringCellValue().trim().equals("Станция")) {
                                             Cell cell = xssfRow.createCell(q);
@@ -118,6 +120,10 @@ public class WriteToFileExcel {
                                         if (row.getCell(q).getStringCellValue().trim().equals("Клиент")) {
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getCustomer());
+                                        }
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Примечание")) {
+                                            Cell cell = xssfRow.createCell(q);
+                                            cell.setCellValue(buildText(mapForAdd.getKey().getDistanceEmpty(), mapForAdd.getKey().getCountCircleDays()));
                                         }
                                     }
                                 }
@@ -131,6 +137,14 @@ public class WriteToFileExcel {
             }
         } catch (IOException e) {
             logger.error("Ошибка записи в файл - {}", e.getMessage());
+        }
+    }
+
+    private static String buildText(int dist, int countCircle) {
+        if (countCircle < MAX_FULL_CIRCLE_DAYS ) {
+            return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle));
+        } else {
+            return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle) + "(превышение!)");
         }
     }
 

@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
  */
 
 public class PrefixOfDays extends JavaHelperBase {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(PrefixOfDays.class);
 

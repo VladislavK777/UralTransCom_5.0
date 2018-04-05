@@ -1,7 +1,7 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Wagon;
-import com.uraltranscom.service.GetListOfWagons;
+import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -40,8 +40,7 @@ import java.util.List;
  */
 
 @Service
-public class GetListOfWagonsImpl implements GetListOfWagons {
-
+public class GetListOfWagonsImpl implements GetList {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfWagonsImpl.class);
 

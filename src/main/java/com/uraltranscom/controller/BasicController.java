@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class BasicController {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(BasicController.class);
 
