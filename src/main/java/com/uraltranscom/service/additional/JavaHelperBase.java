@@ -39,6 +39,9 @@ public class JavaHelperBase {
     // Код страны
     public static final int CODE_IS_RUSSIA = 11;
 
-
+    // Коды проверок принадлежности стран
+    public static final int RUS_RUS = 0; // Внутри России
+    public static final int CIS_CIS = 1; // Внутри СНГ
+    public static final int RUS_CIS_RUS = 2; // Между Россией_СНГ_Россией
 
 }

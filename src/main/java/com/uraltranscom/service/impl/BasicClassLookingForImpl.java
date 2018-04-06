@@ -85,10 +85,14 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         tempListOfWagons = getListOfDistance.getListOfWagons();
 
         // Запускаем распределение для VIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons);
+        if (!tempMapRoutesVip.isEmpty()) {
+            classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons);
+        }
 
         // Запускаем распределение для неVIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons);
+        if (!tempMapRoutesNotVip.isEmpty()) {
+            classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons);
+        }
 
         for (int i = 0; i < tempListOfWagons.size(); i++) {
             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());

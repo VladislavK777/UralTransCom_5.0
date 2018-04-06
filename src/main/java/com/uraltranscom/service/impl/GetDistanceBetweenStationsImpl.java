@@ -45,7 +45,7 @@ public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetD
         try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос
-            callableStatement = connection.prepareCall(" { call getDistance(?,?) } ");
+            callableStatement = connection.prepareCall(" { call getdistancetest(?,?) } ");
 
             // Определяем значения параметров
             callableStatement.setString(1, keyOfStationDeparture);

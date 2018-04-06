@@ -51,12 +51,8 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
         logger.info("Start root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
 
         // Заполняем мапы
-        List<Wagon> copyListOfWagon = new ArrayList<>();
-        Map<Integer, Route> tempMapOfRoutes = new HashMap<>();
-        for (Wagon wagon : tempListOfWagons) {
-            copyListOfWagon.add(wagon);
-        }
-        tempMapOfRoutes.putAll(mapOfRoutes);
+        List<Wagon> copyListOfWagon = new ArrayList<>(tempListOfWagons);
+        Map<Integer, Route> tempMapOfRoutes = new HashMap<>(mapOfRoutes);
 
         // Список расстояний
         Map<List<Object>, Integer> mapDistance = new HashMap<>();
@@ -70,7 +66,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
             mapDistance.clear();
 
             for (int i = 0; i < countWagons; i++) {
-
                 // Поулчаем номер вагона
                 String numberOfWagon = copyListOfWagon.get(i).getNumberOfWagon().trim();
 
@@ -87,18 +82,19 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                     list.add(numberOfWagon);
                     list.add(tempMapOfRoute.getValue());
                     String key = copyListOfWagon.get(i).getNameOfStationDestination().trim() + "_" + tempMapOfRoute.getValue().getNameOfStationDeparture().trim();
-                    if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().containsKey(key)) {
-                        mapDistance.put(list, basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().get(key));
-                    } else if (basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreMaxDist().containsKey(key)) {
-                        continue; // Нам не интересны расстояния больше 3000км
-                    } else {
+                    // Для начала ищем в готовой мапе подходящих расстояний
+                    if (GetListOfDistanceImpl.getRootMapWithDistances().containsKey(key)) {
+                        mapDistance.put(list, GetListOfDistanceImpl.getRootMapWithDistances().get(key));
+                    // Если в ней нет, ищем в неподходящий, если находим, пропускаем шаг
+                    } else if (!GetListOfDistanceImpl.getRootMapWithDistanceMoreMaxDist().containsKey(key)) {
+                        // Если не находим, то лезем в базу
                         int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture);
                         if (distance != -1) {
-                            if (distance <= MAX_DISTANCE) {
-                                basicClassLookingFor.getGetListOfDistance().getRootMapWithDistances().put(key, distance);
+                            if (distance != -20000) {
+                                GetListOfDistanceImpl.getRootMapWithDistances().put(key, distance);
                                 mapDistance.put(list, distance);
                             } else {
-                                basicClassLookingFor.getGetListOfDistance().getRootMapWithDistanceMoreMaxDist().put(key, distance);
+                                GetListOfDistanceImpl.getRootMapWithDistanceMoreMaxDist().put(key, distance);
                             }
                         } else {
                             if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
@@ -138,9 +134,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                     mapDistanceSort.put(cmv.wagon, cmv.distance);
                 }
 
-                // Мапа для удаления использованных маршрутов
-                Map<Integer, Route> mapOfRoutesForDelete = tempMapOfRoutes;
-
                 // Цикл формирования рейсов
                 // Проверяем на пустоту мап, либо вагоны, либо рейсы
                 outer:
@@ -153,12 +146,12 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
 
                     final int[] o = {0};
                     Map<Integer, Route> tempMapOfRouteForDelete = new HashMap<>();
-                    mapOfRoutesForDelete.forEach((k, v) -> {
+                    tempMapOfRoutes.forEach((k, v) -> {
                         tempMapOfRouteForDelete.put(o[0], v);
                         o[0]++;
                     });
 
-                    for (Iterator<Map.Entry<Integer, Route>> it = mapOfRoutesForDelete.entrySet().iterator(); it.hasNext(); ) {
+                    for (Iterator<Map.Entry<Integer, Route>> it = tempMapOfRoutes.entrySet().iterator(); it.hasNext(); ) {
                         Map.Entry<Integer, Route> entry = it.next();
                         for (int j = 0; j < tempMapOfRouteForDelete.size(); j++) {
                             // Находим маршрут для вагона
@@ -185,14 +178,14 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         copyListOfWagon.remove(getKeyNumber);
 
                                         // Уменьшаем количество рейсов у маршрута
-                                        mapOfRoutesForDelete.put(entry.getKey(), new Route(mapOfRoutesForDelete.get(entry.getKey()).getKeyOfStationDeparture(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getNameOfStationDeparture(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getKeyOfStationDestination(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getNameOfStationDestination(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getDistanceOfWay(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getVIP(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getCustomer(),
-                                                mapOfRoutesForDelete.get(entry.getKey()).getCountOrders() - 1));
+                                        tempMapOfRoutes.put(entry.getKey(), new Route(tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDeparture(),
+                                                tempMapOfRoutes.get(entry.getKey()).getNameOfStationDeparture(),
+                                                tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDestination(),
+                                                tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
+                                                tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
+                                                tempMapOfRoutes.get(entry.getKey()).getVIP(),
+                                                tempMapOfRoutes.get(entry.getKey()).getCustomer(),
+                                                tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1));
 
                                         basicClassLookingFor.getListOfDistributedRoutesAndWagons().add("Вагон " + numberOfWagon + " едет на станцию "
                                                 + nameOfStationDepartureOfWagon + ": "
@@ -203,7 +196,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(numberOfWagon, countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));
 
                                         // Удаляем маршрут, если по нему 0 рейсов
-                                        if (mapOfRoutesForDelete.get(entry.getKey()).getCountOrders() == 0) {
+                                        if (tempMapOfRoutes.get(entry.getKey()).getCountOrders() == 0) {
                                             it.remove();
                                         }
                                         // Выходим из цикла, так как с ним больше ничего не сделать

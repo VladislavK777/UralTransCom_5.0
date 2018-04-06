@@ -42,8 +42,6 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
     private BasicClassLookingForImpl basicClassLookingForImpl;
     @Autowired
     private FillMapsNotVipAndVip fillMapsNotVipAndVip;
-    @Autowired
-    private GetCountryCodeOfStationImpl getCountryCodeOfStation;
 
     // Основная мапа
     private static Map<String, Integer> rootMapWithDistances = new HashMap<>();
@@ -54,11 +52,6 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
     // Заполненные мапы Вагонов и Маршрутов
     private Map<Integer, Route> mapOfRoutes = new HashMap<>();
     private List<Wagon> listOfWagons = new ArrayList<>();
-
-    // Метки для определения принадлежности станций к странам
-    private Boolean isRusRus = false;
-    private Boolean isCisCis = false;
-    private Boolean isRusCisRus = false;
 
     @Override
     public void fillMap() {
@@ -71,37 +64,35 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Route> entry = iterator.next();
             for (int i = 0; i < listOfWagons.size(); i++) {
-                String stationCode1 = listOfWagons.get(i).getNameOfStationDestination();
-                String stationCode2 = entry.getValue().getNameOfStationDeparture();
-                if (!rootMapWithDistances.containsKey(stationCode1 + "_" + stationCode2)) {
-                    int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2);
-                    if (distance != -1) {
-                        //TODO перенести в отдельный класс или метод
-                        getResultEqualsCountyCodes(stationCode1, stationCode2);
-                        if (isRusRus) {
-                            if (distance <= MAX_DISTANCE_RUS_TO_RUS) {
-                                rootMapWithDistances.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
+                String stationCode1 = listOfWagons.get(i).getKeyOfStationDestination();
+                String stationCode2 = entry.getValue().getKeyOfStationDeparture();
+                String key = listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture();
+                if (!rootMapWithDistances.containsKey(key)) {
+                    if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
+                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2);
+                        if (distance != -1) {
+                            if (distance != -20000) {
+                                rootMapWithDistances.put(key, distance);
                             } else {
-                                rootMapWithDistanceMoreMaxDist.put(listOfWagons.get(i).getNameOfStationDestination() + "_" + entry.getValue().getNameOfStationDeparture(), distance);
+                                rootMapWithDistanceMoreMaxDist.put(key, distance);
                             }
-                        }
-                    } else {
-                        if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
-                            basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                            logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                            basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
-                                    entry.getValue().getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + entry.getValue().getCountOrders());
-                            logger.info("delete: {}", entry.getValue().toString());
-                            iterator.remove();
-                            break;
-                        }
-                        if (!checkExistKeyOfStationImpl.checkExistKey(stationCode1)) {
-                            basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
-                            logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination());
-                            basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
-                            listOfWagons.remove(i);
-                            break;
+                        } else {
+                            if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
+                                basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
+                                logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
+                                basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
+                                        entry.getValue().getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + entry.getValue().getCountOrders());
+                                iterator.remove();
+                                break;
+                            }
+                            if (!checkExistKeyOfStationImpl.checkExistKey(stationCode1)) {
+                                basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
+                                logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination());
+                                basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
+                                listOfWagons.remove(i);
+                                break;
 
+                            }
                         }
                     }
                 }
@@ -114,23 +105,6 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
             logger.error("Map must not empty");
         }
         logger.info("Stop process fill map with distances");
-    }
-
-    private void getResultEqualsCountyCodes(String stationCode1, String stationCode2) {
-        if (getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) == CODE_IS_RUSSIA &&
-                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) == CODE_IS_RUSSIA) {
-            isRusRus = true;
-        }
-        if (getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) != CODE_IS_RUSSIA &&
-                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) != CODE_IS_RUSSIA) {
-            isCisCis = true;
-        }
-        if ((getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) == CODE_IS_RUSSIA ||
-                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) != CODE_IS_RUSSIA) &&
-                (getCountryCodeOfStation.getCountryCodeOfStation(stationCode1) != CODE_IS_RUSSIA ||
-                getCountryCodeOfStation.getCountryCodeOfStation(stationCode2) == CODE_IS_RUSSIA)) {
-            isRusCisRus = true;
-        }
     }
 
     public static Map<String, Integer> getRootMapWithDistances() {
