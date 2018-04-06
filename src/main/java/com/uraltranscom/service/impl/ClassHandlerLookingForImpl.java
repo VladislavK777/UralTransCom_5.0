@@ -81,7 +81,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                     String keyOfStationDeparture = tempMapOfRoute.getValue().getKeyOfStationDeparture();
                     list.add(numberOfWagon);
                     list.add(tempMapOfRoute.getValue());
-                    String key = copyListOfWagon.get(i).getNameOfStationDestination().trim() + "_" + tempMapOfRoute.getValue().getNameOfStationDeparture().trim();
+                    String key = keyOfStationOfWagonDestination + "_" + keyOfStationDeparture;
                     // Для начала ищем в готовой мапе подходящих расстояний
                     if (GetListOfDistanceImpl.getRootMapWithDistances().containsKey(key)) {
                         mapDistance.put(list, GetListOfDistanceImpl.getRootMapWithDistances().get(key));
