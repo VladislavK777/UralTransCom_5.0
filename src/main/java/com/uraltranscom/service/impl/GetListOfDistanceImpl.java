@@ -66,7 +66,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
             for (int i = 0; i < listOfWagons.size(); i++) {
                 String stationCode1 = listOfWagons.get(i).getKeyOfStationDestination();
                 String stationCode2 = entry.getValue().getKeyOfStationDeparture();
-                String key = listOfWagons.get(i).getKeyOfStationDestination() + "_" + entry.getValue().getKeyOfStationDeparture();
+                String key = stationCode1 + "_" + stationCode2;
                 if (!rootMapWithDistances.containsKey(key)) {
                     if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
                         int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2);
