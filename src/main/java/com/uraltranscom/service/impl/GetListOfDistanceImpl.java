@@ -107,19 +107,19 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
         logger.info("Stop process fill map with distances");
     }
 
-    public static Map<String, Integer> getRootMapWithDistances() {
+    public Map<String, Integer> getRootMapWithDistances() {
         return rootMapWithDistances;
     }
 
-    public static void setRootMapWithDistances(Map<String, Integer> rootMapWithDistances) {
+    public void setRootMapWithDistances(Map<String, Integer> rootMapWithDistances) {
         GetListOfDistanceImpl.rootMapWithDistances = rootMapWithDistances;
     }
 
-    public static Map<String, Integer> getRootMapWithDistanceMoreMaxDist() {
+    public Map<String, Integer> getRootMapWithDistanceMoreMaxDist() {
         return rootMapWithDistanceMoreMaxDist;
     }
 
-    public static void setRootMapWithDistanceMoreMaxDist(Map<String, Integer> rootMapWithDistanceMoreMaxDist) {
+    public void setRootMapWithDistanceMoreMaxDist(Map<String, Integer> rootMapWithDistanceMoreMaxDist) {
         GetListOfDistanceImpl.rootMapWithDistanceMoreMaxDist = rootMapWithDistanceMoreMaxDist;
     }
 

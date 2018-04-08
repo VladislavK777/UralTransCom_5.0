@@ -35,11 +35,9 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     private static Logger logger = LoggerFactory.getLogger(ClassHandlerLookingForImpl.class);
 
     @Autowired
-    private GetDistanceBetweenStationsImpl getDistanceBetweenStations;
+    private GetListOfDistanceImpl getListOfDistance;
     @Autowired
     private GetFullMonthCircleOfWagonImpl getFullMonthCircleOfWagonImpl;
-    @Autowired
-    private CheckExistKeyOfStationImpl checkExistKeyOfStationImpl;
     @Autowired
     private BasicClassLookingForImpl basicClassLookingFor;
 
@@ -60,69 +58,38 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
         // Запускаем цикл
         Boolean isOk = true;
         while (!tempMapOfRoutes.isEmpty() && !copyListOfWagon.isEmpty()) {
-            int countWagons = copyListOfWagon.size();
 
             // Очищаем массивы
             mapDistance.clear();
 
-            for (int i = 0; i < countWagons; i++) {
+            for (Wagon _copyListOfWagon : copyListOfWagon) {
                 // Поулчаем номер вагона
-                String numberOfWagon = copyListOfWagon.get(i).getNumberOfWagon().trim();
+                String numberOfWagon = _copyListOfWagon.getNumberOfWagon().trim();
 
                 // Получаем код станции назначения вагона
-                String keyOfStationOfWagonDestination = copyListOfWagon.get(i).getKeyOfStationDestination().trim();
+                String keyOfStationOfWagonDestination = _copyListOfWagon.getKeyOfStationDestination().trim();
 
                 // По каждому вагону высчитываем расстояние до каждой начальной станнции маршрутов
                 // Цикл расчета расстояния и заполнения мапы
-                Iterator<Map.Entry<Integer, Route>> iterator = tempMapOfRoutes.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<Integer, Route> tempMapOfRoute = iterator.next();
+                for (Map.Entry<Integer, Route> _tempMapOfRoutes : tempMapOfRoutes.entrySet()) {
                     List<Object> list = new ArrayList<>();
-                    String keyOfStationDeparture = tempMapOfRoute.getValue().getKeyOfStationDeparture();
+                    String keyOfStationDeparture = _tempMapOfRoutes.getValue().getKeyOfStationDeparture();
                     list.add(numberOfWagon);
-                    list.add(tempMapOfRoute.getValue());
+                    list.add(_tempMapOfRoutes.getValue());
                     String key = keyOfStationOfWagonDestination + "_" + keyOfStationDeparture;
-                    // Для начала ищем в готовой мапе подходящих расстояний
-                    if (GetListOfDistanceImpl.getRootMapWithDistances().containsKey(key)) {
-                        mapDistance.put(list, GetListOfDistanceImpl.getRootMapWithDistances().get(key));
-                    // Если в ней нет, ищем в неподходящий, если находим, пропускаем шаг
-                    } else if (!GetListOfDistanceImpl.getRootMapWithDistanceMoreMaxDist().containsKey(key)) {
-                        // Если не находим, то лезем в базу
-                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(keyOfStationOfWagonDestination, keyOfStationDeparture);
-                        if (distance != -1) {
-                            if (distance != -20000) {
-                                GetListOfDistanceImpl.getRootMapWithDistances().put(key, distance);
-                                mapDistance.put(list, distance);
-                            } else {
-                                GetListOfDistanceImpl.getRootMapWithDistanceMoreMaxDist().put(key, distance);
-                            }
-                        } else {
-                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationDeparture)) {
-                                basicClassLookingFor.getListOfError().add("Проверьте код станции " + keyOfStationDeparture);
-                                logger.error("Проверьте код станции {}", keyOfStationDeparture);
-                                basicClassLookingFor.getListOfUndistributedRoutes().add(tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDeparture() + " - " +
-                                        tempMapOfRoutes.get(tempMapOfRoute.getKey()).getNameOfStationDestination() + ". Оставшиеся количество рейсов: " +
-                                        tempMapOfRoutes.get(tempMapOfRoute.getKey()).getCountOrders());
-                                iterator.remove();
-                                break;
-                            }
-                            if (!checkExistKeyOfStationImpl.checkExistKey(keyOfStationOfWagonDestination)) {
-                                basicClassLookingFor.getListOfError().add("Проверьте код станции " + keyOfStationOfWagonDestination);
-                                logger.error("Проверьте код станции {}", keyOfStationOfWagonDestination);
-                                copyListOfWagon.remove(i);
-                                countWagons = copyListOfWagon.size();
-                                break;
-                            }
-                        }
+
+                    // Ищем в готовой мапе расстояние
+                    if (getListOfDistance.getRootMapWithDistances().containsKey(key)) {
+                        mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key));
                     }
                 }
             }
 
             if (!mapDistance.isEmpty()) {
-                // Отсортированный список расстояний
+
+                // Сортируем мапу по значению
                 Map<List<Object>, Integer> mapDistanceSort = new LinkedHashMap<>();
 
-                // Поиск меньшего значения в мапе
                 int index = mapDistance.size();
                 CompareMapValue[] compareMapValues = new CompareMapValue[index];
                 index = 0;
@@ -151,7 +118,8 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                         o[0]++;
                     });
 
-                    for (Iterator<Map.Entry<Integer, Route>> it = tempMapOfRoutes.entrySet().iterator(); it.hasNext(); ) {
+                    Iterator<Map.Entry<Integer, Route>> it = tempMapOfRoutes.entrySet().iterator();
+                    while (it.hasNext()) {
                         Map.Entry<Integer, Route> entry = it.next();
                         for (int j = 0; j < tempMapOfRouteForDelete.size(); j++) {
                             // Находим маршрут для вагона
@@ -167,47 +135,40 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                     // Число дней пройденных вагоном
                                     int countCircleDays = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
-                                    // Если больше 30 дней, то исключаем вагон, лимит 30 дней
-                                   // if (countCircleDays < MAX_FULL_CIRCLE_DAYS) {
-                                        // Удаляем вагон
-                                        for (int i = 0; i < tempListOfWagons.size(); i++) {
-                                            if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
-                                                tempListOfWagons.remove(i);
-                                            }
+                                    // Удаляем вагон
+                                    for (int i = 0; i < tempListOfWagons.size(); i++) {
+                                        if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
+                                            tempListOfWagons.remove(i);
                                         }
-                                        copyListOfWagon.remove(getKeyNumber);
+                                    }
 
-                                        // Уменьшаем количество рейсов у маршрута
-                                        tempMapOfRoutes.put(entry.getKey(), new Route(tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDeparture(),
-                                                tempMapOfRoutes.get(entry.getKey()).getNameOfStationDeparture(),
-                                                tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDestination(),
-                                                tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
-                                                tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
-                                                tempMapOfRoutes.get(entry.getKey()).getVIP(),
-                                                tempMapOfRoutes.get(entry.getKey()).getCustomer(),
-                                                tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1));
+                                    copyListOfWagon.remove(getKeyNumber);
 
-                                        basicClassLookingFor.getListOfDistributedRoutesAndWagons().add("Вагон " + numberOfWagon + " едет на станцию "
-                                                + nameOfStationDepartureOfWagon + ": "
-                                                + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
-                                                + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
-                                                + countCircleDays + " " + PrefixOfDays.parsePrefixOfDays(countCircleDays) + ".");
+                                    // Уменьшаем количество рейсов у маршрута
+                                    tempMapOfRoutes.put(entry.getKey(), new Route(tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDeparture(),
+                                            tempMapOfRoutes.get(entry.getKey()).getNameOfStationDeparture(),
+                                            tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDestination(),
+                                            tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
+                                            tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
+                                            tempMapOfRoutes.get(entry.getKey()).getVIP(),
+                                            tempMapOfRoutes.get(entry.getKey()).getCustomer(),
+                                            tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1));
 
-                                        basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(numberOfWagon, countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));
+                                    basicClassLookingFor.getListOfDistributedRoutesAndWagons().add("Вагон " + numberOfWagon + " едет на станцию "
+                                            + nameOfStationDepartureOfWagon + ": "
+                                            + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
+                                            + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
+                                            + countCircleDays + " " + PrefixOfDays.parsePrefixOfDays(countCircleDays) + ".");
 
-                                        // Удаляем маршрут, если по нему 0 рейсов
-                                        if (tempMapOfRoutes.get(entry.getKey()).getCountOrders() == 0) {
-                                            it.remove();
-                                        }
-                                        // Выходим из цикла, так как с ним больше ничего не сделать
-                                        break outer;
-                                   /* } else {
-                                        // Удаляем вагон
-                                        copyListOfWagon.remove(getKeyNumber);
+                                    basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(numberOfWagon, countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));
 
-                                        // Выходим из цикла, так как с ним больше ничего не сделать
-                                        break outer;
-                                    }*/
+                                    // Удаляем маршрут, если по нему 0 рейсов
+                                    if (tempMapOfRoutes.get(entry.getKey()).getCountOrders() == 0) {
+                                        it.remove();
+                                    }
+
+                                    // Выходим из цикла, так как с ним больше ничего не сделать
+                                    break outer;
                                 }
                             }
                         }

@@ -48,7 +48,7 @@ public class WriteToFileExcel extends JavaHelperBase {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat();
     private static XSSFWorkbook xssfWorkbook;
 
-    static File file;
+    private static File file;
 
     private WriteToFileExcel() {
     }
@@ -142,9 +142,9 @@ public class WriteToFileExcel extends JavaHelperBase {
 
     private static String buildText(int dist, int countCircle) {
         if (countCircle < MAX_FULL_CIRCLE_DAYS ) {
-            return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle));
+            return dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle);
         } else {
-            return new String(dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle) + "(превышение!)");
+            return dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle) + "(превышение!)";
         }
     }
 

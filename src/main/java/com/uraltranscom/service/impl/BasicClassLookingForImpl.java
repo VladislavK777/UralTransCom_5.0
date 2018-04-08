@@ -45,10 +45,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     @Autowired
     private ClassHandlerLookingForImpl classHandlerLookingFor;
 
-    private Map<Integer, Route> tempMapRoutesVip = new HashMap<>();
-    private Map<Integer, Route> tempMapRoutesNotVip = new HashMap<>();
-    private List<Wagon> tempListOfWagons = new ArrayList<>();
-
     // Мапа для записи в файл Вагона + Станция назначения.
     private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
@@ -80,9 +76,9 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         getListOfDistance.fillMap();
 
         // Заполняем мапы
-        tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
-        tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
-        tempListOfWagons = getListOfDistance.getListOfWagons();
+        Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
+        Map<Integer, Route> tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
+        List<Wagon> tempListOfWagons = getListOfDistance.getListOfWagons();
 
         // Запускаем распределение для VIP
         if (!tempMapRoutesVip.isEmpty()) {

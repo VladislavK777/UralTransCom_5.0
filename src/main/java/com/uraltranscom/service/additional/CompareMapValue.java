@@ -28,8 +28,8 @@ public class CompareMapValue implements Comparable {
 
     public int compareTo(Object o) {
         if (o instanceof CompareMapValue) {
-            final int diff = distance.intValue() - ((CompareMapValue) o).distance.intValue();
-            return diff < 0 ? -1 : (diff > 0 ? 1 : 0);
+            final int diff = distance - ((CompareMapValue) o).distance;
+            return Integer.compare(diff, 0);
         } else {
             return 0;
         }
