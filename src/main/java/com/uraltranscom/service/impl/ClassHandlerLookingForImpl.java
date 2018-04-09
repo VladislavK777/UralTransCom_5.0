@@ -150,7 +150,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                             tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDestination(),
                                             tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
                                             tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
-                                            tempMapOfRoutes.get(entry.getKey()).getVIP(),
                                             tempMapOfRoutes.get(entry.getKey()).getCustomer(),
                                             tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1));
 

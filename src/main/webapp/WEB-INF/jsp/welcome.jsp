@@ -230,13 +230,13 @@
                          style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
                     </div>
                     <div class="form">
-                        <form enctype="multipart/form-data" method="post" action="reports">
+                        <form enctype="multipart/form-data" method="post" action="routes">
                             <p>Файл заявок</p>
                             <input type="file" name="routes" multiple accept="xlsx">
                             <p>Файл дислокации вагонов</p>
                             <input type="file" name="wagons" multiple accept="xlsx">
                             <p>
-                                <input type="submit" value="Start" class="bot2" id="startProcess" onclick="lockScreen();">
+                                <input type="submit" value="Start" class="bot2">
                             </p>
                         </form>
                     </div>

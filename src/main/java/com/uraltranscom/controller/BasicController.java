@@ -15,9 +15,10 @@ package com.uraltranscom.controller;
  *
  */
 
-import com.uraltranscom.service.impl.BasicClassLookingForImpl;
 import com.uraltranscom.service.additional.MultipartFileToFile;
 import com.uraltranscom.service.export.WriteToFileExcel;
+import com.uraltranscom.service.impl.BasicClassLookingForImpl;
+import com.uraltranscom.service.impl.GetListOfRoutesImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,17 +39,26 @@ public class BasicController {
     @Autowired
     private BasicClassLookingForImpl basicClassLookingForImpl;
 
+    @Autowired
+    private GetListOfRoutesImpl getListOfRoutes;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
         return "welcome";
     }
 
-    @RequestMapping(value = "/reports", method = RequestMethod.POST)
-    public String reportList(@RequestParam(value = "routes") MultipartFile routeFile,
+    @RequestMapping(value = "/routes", method = RequestMethod.POST)
+    public String routeList(@RequestParam(value = "routes") MultipartFile routeFile,
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
         basicClassLookingForImpl.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
         basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
-        basicClassLookingForImpl.fillMapRouteIsOptimal();
+        model.addAttribute("listRoute", getListOfRoutes.getMapOfRoutes());
+        return "showroutes";
+    }
+
+    @RequestMapping(value = "/reports", method = RequestMethod.POST)
+    public String reportList(@RequestParam(value = "routeId", defaultValue = "") String routeId, Model model) {
+        basicClassLookingForImpl.fillMapRouteIsOptimal(routeId);
         model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getListOfDistributedRoutesAndWagons());
         model.addAttribute("reportListOfDistributedRoutes", basicClassLookingForImpl.getListOfUndistributedRoutes());
         model.addAttribute("reportListOfDistributedWagons", basicClassLookingForImpl.getListOfUndistributedWagons());

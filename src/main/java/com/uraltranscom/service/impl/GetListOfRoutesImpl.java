@@ -73,7 +73,6 @@ public class GetListOfRoutesImpl implements GetList {
                 String keyOfStationDestination = null;
                 String nameOfStationDestination = null;
                 String distanceOfWay = null;
-                String VIP = null;
                 String customer = null;
                 int countOrders = 0;
 
@@ -103,7 +102,7 @@ public class GetListOfRoutesImpl implements GetList {
                         }
                         distanceOfWay = val;
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Приоритет")) {
+                    /*if (row.getCell(c).getStringCellValue().equals("Приоритет")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String value = xssfRow.getCell(c).getStringCellValue();
                         if (value.equals("Да")) {
@@ -111,7 +110,7 @@ public class GetListOfRoutesImpl implements GetList {
                         } else {
                             VIP = "0";
                         }
-                    }
+                    }*/
                     if (row.getCell(c).getStringCellValue().trim().equals("Заказчик")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
@@ -121,7 +120,7 @@ public class GetListOfRoutesImpl implements GetList {
                         countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders));
+                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders));
                 i++;
             }
             logger.debug("Body route: {}", mapOfRoutes);

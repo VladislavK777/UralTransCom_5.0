@@ -2,7 +2,7 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
-import com.uraltranscom.service.GetList;
+import com.uraltranscom.service.GetListOfDistance;
 import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import java.util.*;
  */
 
 @Service
-public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
+public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDistance {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfDistanceImpl.class);
 
@@ -54,11 +54,22 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
     private List<Wagon> listOfWagons = new ArrayList<>();
 
     @Override
-    public void fillMap() {
+    public void fillMap(String routeId) {
         logger.info("Start process fill map with distances");
 
         mapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
         listOfWagons = getListOfWagonsImpl.getListOfWagons();
+
+        if (!routeId.isEmpty()) {
+            String[] routesId = routeId.split(",");
+            for (Map.Entry<Integer, Route> _mapOfRoutes : mapOfRoutes.entrySet()) {
+                for (String _routesId : routesId) {
+                    if (_mapOfRoutes.getKey() == Integer.parseInt(_routesId)) {
+                        mapOfRoutes.get(Integer.parseInt(_routesId)).setVIP("1");
+                    }
+                }
+            }
+        }
 
         Iterator<Map.Entry<Integer, Route>> iterator = mapOfRoutes.entrySet().iterator();
         while (iterator.hasNext()) {

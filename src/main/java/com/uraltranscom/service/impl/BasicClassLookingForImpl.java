@@ -65,7 +65,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     }
 
     @Override
-    public void fillMapRouteIsOptimal() {
+    public void fillMapRouteIsOptimal(String routeId) {
         // Очищаем массивы итоговые
         listOfDistributedRoutesAndWagons.clear();
         listOfUndistributedRoutes.clear();
@@ -73,7 +73,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         listOfError.clear();
 
         // Запускаем метод заполненеия первоначальной мапы расстояний
-        getListOfDistance.fillMap();
+        getListOfDistance.fillMap(routeId);
 
         // Заполняем мапы
         Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();

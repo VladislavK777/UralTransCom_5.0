@@ -29,18 +29,17 @@ public class Route {
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Станция назначения
     private String distanceOfWay; // Расстояние маршрута
-    private String VIP; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
+    private String VIP = "0"; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
     private String customer; // Заказчик
     private int countOrders; // Количество заявок на маршрут
 
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String VIP, String customer, int countOrders) {
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, int countOrders) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.distanceOfWay = distanceOfWay;
-        this.VIP = VIP;
         this.customer = customer;
         this.countOrders = countOrders;
     }
