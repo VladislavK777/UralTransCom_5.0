@@ -5,13 +5,15 @@ package com.uraltranscom.controller;
  * Контроллер
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.2
  * @create 12.01.2018
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 09.04.2018
+ *   1. Версия 4.2
  *
  */
 
