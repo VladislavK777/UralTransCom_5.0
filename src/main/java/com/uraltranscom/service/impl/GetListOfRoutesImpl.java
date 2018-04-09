@@ -56,6 +56,7 @@ public class GetListOfRoutesImpl implements GetList {
     // TODO Переписать метод, избавиться от формата жесткого, необходимо и XLSX и XLS
     @Override
     public void fillMap() {
+        mapOfRoutes.clear();
         // Получаем файл формата xls
         try {
             fileInputStream = new FileInputStream(this.file);
