@@ -145,22 +145,19 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                     copyListOfWagon.remove(getKeyNumber);
 
                                     // Уменьшаем количество рейсов у маршрута
-                                    int countOrders = tempMapOfRoutes.get(entry.getKey()).getCountOrders();
-                                    tempMapOfRoutes.get(entry.getKey()).setCountOrders(countOrders - 1);
-
-                                    // Удаляем маршрут, если по нему 0 рейсов
-                                    if (countOrders == 0) {
-                                        it.remove();
-                                    }
-
-                                    /*tempMapOfRoutes.put(entry.getKey(), new Route(tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDeparture(),
+                                    tempMapOfRoutes.put(entry.getKey(), new Route(tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDeparture(),
                                             tempMapOfRoutes.get(entry.getKey()).getNameOfStationDeparture(),
                                             tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDestination(),
                                             tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
                                             tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
                                             tempMapOfRoutes.get(entry.getKey()).getVIP(),
                                             tempMapOfRoutes.get(entry.getKey()).getCustomer(),
-                                            tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1));*/
+                                            tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1));
+
+                                    // Удаляем маршрут, если по нему 0 рейсов
+                                    if (tempMapOfRoutes.get(entry.getKey()).getCountOrders() == 0) {
+                                        it.remove();
+                                    }
 
                                     basicClassLookingFor.getListOfDistributedRoutesAndWagons().add("Вагон " + numberOfWagon + " едет на станцию "
                                             + nameOfStationDepartureOfWagon + ": "
