@@ -74,9 +74,10 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                 for (Map.Entry<Integer, Route> _tempMapOfRoutes : tempMapOfRoutes.entrySet()) {
                     List<Object> list = new ArrayList<>();
                     String keyOfStationDeparture = _tempMapOfRoutes.getValue().getKeyOfStationDeparture();
+                    String cargo = _tempMapOfRoutes.getValue().getCargo();
                     list.add(numberOfWagon);
                     list.add(_tempMapOfRoutes.getValue());
-                    String key = keyOfStationOfWagonDestination + "_" + keyOfStationDeparture;
+                    String key = keyOfStationOfWagonDestination + "_" + keyOfStationDeparture + "_" + cargo;
 
                     // Ищем в готовой мапе расстояние
                     if (getListOfDistance.getRootMapWithDistances().containsKey(key)) {
@@ -133,7 +134,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                     }
 
                                     // Число дней пройденных вагоном
-                                    int countCircleDays = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getTypeOfWagon(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
+                                    int countCircleDays = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getWagonType().toString(), mapDistanceSortFirstElement.getValue(), r.getDistanceOfWay());
 
                                     // Удаляем вагон
                                     for (int i = 0; i < tempListOfWagons.size(); i++) {
