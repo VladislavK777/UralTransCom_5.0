@@ -150,8 +150,10 @@ public class GetListOfRoutesImpl implements GetList {
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
-                i++;
+                if (countOrders > 0 && wagonType.equals("КР")) {
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                    i++;
+                }
             }
             logger.info("Body route: {}", mapOfRoutes);
         } catch (IOException e) {
