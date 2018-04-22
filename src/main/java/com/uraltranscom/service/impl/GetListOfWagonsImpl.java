@@ -1,6 +1,7 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Wagon;
+import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
@@ -23,7 +24,7 @@ import java.util.List;
  * Класс получения списка вагонов
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 25.10.2017
  *
  * 06.11.2017
@@ -36,6 +37,8 @@ import java.util.List;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 19.04.2018
+ *   1. Версия 4.1
  *
  */
 
@@ -82,6 +85,8 @@ public class GetListOfWagonsImpl implements GetList {
                 String typeOfWagon = null;
                 String keyOfStationDestination = null;
                 String nameOfStationDestination = null;
+                String wagonType = null;
+                int volume = 0;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals("Вагон №")) {
@@ -105,8 +110,12 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Объем")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        volume = (int) xssfRow.getCell(c).getNumericCellValue();
+                    }
                 }
-                listOfWagons.add(new Wagon(numberOfWagon, typeOfWagon, keyOfStationDestination, nameOfStationDestination));
+                listOfWagons.add(new Wagon(numberOfWagon, new WagonType(wagonType), keyOfStationDestination, nameOfStationDestination, volume));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {
