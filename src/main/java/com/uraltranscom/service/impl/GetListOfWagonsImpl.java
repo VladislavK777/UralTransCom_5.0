@@ -1,7 +1,6 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Wagon;
-import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
@@ -82,11 +81,10 @@ public class GetListOfWagonsImpl implements GetList {
                 XSSFRow row = sheet.getRow(0);
 
                 String numberOfWagon = null;
-                String typeOfWagon = null;
                 String keyOfStationDestination = null;
                 String nameOfStationDestination = null;
-                String wagonType = null;
                 int volume = 0;
+                String cargo = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals("Вагон №")) {
@@ -97,10 +95,6 @@ public class GetListOfWagonsImpl implements GetList {
                             val = (int) valueDouble + "";
                         }
                         numberOfWagon = val;
-                    }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Тип вагона")) {
-                        XSSFRow xssfRow = sheet.getRow(j);
-                        typeOfWagon = xssfRow.getCell(c).getStringCellValue();
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
@@ -114,8 +108,12 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volume = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Груз")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        cargo = xssfRow.getCell(c).getStringCellValue();
+                    }
                 }
-                listOfWagons.add(new Wagon(numberOfWagon, new WagonType(wagonType), keyOfStationDestination, nameOfStationDestination, volume));
+                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {

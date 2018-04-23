@@ -103,7 +103,7 @@ public class GetListOfRoutesImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние, км")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
                         double valueDouble = xssfRow.getCell(c).getNumericCellValue();
@@ -155,7 +155,7 @@ public class GetListOfRoutesImpl implements GetList {
                     i++;
                 }
             }
-            logger.info("Body route: {}", mapOfRoutes);
+            logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {
             logger.error("Ошибка загруки файла - {}", e.getMessage());
         } catch (OLE2NotOfficeXmlFileException e1) {

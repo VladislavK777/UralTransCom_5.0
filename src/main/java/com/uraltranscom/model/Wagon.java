@@ -32,13 +32,15 @@ public class Wagon {
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Название станции назначения
     private int volume; // Объем вагона
+    private String cargo; // Груз
 
-    public Wagon(String numberOfWagon, WagonType wagonType, String keyOfStationDestination, String nameOfStationDestination, int volume) {
+    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo) {
         this.numberOfWagon = numberOfWagon;
-        this.wagonType = wagonType;
+        this.wagonType = new WagonType("КР");
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.volume = volume;
+        this.cargo = cargo;
     }
 
     public String getNumberOfWagon() {
@@ -81,6 +83,14 @@ public class Wagon {
         this.volume = volume;
     }
 
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,13 +100,14 @@ public class Wagon {
                 Objects.equals(numberOfWagon, wagon.numberOfWagon) &&
                 Objects.equals(wagonType, wagon.wagonType) &&
                 Objects.equals(keyOfStationDestination, wagon.keyOfStationDestination) &&
-                Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination);
+                Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination) &&
+                Objects.equals(cargo, wagon.cargo);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume);
+        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo);
     }
 
     @Override
@@ -105,6 +116,7 @@ public class Wagon {
                 ", " + wagonType.toString() +
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
-                ", " + volume;
+                ", " + volume +
+                ", " + cargo;
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
- * 03.04.2018
+ * 23.04.2018
  *   1. Версия 4.1
  *
  */
