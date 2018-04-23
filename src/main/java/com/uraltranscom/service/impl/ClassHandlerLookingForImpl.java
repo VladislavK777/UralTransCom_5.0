@@ -191,9 +191,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
         }
 
         // Заполняем итоговый массив маршрутов
-        tempMapOfRoutes.forEach((k, v) -> {
-            basicClassLookingFor.getListOfUndistributedRoutes().add(v.getNameOfStationDeparture() + " - " + v.getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + v.getCountOrders());
-        });
+        basicClassLookingFor.getMapOfUndistributedRoutes().putAll(tempMapOfRoutes);
 
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
     }

@@ -50,7 +50,7 @@ public class BasicController {
         basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
         basicClassLookingForImpl.fillMapRouteIsOptimal();
         model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getListOfDistributedRoutesAndWagons());
-        model.addAttribute("reportListOfDistributedRoutes", basicClassLookingForImpl.getListOfUndistributedRoutes());
+        model.addAttribute("reportMapOfUndistributedRoutes", basicClassLookingForImpl.getMapOfUndistributedRoutes());
         model.addAttribute("reportListOfDistributedWagons", basicClassLookingForImpl.getListOfUndistributedWagons());
         model.addAttribute("reportListOfError", basicClassLookingForImpl.getListOfError());
         return "welcome";

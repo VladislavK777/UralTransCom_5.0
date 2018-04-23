@@ -273,17 +273,33 @@
                 </p>
             </section>
             <section id="content-tab2">
-                <p>
-                    <c:if test="${!empty reportListOfDistributedRoutes}">
-                <table>
-                    <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNoRoute">
-                        <tr>
-                            <td>${reportListNoRoute}</td>
-                        </tr>
-                    </c:forEach>
-                </table>
-                </c:if>
-                </p>
+            <div>
+            	<table class="table_report">
+            		<tr>
+            			<th>Номер заявки</th>
+            			<th>Станция отправления</th>
+            			<th>Станция назначения</th>
+            			<th>Расстояние</th>
+            			<th>Разница. ПС</th>
+            			<th>Груз</th>
+            			<th>Объем</th>
+            		</tr>
+            		<br><br>
+                    <c:if test="${!empty reportMapOfUndistributedRoutes}">
+                        <c:forEach items="${reportMapOfUndistributedRoutes}" var="reportMapNoRoute">
+                            <tr>
+                                <td>${reportMapNoRoute.value.getNumberOrder()}</td>
+                                <td>${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
+                                <td>${reportMapNoRoute.value.getNameOfStationDestination()}</td>
+                                <td>${reportMapNoRoute.value.getDistanceOfWay()}</td>
+                                <td>${reportMapNoRoute.value.getCountOrders()}</td>
+                                <td>${reportMapNoRoute.value.getCargo()}</td>
+                                <td>${reportMapNoRoute.value.getVolumePeriod()}</td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
+            	</table>
+            </div>
             </section>
             <section id="content-tab3">
                 <p>

@@ -53,7 +53,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private List<String> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
     // Массив нераспределенных маршрутов
-    private List<String> listOfUndistributedRoutes = new ArrayList<>();
+    private Map<Integer, Route> mapOfUndistributedRoutes = new HashMap<>();
 
     // Массив нераспределенных вагонов
     private List<String> listOfUndistributedWagons = new ArrayList<>();
@@ -68,7 +68,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     public void fillMapRouteIsOptimal() {
         // Очищаем массивы итоговые
         listOfDistributedRoutesAndWagons.clear();
-        listOfUndistributedRoutes.clear();
+        mapOfUndistributedRoutes.clear();
         listOfUndistributedWagons.clear();
         listOfError.clear();
 
@@ -116,12 +116,12 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         this.listOfDistributedRoutesAndWagons = listOfDistributedRoutesAndWagons;
     }
 
-    public List<String> getListOfUndistributedRoutes() {
-        return listOfUndistributedRoutes;
+    public Map<Integer, Route> getMapOfUndistributedRoutes() {
+        return mapOfUndistributedRoutes;
     }
 
-    public void setListOfUndistributedRoutes(List<String> listOfUndistributedRoutes) {
-        this.listOfUndistributedRoutes = listOfUndistributedRoutes;
+    public void setMapOfUndistributedRoutes(Map<Integer, Route> mapOfUndistributedRoutes) {
+        this.mapOfUndistributedRoutes = mapOfUndistributedRoutes;
     }
 
     public List<String> getListOfUndistributedWagons() {
