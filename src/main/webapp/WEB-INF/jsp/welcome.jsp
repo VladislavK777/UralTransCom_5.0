@@ -248,10 +248,10 @@
     <div class="container">
         <div class="tabs">
             <input id="tab1" type="radio" name="tabs" checked>
-            <label for="tab1" title="Распределенные рейсы">Распределенные рейсы</label>
+            <label for="tab1" title="Распределенные рейсы">Распределенные заявки</label>
 
             <input id="tab2" type="radio" name="tabs">
-            <label for="tab2" title="Нераспределенные рейсы">Нераспределенные рейсы</label>
+            <label for="tab2" title="Нераспределенные рейсы">Нераспределенные заявки</label>
 
             <input id="tab3" type="radio" name="tabs">
             <label for="tab3" title="Нераспределенные вагоны">Нераспределенные вагоны</label>
@@ -260,30 +260,56 @@
             <label for="tab4" title="Ошибки">Ошибки</label>
 
             <section id="content-tab1">
-                <p>
-                    <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
-                <table>
-                    <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
-                        <tr>
-                            <td>${reportList}</td>
-                        </tr>
-                    </c:forEach>
+             <div>
+                <table class="table_report">
+                    <tr>
+                        <th>Номер вагона</th>
+                        <th>Станция распределения</th>
+                        <th>Рейс</th>
+                        <th>Порожнее расстояние</th>
+                        <th>Оборот дней</th>
+                    </tr>
+                    <br><br>
+                     <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+                         <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
+                             <tr>
+                                 <td>${reportList.getNumberOfWagon()}</td>
+                                 <td>${reportList.getNameOfStationDepartureOfWagon()}</td>
+                                 <td>${reportList.getRoute()}</td>
+                                 <td>${reportList.getDistanceEmpty()}</td>
+                                 <td>${reportList.getCountCircleDays()}</td>
+                             </tr>
+                         </c:forEach>
+                     </c:if>
                 </table>
-                </c:if>
-                </p>
+             </div>
             </section>
             <section id="content-tab2">
-                <p>
-                    <c:if test="${!empty reportListOfDistributedRoutes}">
-                <table>
-                    <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNoRoute">
-                        <tr>
-                            <td>${reportListNoRoute}</td>
-                        </tr>
-                    </c:forEach>
-                </table>
-                </c:if>
-                </p>
+            <div>
+            	<table class="table_report">
+            		<tr>
+            			<th>Номер заявки</th>
+            			<th>Станция отправления</th>
+            			<th>Станция назначения</th>
+            			<th>Расстояние</th>
+            			<th>Разница. ПС</th>
+            			<th>Груз</th>
+            		</tr>
+            		<br><br>
+                    <c:if test="${!empty reportMapOfUndistributedRoutes}">
+                        <c:forEach items="${reportMapOfUndistributedRoutes}" var="reportMapNoRoute">
+                            <tr>
+                                <td>${reportMapNoRoute.value.getNumberOrder()}</td>
+                                <td>${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
+                                <td>${reportMapNoRoute.value.getNameOfStationDestination()}</td>
+                                <td>${reportMapNoRoute.value.getDistanceOfWay()}</td>
+                                <td>${reportMapNoRoute.value.getCountOrders()}</td>
+                                <td>${reportMapNoRoute.value.getCargo()}</td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
+            	</table>
+            </div>
             </section>
             <section id="content-tab3">
                 <p>

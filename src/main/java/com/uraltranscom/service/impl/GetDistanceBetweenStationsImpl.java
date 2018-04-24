@@ -23,7 +23,7 @@ import java.sql.SQLException;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
- * 03.04.2018
+ * 22.04.2018
  *   1. Версия 4.1
  *
  */
@@ -40,16 +40,17 @@ public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetD
     }
 
     @Override
-    public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) {
+    public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, String cargo) {
         int distance = 0;
         try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос
-            callableStatement = connection.prepareCall(" { call getdistancetest(?,?) } ");
+            callableStatement = connection.prepareCall(" { call getdistancetest2(?,?,?) } ");
 
             // Определяем значения параметров
             callableStatement.setString(1, keyOfStationDeparture);
             callableStatement.setString(2, keyOfStationDestination);
+            callableStatement.setString(3, cargo);
 
             // Выполняем запрос
             resultSet = callableStatement.executeQuery();

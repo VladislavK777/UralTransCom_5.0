@@ -14,7 +14,7 @@ package com.uraltranscom.service;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
- * 03.04.2018
+ * 22.04.2018
  *   1. Версия 4.1
  *
  */
@@ -22,6 +22,6 @@ package com.uraltranscom.service;
 import java.sql.SQLException;
 
 public interface GetDistanceBetweenStations {
-    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) throws SQLException;
+    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, String cargo) throws SQLException;
 
 }

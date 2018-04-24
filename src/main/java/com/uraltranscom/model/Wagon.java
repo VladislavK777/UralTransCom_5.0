@@ -1,20 +1,25 @@
 package com.uraltranscom.model;
 
+import com.uraltranscom.model.additional_model.WagonType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 /**
  *
  * Класс Вагон
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 17.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 19.04.2018
+ *   1. Версия 4.1
  *
  */
 
@@ -23,15 +28,19 @@ public class Wagon {
     private static Logger logger = LoggerFactory.getLogger(Wagon.class);
 
     private String numberOfWagon; // Номер вагона
-    private String typeOfWagon; // Тип вагона
+    private WagonType wagonType; // Тип вагона
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Название станции назначения
+    private int volume; // Объем вагона
+    private String cargo; // Груз
 
-    public Wagon(String numberOfWagon, String typeOfWagon, String keyOfStationDestination, String nameOfStationDestination) {
+    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo) {
         this.numberOfWagon = numberOfWagon;
-        this.typeOfWagon = typeOfWagon;
+        this.wagonType = new WagonType("КР");
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
+        this.volume = volume;
+        this.cargo = cargo;
     }
 
     public String getNumberOfWagon() {
@@ -42,12 +51,12 @@ public class Wagon {
         this.numberOfWagon = numberOfWagon;
     }
 
-    public String getTypeOfWagon() {
-        return typeOfWagon;
+    public WagonType getWagonType() {
+        return wagonType;
     }
 
-    public void setTypeOfWagon(String typeOfWagon) {
-        this.typeOfWagon = typeOfWagon;
+    public void setWagonType(WagonType wagonType) {
+        this.wagonType = wagonType;
     }
 
     public String getKeyOfStationDestination() {
@@ -66,35 +75,48 @@ public class Wagon {
         this.nameOfStationDestination = nameOfStationDestination;
     }
 
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Wagon wagon = (Wagon) o;
-
-        if (numberOfWagon != null ? !numberOfWagon.equals(wagon.numberOfWagon) : wagon.numberOfWagon != null)
-            return false;
-        if (typeOfWagon != null ? !typeOfWagon.equals(wagon.typeOfWagon) : wagon.typeOfWagon != null) return false;
-        if (keyOfStationDestination != null ? !keyOfStationDestination.equals(wagon.keyOfStationDestination) : wagon.keyOfStationDestination != null)
-            return false;
-        return nameOfStationDestination != null ? nameOfStationDestination.equals(wagon.nameOfStationDestination) : wagon.nameOfStationDestination == null;
+        return volume == wagon.volume &&
+                Objects.equals(numberOfWagon, wagon.numberOfWagon) &&
+                Objects.equals(wagonType, wagon.wagonType) &&
+                Objects.equals(keyOfStationDestination, wagon.keyOfStationDestination) &&
+                Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination) &&
+                Objects.equals(cargo, wagon.cargo);
     }
 
     @Override
     public int hashCode() {
-        int result = numberOfWagon != null ? numberOfWagon.hashCode() : 0;
-        result = 31 * result + (typeOfWagon != null ? typeOfWagon.hashCode() : 0);
-        result = 31 * result + (keyOfStationDestination != null ? keyOfStationDestination.hashCode() : 0);
-        result = 31 * result + (nameOfStationDestination != null ? nameOfStationDestination.hashCode() : 0);
-        return result;
+
+        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo);
     }
 
     @Override
     public String toString() {
         return  numberOfWagon +
-                ", " + typeOfWagon +
+                ", " + wagonType.toString() +
                 ", " + keyOfStationDestination +
-                ", " + nameOfStationDestination;
+                ", " + nameOfStationDestination +
+                ", " + volume +
+                ", " + cargo;
     }
 }

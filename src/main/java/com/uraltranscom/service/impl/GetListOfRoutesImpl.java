@@ -6,6 +6,7 @@ package com.uraltranscom.service.impl;
  *
  * @author Vladislav Klochkov
  * @version 4.2
+ * @version 4.1
  * @create 25.10.2017
  *
  * 17.11.2017
@@ -14,12 +15,16 @@ package com.uraltranscom.service.impl;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
- * 09.04.2018
+ * 19.04.2018
+ *   1. Версия 4.1
+ * 24.04.2018
  *   1. Версия 4.2
  *
  */
 
 import com.uraltranscom.model.Route;
+import com.uraltranscom.model.additional_model.VolumePeriod;
+import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -67,8 +72,8 @@ public class GetListOfRoutesImpl implements GetList {
             // Заполняем Map данными
             sheet = xssfWorkbook.getSheetAt(0);
             int i = 0;
-            for (int j = 1; j < sheet.getLastRowNum() + 1; j++) {
-                XSSFRow row = sheet.getRow(0);
+            for (int j = 2; j < sheet.getLastRowNum() + 1; j++) {
+                XSSFRow row = sheet.getRow(1);
 
                 String keyOfStationDeparture = null;
                 String nameOfStationDeparture = null;
@@ -77,25 +82,30 @@ public class GetListOfRoutesImpl implements GetList {
                 String distanceOfWay = null;
                 String customer = null;
                 int countOrders = 0;
+                int volumeFrom = 0;
+                int volumeTo = 0;
+                String numberOrder = null;
+                String cargo = null;
+                String wagonType = null;
 
-                for (int c = 0; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции отправления")) {
+                for (int c = 1; c < row.getLastCellNum(); c++) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код ЕСР ст. отправления")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Станция отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Ст. отправления")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код ЕСР ст.назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Ст. назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние, км")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
                         double valueDouble = xssfRow.getCell(c).getNumericCellValue();
@@ -113,17 +123,39 @@ public class GetListOfRoutesImpl implements GetList {
                             VIP = "0";
                         }
                     }*/
-                    if (row.getCell(c).getStringCellValue().trim().equals("Заказчик")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Контрагент")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Заявка, в/о")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Разница. ПС")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Объем от")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        volumeFrom = (int) xssfRow.getCell(c).getNumericCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Объем до")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        volumeTo = (int) xssfRow.getCell(c).getNumericCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Тип парка")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        wagonType = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Номер заявки")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        numberOrder = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Груз")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        cargo = xssfRow.getCell(c).getStringCellValue();
+                    }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders));
-                i++;
+                if (countOrders > 0 && wagonType.equals("КР")) {
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                    i++;
+                }
             }
             logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {

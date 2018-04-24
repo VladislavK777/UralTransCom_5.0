@@ -79,10 +79,11 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
             for (int i = 0; i < listOfWagons.size(); i++) {
                 String stationCode1 = listOfWagons.get(i).getKeyOfStationDestination();
                 String stationCode2 = entry.getValue().getKeyOfStationDeparture();
-                String key = stationCode1 + "_" + stationCode2;
+                String cargo = listOfWagons.get(i).getCargo();
+                String key = stationCode1 + "_" + stationCode2 + "_" + cargo;
                 if (!rootMapWithDistances.containsKey(key)) {
                     if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
-                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2);
+                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2, cargo);
                         if (distance != -1) {
                             if (distance != -20000) {
                                 rootMapWithDistances.put(key, distance);
@@ -93,8 +94,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                             if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
                                 basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                                 logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                                basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
-                                        entry.getValue().getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + entry.getValue().getCountOrders());
+                                basicClassLookingForImpl.getMapOfUndistributedRoutes().put(mapOfRoutes.size(), entry.getValue());
                                 iterator.remove();
                                 break;
                             }

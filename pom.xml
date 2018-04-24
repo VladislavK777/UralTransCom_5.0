@@ -9,7 +9,7 @@
     <name>UralTransCom</name>
     <packaging>war</packaging>
     <version>4.2</version>
-
+  
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
         <dependency>
