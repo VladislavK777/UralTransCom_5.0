@@ -216,17 +216,19 @@
     <div>
         <table class="table_report">
             <tr>
+                <th>Номер заявки</th>
                 <th>Станция отправления</th>
                 <th>Станция назначения</th>
-                <th>Заказчик</th>
-                <th>Заявка, в/о</th>
-                <th>Расстояние</th>
-                <th>VIP</th>
+                <th>Контрагент</th>
+                <th>Разница. ПС</th>
+                <th>Расстояние, км</th>
+                <th>Приоритет</th>
             </tr>
             <br><br>
             <c:if test="${!empty listRoute}">
                 <c:forEach items="${listRoute}" var="list">
                     <tr>
+                        <td>${list.value.getNumberOrder()}</td>
                         <td>${list.value.getNameOfStationDeparture()}</td>
                         <td>${list.value.getNameOfStationDestination()}</td>
                         <td>${list.value.getCustomer()}</td>

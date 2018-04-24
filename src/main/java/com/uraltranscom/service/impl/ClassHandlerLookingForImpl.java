@@ -6,7 +6,6 @@ import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.ClassHandlerLookingFor;
 import com.uraltranscom.service.additional.CompareMapValue;
 import com.uraltranscom.service.additional.JavaHelperBase;
-import com.uraltranscom.service.additional.PrefixOfDays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,7 +151,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                                     tempMapOfRoutes.get(entry.getKey()).getKeyOfStationDestination(),
                                                     tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
                                                     tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
-                                                    tempMapOfRoutes.get(entry.getKey()).getVIP(),
                                                     tempMapOfRoutes.get(entry.getKey()).getCustomer(),
                                                     tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1,
                                                     tempMapOfRoutes.get(entry.getKey()).getVolumePeriod(),
