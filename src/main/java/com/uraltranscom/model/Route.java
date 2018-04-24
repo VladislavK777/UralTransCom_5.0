@@ -43,7 +43,7 @@ public class Route {
     private String cargo; // Груз
     private WagonType wagonType; // Тип вагона
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String VIP, String customer, int countOrders, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType) {
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, int countOrders, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;

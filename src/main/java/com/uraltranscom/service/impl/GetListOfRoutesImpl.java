@@ -114,15 +114,6 @@ public class GetListOfRoutesImpl implements GetList {
                         }
                         distanceOfWay = val;
                     }
-                    /*if (row.getCell(c).getStringCellValue().equals("Приоритет")) {
-                        XSSFRow xssfRow = sheet.getRow(j);
-                        String value = xssfRow.getCell(c).getStringCellValue();
-                        if (value.equals("Да")) {
-                            VIP = "1";
-                        } else {
-                            VIP = "0";
-                        }
-                    }*/
                     if (row.getCell(c).getStringCellValue().trim().equals("Контрагент")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
@@ -153,7 +144,7 @@ public class GetListOfRoutesImpl implements GetList {
                     }
                 }
                 if (countOrders > 0 && wagonType.equals("КР")) {
-                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
                     i++;
                 }
             }
