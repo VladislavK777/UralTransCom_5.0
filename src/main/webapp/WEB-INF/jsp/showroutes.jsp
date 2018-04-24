@@ -26,6 +26,8 @@
                 var lock = document.getElementById('lockPane');
                 if (lock)
                     lock.className = 'lockScreenOn';
+                    $('body').addClass('stop-scrolling');
+                    document.body.scrollTop = document.documentElement.scrollTop = 0;
             }
         </script>
 
@@ -51,6 +53,10 @@
         <style>
             body {
                 font: 14px/1 "Open Sans", sans-serif;
+            }
+            .stop-scrolling {
+                height: 100%;
+                overflow: hidden;
             }
             /* Настрйка вкладок*/
             /* Стили секций с содержанием */
@@ -207,34 +213,34 @@
 <br><br><br><br><br>
 
 <form method="post" action="reports">
-<div>
-	<table class="table_report">
-		<tr>
-			<th>Станция отправления</th>
-			<th>Станция назначения</th>
-			<th>Заказчик</th>
-			<th>Заявка, в/о</th>
-			<th>Расстояние</th>
-			<th>VIP</th>
-		</tr>
-		<br><br>
-        <c:if test="${!empty listRoute}">
-            <c:forEach items="${listRoute}" var="list">
-                <tr>
-                    <td>${list.value.getNameOfStationDeparture()}</td>
-                    <td>${list.value.getNameOfStationDestination()}</td>
-                    <td>${list.value.getCustomer()}</td>
-                    <td>${list.value.getCountOrders()}</td>
-                    <td>${list.value.getDistanceOfWay()}</td>
-                    <td><input type="checkbox" name="routeId" value="${list.key}" /></td>
-                </tr>
-            </c:forEach>
-        </c:if>
-	</table>
-</div>
-<p>
-    <input type="submit" value="Start" class="bot2"  id="startProcess" onclick="lockScreen();">
-</p>
+    <div>
+        <table class="table_report">
+            <tr>
+                <th>Станция отправления</th>
+                <th>Станция назначения</th>
+                <th>Заказчик</th>
+                <th>Заявка, в/о</th>
+                <th>Расстояние</th>
+                <th>VIP</th>
+            </tr>
+            <br><br>
+            <c:if test="${!empty listRoute}">
+                <c:forEach items="${listRoute}" var="list">
+                    <tr>
+                        <td>${list.value.getNameOfStationDeparture()}</td>
+                        <td>${list.value.getNameOfStationDestination()}</td>
+                        <td>${list.value.getCustomer()}</td>
+                        <td>${list.value.getCountOrders()}</td>
+                        <td>${list.value.getDistanceOfWay()}</td>
+                        <td><input type="checkbox" name="routeId" value="${list.key}" /></td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+        </table>
+        <p>
+            <input type="submit" value="Start" class="bot2" id="startProcess" onclick="lockScreen();">
+        </p>
+    </div>
 </form>
 
 <br><br><br>
