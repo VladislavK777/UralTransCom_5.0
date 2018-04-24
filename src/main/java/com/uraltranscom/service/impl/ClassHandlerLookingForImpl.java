@@ -163,12 +163,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                                 it.remove();
                                             }
 
-                                            basicClassLookingFor.getListOfDistributedRoutesAndWagons().add("Вагон " + wagon.getNumberOfWagon() + " едет на станцию "
-                                                    + nameOfStationDepartureOfWagon + ": "
-                                                    + mapDistanceSortFirstElement.getValue() + " км. Маршрут: "
-                                                    + tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination() + ". Общее время в пути: "
-                                                    + countCircleDays + " " + PrefixOfDays.parsePrefixOfDays(countCircleDays) + ".");
-
+                                            basicClassLookingFor.getListOfDistributedRoutesAndWagons().add(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue(), nameOfStationDepartureOfWagon, tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination()));
                                             basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));
 
                                             isOk = true;

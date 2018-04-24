@@ -81,8 +81,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetList {
                             if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
                                 basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                                 logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                                basicClassLookingForImpl.getListOfUndistributedRoutes().add(entry.getValue().getNameOfStationDeparture() + " - " +
-                                        entry.getValue().getNameOfStationDestination() + ". Оставшиеся количество рейсов: " + entry.getValue().getCountOrders());
+                                basicClassLookingForImpl.getMapOfUndistributedRoutes().put(mapOfRoutes.size(), entry.getValue());
                                 iterator.remove();
                                 break;
                             }

@@ -50,7 +50,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
-    private List<String> listOfDistributedRoutesAndWagons = new ArrayList<>();
+    private List<WagonFinalInfo> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
     // Массив нераспределенных маршрутов
     private Map<Integer, Route> mapOfUndistributedRoutes = new HashMap<>();
@@ -108,11 +108,11 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         this.totalMapWithWagonNumberAndRoute = totalMapWithWagonNumberAndRoute;
     }
 
-    public List<String> getListOfDistributedRoutesAndWagons() {
+    public List<WagonFinalInfo> getListOfDistributedRoutesAndWagons() {
         return listOfDistributedRoutesAndWagons;
     }
 
-    public void setListOfDistributedRoutesAndWagons(List<String> listOfDistributedRoutesAndWagons) {
+    public void setListOfDistributedRoutesAndWagons(List<WagonFinalInfo> listOfDistributedRoutesAndWagons) {
         this.listOfDistributedRoutesAndWagons = listOfDistributedRoutesAndWagons;
     }
 
