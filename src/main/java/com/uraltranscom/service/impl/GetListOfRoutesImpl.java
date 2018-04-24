@@ -5,6 +5,7 @@ package com.uraltranscom.service.impl;
  * Класс получения списка маршрутов
  *
  * @author Vladislav Klochkov
+ * @version 4.2
  * @version 4.1
  * @create 25.10.2017
  *
@@ -16,6 +17,8 @@ package com.uraltranscom.service.impl;
  *   1. Версия 4.0
  * 19.04.2018
  *   1. Версия 4.1
+ * 24.04.2018
+ *   1. Версия 4.2
  *
  */
 
@@ -77,7 +80,6 @@ public class GetListOfRoutesImpl implements GetList {
                 String keyOfStationDestination = null;
                 String nameOfStationDestination = null;
                 String distanceOfWay = null;
-                String VIP = null;
                 String customer = null;
                 int countOrders = 0;
                 int volumeFrom = 0;
@@ -112,7 +114,7 @@ public class GetListOfRoutesImpl implements GetList {
                         }
                         distanceOfWay = val;
                     }
-                    if (row.getCell(c).getStringCellValue().equals("Приоритет")) {
+                    /*if (row.getCell(c).getStringCellValue().equals("Приоритет")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String value = xssfRow.getCell(c).getStringCellValue();
                         if (value.equals("Да")) {
@@ -120,7 +122,7 @@ public class GetListOfRoutesImpl implements GetList {
                         } else {
                             VIP = "0";
                         }
-                    }
+                    }*/
                     if (row.getCell(c).getStringCellValue().trim().equals("Контрагент")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();

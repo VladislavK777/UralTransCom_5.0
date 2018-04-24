@@ -12,7 +12,7 @@ import java.util.Objects;
  * Класс Маршрута
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 4.2
  * @create 17.11.2017
  *
  * 12.01.2018
@@ -21,6 +21,8 @@ import java.util.Objects;
  *   1. Версия 4.0
  * 19.04.2018
  *   1. Версия 4.1
+ * 24.04.2018
+ *   1. Версия 4.2
  *
  */
 
@@ -33,7 +35,7 @@ public class Route {
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Станция назначения
     private String distanceOfWay; // Расстояние маршрута
-    private String VIP; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
+    private String VIP = "0"; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
     private String customer; // Заказчик
     private int countOrders; // Количество заявок на маршрут
     private VolumePeriod volumePeriod; // Возможны объем вагона в заявке
@@ -47,7 +49,6 @@ public class Route {
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.distanceOfWay = distanceOfWay;
-        this.VIP = VIP;
         this.customer = customer;
         this.countOrders = countOrders;
         this.volumePeriod = volumePeriod;

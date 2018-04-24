@@ -21,7 +21,7 @@ import java.util.Map;
  * Основной класс
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 4.2
  * @create 01.11.2017
  *
  * 12.01.2018
@@ -30,6 +30,8 @@ import java.util.Map;
  *   1. Версия 4.0
  * 03.04.2018
  *   1. Версия 4.1
+ * 09.04.2018
+ *   1. Версия 4.2
  *
  */
 
@@ -65,7 +67,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     }
 
     @Override
-    public void fillMapRouteIsOptimal() {
+    public void fillMapRouteIsOptimal(String routeId) {
         // Очищаем массивы итоговые
         listOfDistributedRoutesAndWagons.clear();
         mapOfUndistributedRoutes.clear();
@@ -73,7 +75,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         listOfError.clear();
 
         // Запускаем метод заполненеия первоначальной мапы расстояний
-        getListOfDistance.fillMap();
+        getListOfDistance.fillMap(routeId);
 
         // Заполняем мапы
         Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
