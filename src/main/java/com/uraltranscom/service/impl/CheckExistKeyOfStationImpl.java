@@ -12,10 +12,13 @@ package com.uraltranscom.service.impl;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 03.04.2018
+ *   1. Версия 4.1
  *
  */
 
 import com.uraltranscom.service.CheckExistKeyOfStation;
+import com.uraltranscom.util.ConnectionDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,7 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Service
-public class CheckExistKeyOfStationImpl implements CheckExistKeyOfStation {
+public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExistKeyOfStation {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(CheckExistKeyOfStationImpl.class);
 
@@ -36,9 +39,9 @@ public class CheckExistKeyOfStationImpl implements CheckExistKeyOfStation {
     private CheckExistKeyOfStationImpl() {
     }
 
-    public boolean checkExistKey(String keyOfStation, Connection connection) {
+    public boolean checkExistKey(String keyOfStation) {
         Boolean isExist = false;
-        try {
+        try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос
             preparedStatement = connection.prepareStatement("select distinct 1 from distances where (station_id1 = ? or station_id2 = ?)");
@@ -57,7 +60,7 @@ public class CheckExistKeyOfStationImpl implements CheckExistKeyOfStation {
                 }
             }
         } catch (SQLException ex) {
-            logger.error("Ошибка запроса");
+            logger.error("Ошибка запроса: {}", preparedStatement);
         }
         return isExist;
     }

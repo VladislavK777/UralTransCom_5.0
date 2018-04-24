@@ -1,4 +1,13 @@
-package com.uraltranscom.dao;
+package com.uraltranscom.util;
+
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooKeeper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 /**
  *
@@ -12,16 +21,12 @@ package com.uraltranscom.dao;
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
- *
+ * 03.04.2018
+ *   1. Версия 4.1
+ *   Не используется
  */
 
-import org.apache.zookeeper.*;
-import org.slf4j.*;
-import java.io.IOException;
-import java.util.concurrent.CountDownLatch;
-
 public class ZkConnector {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(ZkConnector.class);
 

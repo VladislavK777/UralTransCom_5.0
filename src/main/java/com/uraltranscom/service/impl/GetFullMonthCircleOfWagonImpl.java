@@ -11,13 +11,15 @@ import org.springframework.stereotype.Service;
  * Класс расчета количества дней, затраченных вагоном за один цикл. По вагонам количесво дней суммируется
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 08.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 23.04.2018
+ *   1. Версия 4.1
  *
  */
 
@@ -26,17 +28,8 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
 
-
-
-    //Map<String, Integer> mapOfDaysOfWagon = new HashMap<>();
-
     private GetFullMonthCircleOfWagonImpl() {
     }
-
-    /*
-     * Метод расчета дней, пройденных вагоном за один цикл
-     * По вагонам количесво дней суммируется
-     */
 
     @Override
     public int fullDays(String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
@@ -53,20 +46,4 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
 
         return fullMonthCircle;
     }
-
-    /*
-    public int getNumberOfDaysOfWagon(String numberOfWagon) {
-        return mapOfDaysOfWagon.get(numberOfWagon);
-    }
-
-    public void deleteFromMap(String numberOfWagon) {
-        Iterator<Map.Entry<String, Integer>> it = mapOfDaysOfWagon.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Integer> entry = it.next();
-            if (entry.getKey().equals(numberOfWagon)) {
-                it.remove();
-            }
-        }
-    }
-    */
 }

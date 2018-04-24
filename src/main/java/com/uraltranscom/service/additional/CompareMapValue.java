@@ -28,28 +28,10 @@ public class CompareMapValue implements Comparable {
 
     public int compareTo(Object o) {
         if (o instanceof CompareMapValue) {
-            final int diff = distance.intValue() - ((CompareMapValue) o).distance.intValue();
-            return diff < 0 ? -1 : (diff > 0 ? 1 : 0);
+            final int diff = distance - ((CompareMapValue) o).distance;
+            return Integer.compare(diff, 0);
         } else {
             return 0;
         }
     }
-
-    /*
-    public Map sortMap(Map<List<Object>, Integer> mapDistanceSort) {
-        Map<List<Object>, Integer> sortedMap = new LinkedHashMap<>(mapDistanceSort.size());
-
-        mapDistanceSort.forEach((k, v) -> {
-            r = (Route) k.get(1);
-            if ("1".equals(r.getVIP())) sortedMap.put(k, v);
-        });
-
-        mapDistanceSort.forEach((k, v) -> {
-            r = (Route) k.get(1);
-            if ("0".equals(r.getVIP())) sortedMap.put(k, v);
-        });
-
-        return sortedMap;
-    }
-    */
 }

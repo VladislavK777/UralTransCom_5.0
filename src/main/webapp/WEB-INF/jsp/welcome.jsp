@@ -39,13 +39,10 @@
     <!-- Скрипт всплывающего окна -->
     <script type="text/javascript">
         $(document).ready(function () {
-
             $(popup_bg).click(function () {
                 $(popup).fadeOut(800);
             });
-
         });
-
         function showPopup() {
             $(popup).fadeIn(800);
         }
@@ -62,7 +59,6 @@
         body {
             font: 14px/1 "Open Sans", sans-serif;
         }
-
         /* Настрйка вкладок*/
         /* Стили секций с содержанием */
         .tabs > section {
@@ -72,7 +68,6 @@
             background: #fff;
             border: 1px solid #ddd;
         }
-
         .tabs > section > p {
             margin: 0 0 5px;
             line-height: 1.5;
@@ -85,7 +80,6 @@
             -webkit-animation-name: fadeIn;
             animation-name: fadeIn;
         }
-
         /* Описываем анимацию свойства opacity */
         @-webkit-keyframes fadeIn {
             from {
@@ -95,7 +89,6 @@
                 opacity: 1;
             }
         }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -104,13 +97,11 @@
                 opacity: 1;
             }
         }
-
         /* Прячем чекбоксы */
         .tabs > input {
             display: none;
             position: absolute;
         }
-
         /* Стили переключателей вкладок (табов) */
         .tabs > label {
             display: inline-block;
@@ -124,20 +115,17 @@
             background: #f1f1f1;
             border-radius: 3px 3px 0 0;
         }
-
         /* Шрифт-иконки от Font Awesome в формате Unicode */
         .tabs > label:before {
             font-family: fontawesome;
             font-weight: normal;
             margin-right: 10px;
         }
-
         /* Изменения стиля переключателей вкладок при наведении */
         .tabs > label:hover {
             color: #888;
             cursor: pointer;
         }
-
         /* Стили для активной вкладки */
         .tabs > input:checked + label {
             color: #555;
@@ -145,7 +133,6 @@
             border-bottom: 1px solid #fff;
             background: #fff;
         }
-
         /* Активация секций с помощью псевдокласса :checked */
         #tab1:checked ~ #content-tab1,
         #tab2:checked ~ #content-tab2,
@@ -153,31 +140,26 @@
         #tab4:checked ~ #content-tab4 {
             display: block;
         }
-
         /* Убираем текст с переключателей и оставляем иконки на малых экранах*/
         @media screen and (max-width: 680px) {
             .tabs > label {
                 font-size: 0;
             }
-
             .tabs > label:before {
                 margin: 0;
                 font-size: 18px;
             }
         }
-
         /* Изменяем внутренние отступы переключателей для малых экранов */
         @media screen and (max-width: 400px) {
             .tabs > label {
                 padding: 15px;
             }
         }
-
         /* Стили лоадера */
         .hide {
             display: none;
         }
-
         .loader {
             border: 16px solid #f3f3f3;
             border-top: 16px solid #364274;
@@ -189,18 +171,15 @@
             top: 40%;
             left: 45%;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         /* Блокировка экрана */
         .lockScreenOff {
             display: none;
             visibility: hidden;
         }
-
         .lockScreenOn {
             display: block;
             visibility: visible;
@@ -251,13 +230,13 @@
                          style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
                     </div>
                     <div class="form">
-                        <form enctype="multipart/form-data" method="post" action="reports">
+                        <form enctype="multipart/form-data" method="post" action="routes">
                             <p>Файл заявок</p>
                             <input type="file" name="routes" multiple accept="xlsx">
                             <p>Файл дислокации вагонов</p>
                             <input type="file" name="wagons" multiple accept="xlsx">
                             <p>
-                                <input type="submit" value="Start" class="bot2" id="startProcess" onclick="lockScreen();">
+                                <input type="submit" value="Start" class="bot2">
                             </p>
                         </form>
                     </div>
@@ -269,10 +248,10 @@
     <div class="container">
         <div class="tabs">
             <input id="tab1" type="radio" name="tabs" checked>
-            <label for="tab1" title="Распределенные рейсы">Распределенные рейсы</label>
+            <label for="tab1" title="Распределенные рейсы">Распределенные заявки</label>
 
             <input id="tab2" type="radio" name="tabs">
-            <label for="tab2" title="Нераспределенные рейсы">Нераспределенные рейсы</label>
+            <label for="tab2" title="Нераспределенные рейсы">Нераспределенные заявки</label>
 
             <input id="tab3" type="radio" name="tabs">
             <label for="tab3" title="Нераспределенные вагоны">Нераспределенные вагоны</label>
@@ -281,30 +260,56 @@
             <label for="tab4" title="Ошибки">Ошибки</label>
 
             <section id="content-tab1">
-                <p>
-                    <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
-                <table>
-                    <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
-                        <tr>
-                            <td>${reportList}</td>
-                        </tr>
-                    </c:forEach>
+             <div>
+                <table class="table_report">
+                    <tr>
+                        <th>Номер вагона</th>
+                        <th>Станция распределения</th>
+                        <th>Рейс</th>
+                        <th>Порожнее расстояние</th>
+                        <th>Оборот дней</th>
+                    </tr>
+                    <br><br>
+                     <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+                         <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
+                             <tr>
+                                 <td>${reportList.getNumberOfWagon()}</td>
+                                 <td>${reportList.getNameOfStationDepartureOfWagon()}</td>
+                                 <td>${reportList.getRoute()}</td>
+                                 <td>${reportList.getDistanceEmpty()}</td>
+                                 <td>${reportList.getCountCircleDays()}</td>
+                             </tr>
+                         </c:forEach>
+                     </c:if>
                 </table>
-                </c:if>
-                </p>
+             </div>
             </section>
             <section id="content-tab2">
-                <p>
-                    <c:if test="${!empty reportListOfDistributedRoutes}">
-                <table>
-                    <c:forEach items="${reportListOfDistributedRoutes}" var="reportListNoRoute">
-                        <tr>
-                            <td>${reportListNoRoute}</td>
-                        </tr>
-                    </c:forEach>
-                </table>
-                </c:if>
-                </p>
+            <div>
+            	<table class="table_report">
+            		<tr>
+            			<th>Номер заявки</th>
+            			<th>Станция отправления</th>
+            			<th>Станция назначения</th>
+            			<th>Расстояние</th>
+            			<th>Разница. ПС</th>
+            			<th>Груз</th>
+            		</tr>
+            		<br><br>
+                    <c:if test="${!empty reportMapOfUndistributedRoutes}">
+                        <c:forEach items="${reportMapOfUndistributedRoutes}" var="reportMapNoRoute">
+                            <tr>
+                                <td>${reportMapNoRoute.value.getNumberOrder()}</td>
+                                <td>${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
+                                <td>${reportMapNoRoute.value.getNameOfStationDestination()}</td>
+                                <td>${reportMapNoRoute.value.getDistanceOfWay()}</td>
+                                <td>${reportMapNoRoute.value.getCountOrders()}</td>
+                                <td>${reportMapNoRoute.value.getCargo()}</td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
+            	</table>
+            </div>
             </section>
             <section id="content-tab3">
                 <p>

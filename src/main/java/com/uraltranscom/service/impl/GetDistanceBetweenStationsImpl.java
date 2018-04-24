@@ -1,6 +1,7 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.service.GetDistanceBetweenStations;
+import com.uraltranscom.util.ConnectionDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,19 +16,20 @@ import java.sql.SQLException;
  * Класс получения расстояния между станциями
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.1
  * @create 25.10.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 22.04.2018
+ *   1. Версия 4.1
  *
  */
 
 @Service
-public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStations {
-
+public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetDistanceBetweenStations {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetDistanceBetweenStationsImpl.class);
 
@@ -38,16 +40,17 @@ public class GetDistanceBetweenStationsImpl implements GetDistanceBetweenStation
     }
 
     @Override
-    public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, Connection connection) {
+    public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, String cargo) {
         int distance = 0;
-        try {
+        try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос
-            callableStatement = connection.prepareCall(" { call getDistance(?,?) } ");
+            callableStatement = connection.prepareCall(" { call getdistancetest2(?,?,?) } ");
 
             // Определяем значения параметров
             callableStatement.setString(1, keyOfStationDeparture);
             callableStatement.setString(2, keyOfStationDestination);
+            callableStatement.setString(3, cargo);
 
             // Выполняем запрос
             resultSet = callableStatement.executeQuery();

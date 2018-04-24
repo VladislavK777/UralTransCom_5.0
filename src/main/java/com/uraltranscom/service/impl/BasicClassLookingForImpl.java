@@ -1,8 +1,8 @@
 package com.uraltranscom.service.impl;
 
-import com.uraltranscom.dao.ConnectionDB;
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
+import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.BasicClassLookingFor;
 import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import com.uraltranscom.service.additional.JavaHelperBase;
@@ -11,27 +11,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * Основной класс
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.2
  * @create 01.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 03.04.2018
+ *   1. Версия 4.1
+ * 09.04.2018
+ *   1. Версия 4.2
  *
  */
 
 @Service
 public class BasicClassLookingForImpl extends JavaHelperBase implements BasicClassLookingFor {
-
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(BasicClassLookingForImpl.class);
 
@@ -42,21 +47,15 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     @Autowired
     private ClassHandlerLookingForImpl classHandlerLookingFor;
 
-    private static Connection connection;
-
-    private Map<Integer, Route> tempMapRoutesVip = new HashMap<>();
-    private Map<Integer, Route> tempMapRoutesNotVip = new HashMap<>();
-    private List<Wagon> tempListOfWagons = new ArrayList<>();
-
     // Мапа для записи в файл Вагона + Станция назначения.
-    private Map<String, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
+    private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
-    private List<String> listOfDistributedRoutesAndWagons = new ArrayList<>();
+    private List<WagonFinalInfo> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
     // Массив нераспределенных маршрутов
-    private List<String> listOfUndistributedRoutes = new ArrayList<>();
+    private Map<Integer, Route> mapOfUndistributedRoutes = new HashMap<>();
 
     // Массив нераспределенных вагонов
     private List<String> listOfUndistributedWagons = new ArrayList<>();
@@ -68,58 +67,63 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     }
 
     @Override
-    public void fillMapRouteIsOptimal() {
+    public void fillMapRouteIsOptimal(String routeId) {
         // Очищаем массивы итоговые
         listOfDistributedRoutesAndWagons.clear();
-        listOfUndistributedRoutes.clear();
+        mapOfUndistributedRoutes.clear();
         listOfUndistributedWagons.clear();
         listOfError.clear();
 
-        // Устанавливаем соединение
-        connection = ConnectionDB.getConnection();
-
         // Запускаем метод заполненеия первоначальной мапы расстояний
-        getListOfDistance.setConnection(connection);
-        getListOfDistance.fillMap();
+        getListOfDistance.fillMap(routeId);
 
         // Заполняем мапы
-        tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
-        tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
-        tempListOfWagons = getListOfDistance.getListOfWagons();
+        Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
+        Map<Integer, Route> tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
+        List<Wagon> tempListOfWagons = getListOfDistance.getListOfWagons();
 
         // Запускаем распределение для VIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons, connection);
+        if (!tempMapRoutesVip.isEmpty()) {
+            classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons);
+        }
 
         // Запускаем распределение для неVIP
-        classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons, connection);
+        if (!tempMapRoutesNotVip.isEmpty()) {
+            classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons);
+        }
 
         for (int i = 0; i < tempListOfWagons.size(); i++) {
             listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
         }
+
+        // очищаем мапы
+        tempListOfWagons.clear();
+        tempMapRoutesVip.clear();
+        tempMapRoutesNotVip.clear();
     }
 
-    public Map<String, Route> getTotalMapWithWagonNumberAndRoute() {
+    public Map<WagonFinalInfo, Route> getTotalMapWithWagonNumberAndRoute() {
         return totalMapWithWagonNumberAndRoute;
     }
 
-    public void setTotalMapWithWagonNumberAndRoute(Map<String, Route> totalMapWithWagonNumberAndRoute) {
+    public void setTotalMapWithWagonNumberAndRoute(Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute) {
         this.totalMapWithWagonNumberAndRoute = totalMapWithWagonNumberAndRoute;
     }
 
-    public List<String> getListOfDistributedRoutesAndWagons() {
+    public List<WagonFinalInfo> getListOfDistributedRoutesAndWagons() {
         return listOfDistributedRoutesAndWagons;
     }
 
-    public void setListOfDistributedRoutesAndWagons(List<String> listOfDistributedRoutesAndWagons) {
+    public void setListOfDistributedRoutesAndWagons(List<WagonFinalInfo> listOfDistributedRoutesAndWagons) {
         this.listOfDistributedRoutesAndWagons = listOfDistributedRoutesAndWagons;
     }
 
-    public List<String> getListOfUndistributedRoutes() {
-        return listOfUndistributedRoutes;
+    public Map<Integer, Route> getMapOfUndistributedRoutes() {
+        return mapOfUndistributedRoutes;
     }
 
-    public void setListOfUndistributedRoutes(List<String> listOfUndistributedRoutes) {
-        this.listOfUndistributedRoutes = listOfUndistributedRoutes;
+    public void setMapOfUndistributedRoutes(Map<Integer, Route> mapOfUndistributedRoutes) {
+        this.mapOfUndistributedRoutes = mapOfUndistributedRoutes;
     }
 
     public List<String> getListOfUndistributedWagons() {

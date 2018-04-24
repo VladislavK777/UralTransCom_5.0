@@ -1,5 +1,7 @@
 package com.uraltranscom.model;
 
+import com.uraltranscom.model.additional_model.VolumePeriod;
+import com.uraltranscom.model.additional_model.WagonType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,13 +12,17 @@ import java.util.Objects;
  * Класс Маршрута
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.2
  * @create 17.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 19.04.2018
+ *   1. Версия 4.1
+ * 24.04.2018
+ *   1. Версия 4.2
  *
  */
 
@@ -29,20 +35,26 @@ public class Route {
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Станция назначения
     private String distanceOfWay; // Расстояние маршрута
-    private String VIP; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
+    private String VIP = "0"; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
     private String customer; // Заказчик
     private int countOrders; // Количество заявок на маршрут
+    private VolumePeriod volumePeriod; // Возможны объем вагона в заявке
+    private String numberOrder; // Номер заявки
+    private String cargo; // Груз
+    private WagonType wagonType; // Тип вагона
 
-
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String VIP, String customer, int countOrders) {
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, int countOrders, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.distanceOfWay = distanceOfWay;
-        this.VIP = VIP;
         this.customer = customer;
         this.countOrders = countOrders;
+        this.volumePeriod = volumePeriod;
+        this.numberOrder = numberOrder;
+        this.cargo = cargo;
+        this.wagonType = wagonType;
     }
 
     public String getKeyOfStationDeparture() {
@@ -109,6 +121,38 @@ public class Route {
         this.countOrders = countOrders;
     }
 
+    public VolumePeriod getVolumePeriod() {
+        return volumePeriod;
+    }
+
+    public void setVolumePeriod(VolumePeriod volumePeriod) {
+        this.volumePeriod = volumePeriod;
+    }
+
+    public String getNumberOrder() {
+        return numberOrder;
+    }
+
+    public void setNumberOrder(String numberOrder) {
+        this.numberOrder = numberOrder;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public WagonType getWagonType() {
+        return wagonType;
+    }
+
+    public void setWagonType(WagonType wagonType) {
+        this.wagonType = wagonType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,43 +165,32 @@ public class Route {
                 Objects.equals(nameOfStationDestination, route.nameOfStationDestination) &&
                 Objects.equals(distanceOfWay, route.distanceOfWay) &&
                 Objects.equals(VIP, route.VIP) &&
-                Objects.equals(customer, route.customer);
+                Objects.equals(customer, route.customer) &&
+                Objects.equals(volumePeriod, route.volumePeriod) &&
+                Objects.equals(numberOrder, route.numberOrder) &&
+                Objects.equals(cargo, route.cargo) &&
+                Objects.equals(wagonType, route.wagonType);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders);
+        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders, volumePeriod, numberOrder, cargo, wagonType);
     }
 
     @Override
     public String toString() {
-        return  keyOfStationDeparture +
+        return  numberOrder +
+                ", " + keyOfStationDeparture +
                 ", " + nameOfStationDeparture +
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
                 ", " + distanceOfWay +
                 ", " + VIP +
                 ", " + customer +
-                ", " + countOrders;
+                ", " + countOrders +
+                ", " + wagonType +
+                ", " + cargo +
+                ", " + volumePeriod;
     }
-
-    /*
-    @Override
-    public int compareTo(Object o) {
-        try {
-            Route p = (Route) o;
-            if (p.getVIP() == this.VIP) {
-                return p.hashCode() - this.hashCode();
-            }
-            if (Integer.parseInt(p.getVIP()) < Integer.parseInt(this.VIP)) {
-                return -1;
-            } else {
-                return 1;
-            }
-        } catch (NullPointerException | ClassCastException e) {
-            return 1;
-        }
-    }
-    */
 }
