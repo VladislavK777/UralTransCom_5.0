@@ -17,7 +17,6 @@ package com.uraltranscom.service.additional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -34,9 +33,9 @@ public class MultipartFileToFile {
         try {
             convertToFile = new File(multipart.getOriginalFilename());
             convertToFile.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(convertToFile);
-            fileOutputStream.write(multipart.getBytes());
-            fileOutputStream.close();
+            try(FileOutputStream fileOutputStream = new FileOutputStream(convertToFile)) {
+                fileOutputStream.write(multipart.getBytes());
+            }
         } catch (IOException e) {
             logger.error("Ошибка конвертации файла - {}", e.getMessage());
         }
