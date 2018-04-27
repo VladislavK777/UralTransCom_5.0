@@ -121,6 +121,9 @@ public class GetListOfRoutesImpl implements GetList {
                     if (row.getCell(c).getStringCellValue().trim().equals("Разница. ПС")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
+                        if (countOrders < 0) {
+                            countOrders = countOrders * (-1);
+                        }
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals("Объем от")) {
                         XSSFRow xssfRow = sheet.getRow(j);
@@ -143,10 +146,8 @@ public class GetListOfRoutesImpl implements GetList {
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
                 }
-                if (countOrders > 0 && wagonType.equals("КР")) {
-                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
-                    i++;
-                }
+                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                i++;
             }
             logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {

@@ -268,6 +268,7 @@
                         <th>Рейс</th>
                         <th>Порожнее расстояние</th>
                         <th>Оборот дней</th>
+                        <th>Из под груза</th>
                     </tr>
                     <br><br>
                      <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
@@ -278,6 +279,7 @@
                                  <td>${reportList.getRoute()}</td>
                                  <td>${reportList.getDistanceEmpty()}</td>
                                  <td>${reportList.getCountCircleDays()}</td>
+                                 <td>${reportList.getCargo()}</td>
                              </tr>
                          </c:forEach>
                      </c:if>
@@ -299,12 +301,14 @@
                     <c:if test="${!empty reportMapOfUndistributedRoutes}">
                         <c:forEach items="${reportMapOfUndistributedRoutes}" var="reportMapNoRoute">
                             <tr>
-                                <td>${reportMapNoRoute.value.getNumberOrder()}</td>
-                                <td>${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
-                                <td>${reportMapNoRoute.value.getNameOfStationDestination()}</td>
-                                <td>${reportMapNoRoute.value.getDistanceOfWay()}</td>
-                                <td>${reportMapNoRoute.value.getCountOrders()}</td>
-                                <td>${reportMapNoRoute.value.getCargo()}</td>
+
+                                        <td style="color: red">${reportMapNoRoute.value.getNumberOrder()}</td>
+                                        <td style="color: red">${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
+                                        <td style="color: red">${reportMapNoRoute.value.getNameOfStationDestination()}</td>
+                                        <td style="color: red">${reportMapNoRoute.value.getDistanceOfWay()}</td>
+                                        <td style="color: red">${reportMapNoRoute.value.getCountOrders()}</td>
+                                        <td style="color: red">${reportMapNoRoute.value.getCargo()}</td>
+
                             </tr>
                         </c:forEach>
                     </c:if>

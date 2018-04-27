@@ -27,6 +27,7 @@ public class WagonFinalInfo {
     private int distanceEmpty; // Расстояние порожнее
     private String nameOfStationDepartureOfWagon; // Станция, куда едет вагон порожний
     private String route; // Маршрут
+    private String cargo; // Груз
 
     public WagonFinalInfo(String numberOfWagon, int countCircleDays, int distanceEmpty) {
         this.numberOfWagon = numberOfWagon;
@@ -34,12 +35,13 @@ public class WagonFinalInfo {
         this.distanceEmpty = distanceEmpty;
     }
 
-    public WagonFinalInfo(String numberOfWagon, int countCircleDays, int distanceEmpty, String nameOfStationDepartureOfWagon, String route) {
+    public WagonFinalInfo(String numberOfWagon, int countCircleDays, int distanceEmpty, String nameOfStationDepartureOfWagon, String route, String cargo) {
         this.numberOfWagon = numberOfWagon;
         this.countCircleDays = countCircleDays;
         this.distanceEmpty = distanceEmpty;
         this.nameOfStationDepartureOfWagon = nameOfStationDepartureOfWagon;
         this.route = route;
+        this.cargo = cargo;
     }
 
     public String getNumberOfWagon() {
@@ -82,9 +84,16 @@ public class WagonFinalInfo {
         this.route = route;
     }
 
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WagonFinalInfo that = (WagonFinalInfo) o;
@@ -92,13 +101,14 @@ public class WagonFinalInfo {
                 distanceEmpty == that.distanceEmpty &&
                 Objects.equals(numberOfWagon, that.numberOfWagon) &&
                 Objects.equals(nameOfStationDepartureOfWagon, that.nameOfStationDepartureOfWagon) &&
-                Objects.equals(route, that.route);
+                Objects.equals(route, that.route) &&
+                Objects.equals(cargo, that.cargo);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(numberOfWagon, countCircleDays, distanceEmpty, nameOfStationDepartureOfWagon, route);
+        return Objects.hash(numberOfWagon, countCircleDays, distanceEmpty, nameOfStationDepartureOfWagon, route, cargo);
     }
 
     @Override
@@ -107,6 +117,7 @@ public class WagonFinalInfo {
                 ", " + nameOfStationDepartureOfWagon +
                 ", " + route +
                 ", " + countCircleDays +
-                ", " + distanceEmpty;
+                ", " + distanceEmpty +
+                ", " + cargo;
     }
 }
