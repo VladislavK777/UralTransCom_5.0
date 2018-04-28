@@ -1,6 +1,7 @@
 package com.uraltranscom.model;
 
 import com.uraltranscom.model.additional_model.WagonType;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ import java.util.Objects;
  *
  */
 
-public class Wagon {
+public class Wagon extends JavaHelperBase {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(Wagon.class);
 
@@ -36,7 +37,7 @@ public class Wagon {
 
     public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo) {
         this.numberOfWagon = numberOfWagon;
-        this.wagonType = new WagonType("КР");
+        this.wagonType = new WagonType(TYPE_OF_WAGON_KR);
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.volume = volume;

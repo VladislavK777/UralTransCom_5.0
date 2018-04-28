@@ -26,6 +26,7 @@ import com.uraltranscom.model.Route;
 import com.uraltranscom.model.additional_model.VolumePeriod;
 import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GetListOfRoutesImpl implements GetList {
+public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
 
@@ -146,8 +147,10 @@ public class GetListOfRoutesImpl implements GetList {
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
                 }
-                mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
-                i++;
+                if (wagonType.equals(TYPE_OF_WAGON_KR)) {
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                    i++;
+                }
             }
             logger.debug("Body route: {}", mapOfRoutes);
         } catch (IOException e) {
