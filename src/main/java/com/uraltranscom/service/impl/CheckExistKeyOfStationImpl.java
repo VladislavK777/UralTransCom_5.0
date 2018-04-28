@@ -59,6 +59,7 @@ public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExi
                     isExist = true;
                 }
             }
+            logger.debug("Проверяем станцию: {}", keyOfStation);
         } catch (SQLException ex) {
             logger.error("Ошибка запроса: {}", preparedStatement);
         }

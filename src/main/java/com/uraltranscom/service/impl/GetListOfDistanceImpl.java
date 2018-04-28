@@ -62,6 +62,12 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
         mapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
         listOfWagons = getListOfWagonsImpl.getListOfWagons();
 
+        try {
+            fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
+        } catch (NullPointerException e) {
+            logger.error("Map must not empty");
+        }
+
         if (!routeId.isEmpty()) {
             String[] routesId = routeId.split(",");
             for (Map.Entry<Integer, Route> _mapOfRoutes : mapOfRoutes.entrySet()) {
@@ -84,13 +90,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                 if (!rootMapWithDistances.containsKey(key)) {
                     if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
                         int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2, cargo);
-                        if (distance != -1) {
-                            if (distance != -20000) {
-                                rootMapWithDistances.put(key, distance);
-                            } else {
-                                rootMapWithDistanceMoreMaxDist.put(key, distance);
-                            }
-                        } else {
+                        if (distance == -1) {
                             if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
                                 basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                                 logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
@@ -104,18 +104,17 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                                 basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
                                 listOfWagons.remove(i);
                                 break;
-
+                            }
+                        } else {
+                            if (distance != -20000) {
+                                rootMapWithDistances.put(key, distance);
+                            } else {
+                                rootMapWithDistanceMoreMaxDist.put(key, distance);
                             }
                         }
                     }
                 }
             }
-        }
-
-        try {
-            fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
-        } catch (NullPointerException e) {
-            logger.error("Map must not empty");
         }
         logger.info("Stop process fill map with distances");
     }
