@@ -18,24 +18,6 @@
             src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
     </script>
 
-    <!-- Вызов лоадера -->
-    <script>
-        jQuery(function ($) {
-            $('#startProcess').on('click', function (e) {
-                $('.content').toggleClass('hide');
-            });
-        });
-    </script>
-
-    <!-- Блокировка экрана -->
-    <script type="text/javascript">
-        function lockScreen() {
-            var lock = document.getElementById('lockPane');
-            if (lock)
-                lock.className = 'lockScreenOn';
-        }
-    </script>
-
     <!-- Скрипт всплывающего окна -->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -79,23 +61,6 @@
             animation-fill-mode: both;
             -webkit-animation-name: fadeIn;
             animation-name: fadeIn;
-        }
-        /* Описываем анимацию свойства opacity */
-        @-webkit-keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
         }
         /* Прячем чекбоксы */
         .tabs > input {
@@ -155,44 +120,6 @@
             .tabs > label {
                 padding: 15px;
             }
-        }
-        /* Стили лоадера */
-        .hide {
-            display: none;
-        }
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #364274;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-            position: relative;
-            top: 40%;
-            left: 45%;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        /* Блокировка экрана */
-        .lockScreenOff {
-            display: none;
-            visibility: hidden;
-        }
-        .lockScreenOn {
-            display: block;
-            visibility: visible;
-            position: absolute;
-            z-index: 999;
-            top: 0px;
-            left: 0px;
-            width: 100%;
-            height: 100%;
-            background-color: #ccc;
-            text-align: center;
-            filter: alpha(opacity=75);
-            opacity: 0.75;
         }
     </style>
 </head>
@@ -268,17 +195,31 @@
                         <th>Рейс</th>
                         <th>Порожнее расстояние</th>
                         <th>Оборот дней</th>
+                        <th>Из под груза</th>
                     </tr>
                     <br><br>
                      <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
                          <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
-                             <tr>
-                                 <td>${reportList.getNumberOfWagon()}</td>
-                                 <td>${reportList.getNameOfStationDepartureOfWagon()}</td>
-                                 <td>${reportList.getRoute()}</td>
-                                 <td>${reportList.getDistanceEmpty()}</td>
-                                 <td>${reportList.getCountCircleDays()}</td>
-                             </tr>
+                            <tr>
+                                <c:choose>
+                                    <c:when test="${reportList.getCargo() == 'СБ.ПОВАГ.ОТП'}">
+                                        <td style="background: #364274; color: #ffffff;">${reportList.getNumberOfWagon()}</td>
+                                        <td style="background: #364274; color: #ffffff;">${reportList.getNameOfStationDepartureOfWagon()}</td>
+                                        <td style="background: #364274; color: #ffffff;">${reportList.getRoute()}</td>
+                                        <td style="background: #364274; color: #ffffff;">${reportList.getDistanceEmpty()}</td>
+                                        <td style="background: #364274; color: #ffffff;">${reportList.getCountCircleDays()}</td>
+                                        <td style="background: #364274; color: #ffffff;">${reportList.getCargo()}</td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td style="background: #ffffff; color: #364274;">${reportList.getNumberOfWagon()}</td>
+                                        <td style="background: #ffffff; color: #364274;">${reportList.getNameOfStationDepartureOfWagon()}</td>
+                                        <td style="background: #ffffff; color: #364274;">${reportList.getRoute()}</td>
+                                        <td style="background: #ffffff; color: #364274;">${reportList.getDistanceEmpty()}</td>
+                                        <td style="background: #ffffff; color: #364274;">${reportList.getCountCircleDays()}</td>
+                                        <td style="background: #ffffff; color: #364274;">${reportList.getCargo()}</td>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tr>
                          </c:forEach>
                      </c:if>
                 </table>
@@ -299,12 +240,12 @@
                     <c:if test="${!empty reportMapOfUndistributedRoutes}">
                         <c:forEach items="${reportMapOfUndistributedRoutes}" var="reportMapNoRoute">
                             <tr>
-                                <td>${reportMapNoRoute.value.getNumberOrder()}</td>
-                                <td>${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
-                                <td>${reportMapNoRoute.value.getNameOfStationDestination()}</td>
-                                <td>${reportMapNoRoute.value.getDistanceOfWay()}</td>
-                                <td>${reportMapNoRoute.value.getCountOrders()}</td>
-                                <td>${reportMapNoRoute.value.getCargo()}</td>
+                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getNumberOrder()}</td>
+                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
+                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getNameOfStationDestination()}</td>
+                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getDistanceOfWay()}</td>
+                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getCountOrders()}</td>
+                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getCargo()}</td>
                             </tr>
                         </c:forEach>
                     </c:if>
@@ -317,7 +258,7 @@
                 <table>
                     <c:forEach items="${reportListOfDistributedWagons}" var="reportListNoWagon">
                         <tr>
-                            <td>${reportListNoWagon}</td>
+                            <td style="background: #ffffff; color: #364274;">${reportListNoWagon}</td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -330,7 +271,7 @@
                 <table>
                     <c:forEach items="${reportListOfError}" var="Error">
                         <tr>
-                            <td>${Error}</td>
+                            <td style="background: #ffffff; color: #364274;">${Error}</td>
                         </tr>
                     </c:forEach>
                 </table>

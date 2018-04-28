@@ -26,6 +26,7 @@ import com.uraltranscom.model.Route;
 import com.uraltranscom.model.additional_model.VolumePeriod;
 import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GetListOfRoutesImpl implements GetList {
+public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetListOfRoutesImpl.class);
 
@@ -121,6 +122,9 @@ public class GetListOfRoutesImpl implements GetList {
                     if (row.getCell(c).getStringCellValue().trim().equals("Разница. ПС")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
+                        if (countOrders < 0) {
+                            countOrders = countOrders * (-1);
+                        }
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals("Объем от")) {
                         XSSFRow xssfRow = sheet.getRow(j);
@@ -143,7 +147,7 @@ public class GetListOfRoutesImpl implements GetList {
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
                 }
-                if (countOrders > 0 && wagonType.equals("КР")) {
+                if (wagonType.equals(TYPE_OF_WAGON_KR)) {
                     mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
                     i++;
                 }

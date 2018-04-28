@@ -120,7 +120,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                         Map.Entry<Integer, Route> entry = it.next();
                         for (int j = 0; j < tempMapOfRouteForDelete.size(); j++) {
                             // Находим маршрут для вагона
-                            if (tempMapOfRouteForDelete.get(j).equals(route)) {
+                            if (tempMapOfRouteForDelete.get(j).equals(route) && entry.getValue().getCountOrders() > 0) {
                                 if (tempMapOfRouteForDelete.get(j).equals(entry.getValue())) {
                                     if (wagon.getVolume() >= entry.getValue().getVolumePeriod().getVolumeFrom() && wagon.getVolume() <= entry.getValue().getVolumePeriod().getVolumeTo()) {
 
@@ -162,7 +162,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                             it.remove();
                                         }
 
-                                        basicClassLookingFor.getListOfDistributedRoutesAndWagons().add(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue(), nameOfStationDepartureOfWagon, tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination()));
+                                        basicClassLookingFor.getListOfDistributedRoutesAndWagons().add(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue(), nameOfStationDepartureOfWagon, tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination(), wagon.getCargo().trim()));
                                         basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));
 
                                         isOk = true;
