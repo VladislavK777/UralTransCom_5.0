@@ -8,8 +8,10 @@ import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -46,27 +48,19 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     private FillMapsNotVipAndVip fillMapsNotVipAndVip;
 
     // Основная мапа
-    private static Map<String, Integer> rootMapWithDistances = new HashMap<>();
+    @Resource(name = "rootMapWithDistancesBean")
+    private Map<String, Integer> rootMapWithDistances;
 
     // Мапа с расстояниями больше максимального значения
-    private static Map<String, Integer> rootMapWithDistanceMoreMaxDist = new HashMap<>();
-
-    // Заполненные мапы Вагонов и Маршрутов
-    private Map<Integer, Route> mapOfRoutes = new HashMap<>();
-    private List<Wagon> listOfWagons = new ArrayList<>();
+    @Resource(name = "rootMapWithDistanceMoreMaxDistBean")
+    private Map<String, Integer> rootMapWithDistanceMoreMaxDist;
 
     @Override
     public void fillMap(String routeId) {
         logger.info("Start process fill map with distances");
 
-        mapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
-        listOfWagons = getListOfWagonsImpl.getListOfWagons();
-
-        try {
-            fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
-        } catch (NullPointerException e) {
-            logger.error("Map must not empty");
-        }
+        Map<Integer, Route> mapOfRoutes = new HashMap<>(getListOfRoutesImpl.getMapOfRoutes());
+        List<Wagon> listOfWagons = new ArrayList<>(getListOfWagonsImpl.getListOfWagons());
 
         if (!routeId.isEmpty()) {
             String[] routesId = routeId.split(",");
@@ -87,6 +81,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                 String stationCode2 = entry.getValue().getKeyOfStationDeparture();
                 String cargo = listOfWagons.get(i).getCargo();
                 String key = stationCode1 + "_" + stationCode2 + "_" + cargo;
+                logger.info("key: {}", key);
                 if (!rootMapWithDistances.containsKey(key)) {
                     if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
                         int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2, cargo);
@@ -116,6 +111,13 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                 }
             }
         }
+
+        try {
+            fillMapsNotVipAndVip.separateMaps(mapOfRoutes);
+        } catch (NullPointerException e) {
+            logger.error("Map must not empty");
+        }
+
         logger.info("Stop process fill map with distances");
     }
 
@@ -124,7 +126,7 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     }
 
     public void setRootMapWithDistances(Map<String, Integer> rootMapWithDistances) {
-        GetListOfDistanceImpl.rootMapWithDistances = rootMapWithDistances;
+        this.rootMapWithDistances = rootMapWithDistances;
     }
 
     public Map<String, Integer> getRootMapWithDistanceMoreMaxDist() {
@@ -132,28 +134,8 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     }
 
     public void setRootMapWithDistanceMoreMaxDist(Map<String, Integer> rootMapWithDistanceMoreMaxDist) {
-        GetListOfDistanceImpl.rootMapWithDistanceMoreMaxDist = rootMapWithDistanceMoreMaxDist;
+        this.rootMapWithDistanceMoreMaxDist = rootMapWithDistanceMoreMaxDist;
     }
-
-    public Map<Integer, Route> getMapOfRoutes() {
-        return mapOfRoutes;
-    }
-
-    public void setMapOfRoutes(Map<Integer, Route> mapOfRoutes) {
-        this.mapOfRoutes = mapOfRoutes;
-    }
-
-    public List<Wagon> getListOfWagons() {
-        return listOfWagons;
-    }
-
-    public void setListOfWagons(List<Wagon> listOfWagons) {
-        this.listOfWagons = listOfWagons;
-    }
-
-    /*public static void setConnection(Connection connection) {
-        GetListOfDistanceImpl.connection = connection;
-    }*/
 
     public GetListOfRoutesImpl getGetListOfRoutesImpl() {
         return getListOfRoutesImpl;

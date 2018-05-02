@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,8 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private static Logger logger = LoggerFactory.getLogger(BasicClassLookingForImpl.class);
 
     @Autowired
+    private GetListOfWagonsImpl getListOfWagons;
+    @Autowired
     private GetListOfDistanceImpl getListOfDistance;
     @Autowired
     private FillMapsNotVipAndVip fillMapsNotVipAndVip;
@@ -48,7 +51,8 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private ClassHandlerLookingForImpl classHandlerLookingFor;
 
     // Мапа для записи в файл Вагона + Станция назначения.
-    private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
+    @Resource(name = "totalMapWithWagonNumberAndRouteBean")
+    private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute;
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
@@ -80,7 +84,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         // Заполняем мапы
         Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
         Map<Integer, Route> tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
-        List<Wagon> tempListOfWagons = getListOfDistance.getListOfWagons();
+        List<Wagon> tempListOfWagons = getListOfWagons.getListOfWagons();
 
         // Запускаем распределение для VIP
         if (!tempMapRoutesVip.isEmpty()) {

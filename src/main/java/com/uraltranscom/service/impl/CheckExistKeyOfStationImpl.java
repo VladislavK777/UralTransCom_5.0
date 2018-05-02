@@ -33,14 +33,15 @@ public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExi
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(CheckExistKeyOfStationImpl.class);
 
-    private static ResultSet resultSet;
-    private static PreparedStatement preparedStatement;
-
     private CheckExistKeyOfStationImpl() {
     }
 
     public boolean checkExistKey(String keyOfStation) {
+
+        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
         Boolean isExist = false;
+
         try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос

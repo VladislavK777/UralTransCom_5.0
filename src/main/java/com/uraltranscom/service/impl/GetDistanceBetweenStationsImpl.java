@@ -33,15 +33,16 @@ public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetD
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetDistanceBetweenStationsImpl.class);
 
-    private static ResultSet resultSet;
-    private static CallableStatement callableStatement;
-
     private GetDistanceBetweenStationsImpl() {
     }
 
     @Override
     public int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination, String cargo) {
+
+        ResultSet resultSet;
+        CallableStatement callableStatement = null;
         int distance = 0;
+
         try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос

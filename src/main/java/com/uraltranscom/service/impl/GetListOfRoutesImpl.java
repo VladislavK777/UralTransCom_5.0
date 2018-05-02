@@ -6,7 +6,6 @@ package com.uraltranscom.service.impl;
  *
  * @author Vladislav Klochkov
  * @version 4.2
- * @version 4.1
  * @create 25.10.2017
  *
  * 17.11.2017
