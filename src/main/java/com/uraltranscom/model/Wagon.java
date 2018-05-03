@@ -34,14 +34,16 @@ public class Wagon extends JavaHelperBase {
     private String nameOfStationDestination; // Название станции назначения
     private int volume; // Объем вагона
     private String cargo; // Груз
+    private String keyItemCargo; // Код груза
 
-    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo) {
+    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo, String keyItemCargo) {
         this.numberOfWagon = numberOfWagon;
         this.wagonType = new WagonType(TYPE_OF_WAGON_KR);
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.volume = volume;
         this.cargo = cargo;
+        this.keyItemCargo = keyItemCargo;
     }
 
     public String getNumberOfWagon() {
@@ -92,6 +94,14 @@ public class Wagon extends JavaHelperBase {
         this.cargo = cargo;
     }
 
+    public String getKeyItemCargo() {
+        return keyItemCargo;
+    }
+
+    public void setKeyItemCargo(String keyItemCargo) {
+        this.keyItemCargo = keyItemCargo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,13 +112,14 @@ public class Wagon extends JavaHelperBase {
                 Objects.equals(wagonType, wagon.wagonType) &&
                 Objects.equals(keyOfStationDestination, wagon.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination) &&
-                Objects.equals(cargo, wagon.cargo);
+                Objects.equals(cargo, wagon.cargo) &&
+                Objects.equals(keyItemCargo, wagon.keyItemCargo);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo);
+        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo);
     }
 
     @Override
@@ -118,6 +129,7 @@ public class Wagon extends JavaHelperBase {
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
                 ", " + volume +
-                ", " + cargo;
+                ", " + cargo +
+                ", " + keyItemCargo;
     }
 }

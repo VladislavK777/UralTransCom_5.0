@@ -45,7 +45,7 @@ public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExi
         try (Connection connection = getDataSource().getConnection()) {
 
             // Подготавливаем запрос
-            preparedStatement = connection.prepareStatement("select distinct 1 from distances where (station_id1 = ? or station_id2 = ?)");
+            preparedStatement = connection.prepareStatement("select distinct 1 from distances_new where (station_id1 = ? or station_id2 = ?)");
 
             // Определяем значения параметров
             preparedStatement.setString(1, keyOfStation);

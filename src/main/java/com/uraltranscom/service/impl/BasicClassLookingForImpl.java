@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +50,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private ClassHandlerLookingForImpl classHandlerLookingFor;
 
     // Мапа для записи в файл Вагона + Станция назначения.
-    @Resource(name = "totalMapWithWagonNumberAndRouteBean")
-    private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute;
+    private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
     // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
@@ -73,6 +71,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     @Override
     public void fillMapRouteIsOptimal(String routeId) {
         // Очищаем массивы итоговые
+        totalMapWithWagonNumberAndRoute.clear();
         listOfDistributedRoutesAndWagons.clear();
         mapOfUndistributedRoutes.clear();
         listOfUndistributedWagons.clear();

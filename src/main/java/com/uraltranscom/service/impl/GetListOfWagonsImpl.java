@@ -68,6 +68,7 @@ public class GetListOfWagonsImpl implements GetList {
     @Override
     public void fillMap() {
         listOfWagons.clear();
+        writeToFileExcel.setFile(null);
         writeToFileExcel.setFile(file);
 
         // Получаем файл формата xls
@@ -85,26 +86,22 @@ public class GetListOfWagonsImpl implements GetList {
                 String nameOfStationDestination = null;
                 int volume = 0;
                 String cargo = null;
+                String keyItemCargo = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().trim().equals("Вагон №")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Номер вагона")) {
                         XSSFRow xssfRow = sheet.getRow(j);
-                        String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
-                        double valueDouble = xssfRow.getCell(c).getNumericCellValue();
-                        if ((valueDouble - (int) valueDouble) * 1000 == 0) {
-                            val = (int) valueDouble + "";
-                        }
-                        numberOfWagon = val;
+                        numberOfWagon = xssfRow.getCell(c).getStringCellValue();
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения(6)")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Объем")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals("Обьем вагона")) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volume = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
@@ -112,8 +109,12 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals("Код груза ЕТСНГ")) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        keyItemCargo = xssfRow.getCell(c).getStringCellValue();
+                    }
                 }
-                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo));
+                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {
@@ -122,6 +123,11 @@ public class GetListOfWagonsImpl implements GetList {
             logger.error("Некорректный формат файла, необходим формат xlsx");
         }
 
+    }
+
+    protected void replaceListOfWagon(List<Wagon> listOfWagonsAfterGetDistance) {
+        listOfWagons.clear();
+        listOfWagons.addAll(listOfWagonsAfterGetDistance);
     }
 
     public List<Wagon> getListOfWagons() {

@@ -70,16 +70,40 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                 // По каждому вагону высчитываем расстояние до каждой начальной станнции маршрутов
                 // Цикл расчета расстояния и заполнения мапы
                 for (Map.Entry<Integer, Route> _tempMapOfRoutes : tempMapOfRoutes.entrySet()) {
+
                     List<Object> list = new ArrayList<>();
                     String keyOfStationDeparture = _tempMapOfRoutes.getValue().getKeyOfStationDeparture();
-                    String cargo = _copyListOfWagon.getCargo();
+                    String keyItemCargo = _copyListOfWagon.getKeyItemCargo();
                     list.add(_copyListOfWagon);
                     list.add(_tempMapOfRoutes.getValue());
-                    String key = keyOfStationOfWagonDestination + "_" + keyOfStationDeparture + "_" + cargo;
+                    String key = keyOfStationOfWagonDestination + "_" + keyOfStationDeparture;
 
                     // Ищем в готовой мапе расстояние
                     if (getListOfDistance.getRootMapWithDistances().containsKey(key)) {
-                        mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key));
+                        if (getListOfDistance.getRootMapWithTypeOfCargo().containsKey(keyItemCargo)) {
+                            if (getListOfDistance.getRootMapWithDistances().get(key).get(1) == 0) {
+                                switch (getListOfDistance.getRootMapWithTypeOfCargo().get(keyItemCargo)) {
+                                    case 3:
+                                        if (getListOfDistance.getRootMapWithDistances().get(key).get(0) <= 300) {
+                                            mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key).get(0));
+                                        }
+                                        break;
+                                    default:
+                                        if (getListOfDistance.getRootMapWithDistances().get(key).get(0) <= 600) {
+                                            mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key).get(0));
+                                        }
+                                        break;
+                                }
+                            } else if (getListOfDistance.getRootMapWithDistances().get(key).get(1) == 1) {
+                                if (getListOfDistance.getRootMapWithDistances().get(key).get(0) <= 2500) {
+                                    mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key).get(0));
+                                }
+                            } else {
+                                if (getListOfDistance.getRootMapWithDistances().get(key).get(0) <= 1800) {
+                                    mapDistance.put(list, getListOfDistance.getRootMapWithDistances().get(key).get(0));
+                                }
+                            }
+                        }
                     }
                 }
             }

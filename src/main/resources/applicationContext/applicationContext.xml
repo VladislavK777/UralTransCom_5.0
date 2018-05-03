@@ -40,22 +40,4 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="rootMapWithDistancesBean" class="java.util.HashMap">
-        <constructor-arg index="0" type="java.util.Map">
-            <map key-type="java.lang.String" value-type="java.lang.Integer"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="rootMapWithDistanceMoreMaxDistBean" class="java.util.HashMap">
-        <constructor-arg index="0" type="java.util.Map">
-            <map key-type="java.lang.String" value-type="java.lang.Integer"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="totalMapWithWagonNumberAndRouteBean" class="java.util.HashMap">
-        <constructor-arg index="0" type="java.util.Map">
-            <map key-type="com.uraltranscom.model_ext.WagonFinalInfo" value-type="com.uraltranscom.model.Route"/>
-        </constructor-arg>
-    </bean>
-
 </beans>
