@@ -8,6 +8,7 @@
     <title>UralTransCom</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="resources/style.css" rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="resources/favicon.ico" type="image/x-icon">
     <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
     </script>

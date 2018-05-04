@@ -8,6 +8,8 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,7 +36,7 @@ public class testGetDistance {
     public void getConnect() throws Exception {
         System.out.println("Test Start");
         GetDistanceBetweenStations getDistanceBetweenStations = mock(GetDistanceBetweenStations.class);
-        when(getDistanceBetweenStations.getDistanceBetweenStations("033409", "716607", "СОЛЬ        ")).thenReturn(-20000);
-        assertEquals(125, getDistanceBetweenStations.getDistanceBetweenStations("033409", "716607", "СОЛЬ        "));
+        when(getDistanceBetweenStations.getDistanceBetweenStations("033409", "716607")).thenReturn(new ArrayList<>());
+        assertEquals(new ArrayList<>(), getDistanceBetweenStations.getDistanceBetweenStations("033409", "716607"));
     }
 }
