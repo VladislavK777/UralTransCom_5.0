@@ -5,7 +5,7 @@ package com.uraltranscom.service.impl;
  * Класс проверки корректности кода станции
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.2
  * @create 12.01.2018
  *
  * 12.01.2018
@@ -14,6 +14,8 @@ package com.uraltranscom.service.impl;
  *   1. Версия 4.0
  * 03.04.2018
  *   1. Версия 4.1
+ * 04.05.2018
+ *   1. Версия 4.2
  *
  */
 
@@ -23,10 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Service
 public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExistKeyOfStation {
@@ -38,23 +37,11 @@ public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExi
 
     public boolean checkExistKey(String keyOfStation) {
 
-        ResultSet resultSet;
-        PreparedStatement preparedStatement = null;
         Boolean isExist = false;
 
-        try (Connection connection = getDataSource().getConnection()) {
-
-            // Подготавливаем запрос
-            preparedStatement = connection.prepareStatement("select distinct 1 from distances_new where (station_id1 = ? or station_id2 = ?)");
-
-            // Определяем значения параметров
-            preparedStatement.setString(1, keyOfStation);
-            preparedStatement.setString(2, keyOfStation);
-
-            // Выполняем запрос
-            resultSet = preparedStatement.executeQuery();
-
-            // Вычитываем полученное значение
+        try (Connection connection = getDataSource().getConnection();
+             PreparedStatement preparedStatement = createPreparedStatement(connection, keyOfStation);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 if (!resultSet.wasNull()) {
                     isExist = true;
@@ -62,8 +49,16 @@ public class CheckExistKeyOfStationImpl extends ConnectionDB implements CheckExi
             }
             logger.debug("Проверяем станцию: {}", keyOfStation);
         } catch (SQLException ex) {
-            logger.error("Ошибка запроса: {}", preparedStatement);
+            logger.error("Ошибка запроса: {}", ex.getMessage());
         }
         return isExist;
+    }
+
+    private PreparedStatement createPreparedStatement(Connection connection, String keyOfStation) throws SQLException {
+        String sql = "select distinct 1 from distances_new where (station_id1 = ? or station_id2 = ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, keyOfStation);
+        preparedStatement.setString(2, keyOfStation);
+        return preparedStatement;
     }
 }

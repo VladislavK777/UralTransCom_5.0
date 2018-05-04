@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,30 +40,25 @@ public class GetDistanceBetweenStationsImpl extends ConnectionDB implements GetD
     @Override
     public List<Integer> getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) {
 
-        ResultSet resultSet;
-        CallableStatement callableStatement = null;
         List<Integer> listResult = new ArrayList<>();
 
-        try (Connection connection = getDataSource().getConnection()) {
-
-            // Подготавливаем запрос
-            callableStatement = connection.prepareCall(" { call getdistancetest(?,?) } ");
-
-            // Определяем значения параметров
-            callableStatement.setString(1, keyOfStationDeparture);
-            callableStatement.setString(2, keyOfStationDestination);
-
-            // Выполняем запрос
-            resultSet = callableStatement.executeQuery();
-
-            // Вычитываем полученное значение
+        try (Connection connection = getDataSource().getConnection();
+             CallableStatement callableStatement = createCallableStatement(connection, keyOfStationDeparture, keyOfStationDestination);
+             ResultSet resultSet = callableStatement.executeQuery()) {
             while (resultSet.next()) {
                 listResult.add(resultSet.getInt(1));
             }
             logger.debug("Get distance for: {}", keyOfStationDeparture + "_" + keyOfStationDestination + ": " + listResult.get(0));
         } catch (SQLException sqlEx) {
-            logger.error("Ошибка запроса {} - {}", callableStatement, sqlEx.getMessage());
+            logger.error("Ошибка запроса: {}", sqlEx.getMessage());
         }
         return listResult;
+    }
+
+    private CallableStatement createCallableStatement(Connection connection, String keyOfStationDeparture, String keyOfStationDestination) throws SQLException {
+        CallableStatement callableStatement = connection.prepareCall(" { call getdistancetest(?,?) } ");
+        callableStatement.setString(1, keyOfStationDeparture);
+        callableStatement.setString(2, keyOfStationDestination);
+        return callableStatement;
     }
 }
