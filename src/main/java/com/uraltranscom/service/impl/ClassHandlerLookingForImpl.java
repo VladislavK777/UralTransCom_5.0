@@ -160,11 +160,11 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                         int countCircleDays = getFullMonthCircleOfWagonImpl.fullDays(copyListOfWagon.get(getKeyNumber).getWagonType().toString(), mapDistanceSortFirstElement.getValue(), route.getDistanceOfWay());
 
                                         // Удаляем вагон
-                                        for (int i = 0; i < tempListOfWagons.size(); i++) {
+                                        /*for (int i = 0; i < tempListOfWagons.size(); i++) {
                                             if (tempListOfWagons.get(i).getNumberOfWagon().equals(copyListOfWagon.get(getKeyNumber).getNumberOfWagon())) {
                                                 tempListOfWagons.remove(i);
                                             }
-                                        }
+                                        }*/
 
                                         copyListOfWagon.remove(getKeyNumber);
 
@@ -200,9 +200,6 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                 }
             }
         }
-
-        // Заполняем итоговый массив маршрутов
-        basicClassLookingFor.getMapOfUndistributedRoutes().putAll(tempMapOfRoutes);
 
         logger.info("Stop root method: {}", this.getClass().getSimpleName() + ".fillMapRouteIsOptimal");
     }

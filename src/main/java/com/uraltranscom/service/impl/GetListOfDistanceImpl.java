@@ -98,16 +98,14 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                         int distance = listDistance.get(0);
                         if (distance == -1) {
                             if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
-                                basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                                logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
-                                basicClassLookingForImpl.getMapOfUndistributedRoutes().put(mapOfRoutes.size(), entry.getValue());
+                                basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture() + " в файле заявок");
+                                logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture() + " в файле заявок");
                                 iterator.remove();
                                 break;
                             }
                             if (!checkExistKeyOfStationImpl.checkExistKey(stationCode1)) {
-                                basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination());
-                                logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination());
-                                basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
+                                basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + listOfWagons.get(i).getKeyOfStationDestination() + " в файле дислокации вагонов");
+                                logger.error("Проверьте код станции {}", listOfWagons.get(i).getKeyOfStationDestination() + " в файле дислокации вагонов");
                                 listOfWagons.remove(i);
                                 break;
                             }
