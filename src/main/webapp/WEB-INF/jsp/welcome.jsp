@@ -101,9 +101,7 @@
         }
         /* Активация секций с помощью псевдокласса :checked */
         #tab1:checked ~ #content-tab1,
-        #tab2:checked ~ #content-tab2,
-        #tab3:checked ~ #content-tab3,
-        #tab4:checked ~ #content-tab4 {
+        #tab2:checked ~ #content-tab2 {
             display: block;
         }
         /* Убираем текст с переключателей и оставляем иконки на малых экранах*/
@@ -179,13 +177,7 @@
             <label for="tab1" title="Распределенные рейсы">Распределенные заявки</label>
 
             <input id="tab2" type="radio" name="tabs">
-            <label for="tab2" title="Нераспределенные рейсы">Нераспределенные заявки</label>
-
-            <input id="tab3" type="radio" name="tabs">
-            <label for="tab3" title="Нераспределенные вагоны">Нераспределенные вагоны</label>
-
-            <input id="tab4" type="radio" name="tabs">
-            <label for="tab4" title="Ошибки">Ошибки</label>
+            <label for="tab2" title="Ошибки">Ошибки в кодах станций</label>
 
             <section id="content-tab1">
              <div>
@@ -227,46 +219,6 @@
              </div>
             </section>
             <section id="content-tab2">
-            <div>
-            	<table class="table_report">
-            		<tr>
-            			<th>Номер заявки</th>
-            			<th>Станция отправления</th>
-            			<th>Станция назначения</th>
-            			<th>Расстояние</th>
-            			<th>Кол. вагонов</th>
-            			<th>Груз</th>
-            		</tr>
-            		<br><br>
-                    <c:if test="${!empty reportMapOfUndistributedRoutes}">
-                        <c:forEach items="${reportMapOfUndistributedRoutes}" var="reportMapNoRoute">
-                            <tr>
-                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getNumberOrder()}</td>
-                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getNameOfStationDeparture()}</td>
-                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getNameOfStationDestination()}</td>
-                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getDistanceOfWay()}</td>
-                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getCountOrders()}</td>
-                                <td style="background: #ffffff; color: #364274;">${reportMapNoRoute.value.getCargo()}</td>
-                            </tr>
-                        </c:forEach>
-                    </c:if>
-            	</table>
-            </div>
-            </section>
-            <section id="content-tab3">
-                <p>
-                    <c:if test="${!empty reportListOfDistributedWagons}">
-                <table>
-                    <c:forEach items="${reportListOfDistributedWagons}" var="reportListNoWagon">
-                        <tr>
-                            <td style="background: #ffffff; color: #364274;">${reportListNoWagon}</td>
-                        </tr>
-                    </c:forEach>
-                </table>
-                </c:if>
-                </p>
-            </section>
-            <section id="content-tab4">
                 <p>
                     <c:if test="${!empty reportListOfError}">
                 <table>

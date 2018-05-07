@@ -23,7 +23,7 @@ import java.util.List;
  * Класс получения списка вагонов
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 4.2
  * @create 25.10.2017
  *
  * 06.11.2017
@@ -38,6 +38,8 @@ import java.util.List;
  *   1. Версия 4.0
  * 19.04.2018
  *   1. Версия 4.1
+ * 03.05.2018
+ *   1. Версия 4.2
  *
  */
 

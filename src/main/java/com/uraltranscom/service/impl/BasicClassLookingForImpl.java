@@ -49,18 +49,11 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     // Мапа для записи в файл Вагона + Станция назначения.
     private Map<WagonFinalInfo, Route> totalMapWithWagonNumberAndRoute = new HashMap<>();
 
-    // Итоговые массивы для вывода на страницу
     // Массив распределенных маршрутов и вагонов
     private List<WagonFinalInfo> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
-    // Массив нераспределенных маршрутов
-    private Map<Integer, Route> mapOfUndistributedRoutes = new HashMap<>();
-
-    // Массив нераспределенных вагонов
-    private List<String> listOfUndistributedWagons = new ArrayList<>();
-
     // Массив ошибок
-    private List<String> listOfError = new LinkedList<>();
+    private List<String> listOfError = new ArrayList<>();
 
     private BasicClassLookingForImpl() {
     }
@@ -70,8 +63,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         // Очищаем массивы итоговые
         totalMapWithWagonNumberAndRoute.clear();
         listOfDistributedRoutesAndWagons.clear();
-        mapOfUndistributedRoutes.clear();
-        listOfUndistributedWagons.clear();
         listOfError.clear();
 
         // Запускаем метод заполненеия первоначальной мапы расстояний
@@ -90,10 +81,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         // Запускаем распределение для неVIP
         if (!tempMapRoutesNotVip.isEmpty()) {
             classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons);
-        }
-
-        for (int i = 0; i < tempListOfWagons.size(); i++) {
-            listOfUndistributedWagons.add(tempListOfWagons.get(i).getNumberOfWagon());
         }
 
         // очищаем мапы
@@ -116,22 +103,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
 
     public void setListOfDistributedRoutesAndWagons(List<WagonFinalInfo> listOfDistributedRoutesAndWagons) {
         this.listOfDistributedRoutesAndWagons = listOfDistributedRoutesAndWagons;
-    }
-
-    public Map<Integer, Route> getMapOfUndistributedRoutes() {
-        return mapOfUndistributedRoutes;
-    }
-
-    public void setMapOfUndistributedRoutes(Map<Integer, Route> mapOfUndistributedRoutes) {
-        this.mapOfUndistributedRoutes = mapOfUndistributedRoutes;
-    }
-
-    public List<String> getListOfUndistributedWagons() {
-        return listOfUndistributedWagons;
-    }
-
-    public void setListOfUndistributedWagons(List<String> listOfUndistributedWagons) {
-        this.listOfUndistributedWagons = listOfUndistributedWagons;
     }
 
     public List<String> getListOfError() {

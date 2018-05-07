@@ -62,8 +62,6 @@ public class BasicController {
     public String reportList(@RequestParam(value = "routeId", defaultValue = "") String routeId, Model model) {
         basicClassLookingForImpl.fillMapRouteIsOptimal(routeId);
         model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getListOfDistributedRoutesAndWagons());
-        model.addAttribute("reportMapOfUndistributedRoutes", basicClassLookingForImpl.getMapOfUndistributedRoutes());
-        model.addAttribute("reportListOfDistributedWagons", basicClassLookingForImpl.getListOfUndistributedWagons());
         model.addAttribute("reportListOfError", basicClassLookingForImpl.getListOfError());
         return "welcome";
     }

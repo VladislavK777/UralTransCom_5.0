@@ -115,27 +115,20 @@ public class WriteToFileExcel extends JavaHelperBase {
                                 if (val.equals(mapForAdd.getKey().getNumberOfWagon())) {
                                     for (int q = 0; q < row.getLastCellNum(); q++) {
                                         if (row.getCell(q).getStringCellValue().trim().equals("Станция погрузки запланированная")) {
-                                            Font fontTitle = sheet.getWorkbook().createFont();
-                                            fontTitle.setColor(HSSFColor.BLACK.index);
-                                            XSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-                                            cellStyle.setFont(fontTitle);
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getNameOfStationDeparture());
-                                            cell.setCellStyle(cellStyle);
+                                            cell.setCellStyle(cellStyle(sheet));
                                         }
                                         if (row.getCell(q).getStringCellValue().trim().equals("Клиент Следующее задание")) {
-                                            Font fontTitle = sheet.getWorkbook().createFont();
-                                            fontTitle.setColor(HSSFColor.BLACK.index);
-                                            XSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-                                            cellStyle.setFont(fontTitle);
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getCustomer());
-                                            cell.setCellStyle(cellStyle);
+                                            cell.setCellStyle(cellStyle(sheet));
                                         }
-                                        /*if (row.getCell(q).getStringCellValue().trim().equals("Примечание")) {
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Примечание")) {
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(buildText(mapForAdd.getKey().getDistanceEmpty(), mapForAdd.getKey().getCountCircleDays()));
-                                        }*/
+                                            cell.setCellStyle(cellStyle(sheet));
+                                        }
                                     }
                                 }
                             }
@@ -157,6 +150,14 @@ public class WriteToFileExcel extends JavaHelperBase {
         } else {
             return dist + " км./" + countCircle + " " + PrefixOfDays.parsePrefixOfDays(countCircle) + "(превышение!)";
         }
+    }
+
+    private static XSSFCellStyle cellStyle(XSSFSheet sheet) {
+        Font fontTitle = sheet.getWorkbook().createFont();
+        fontTitle.setColor(HSSFColor.BLACK.index);
+        XSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(fontTitle);
+        return cellStyle;
     }
 
     // Метод записи в файл
