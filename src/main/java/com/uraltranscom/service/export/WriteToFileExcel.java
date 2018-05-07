@@ -5,13 +5,15 @@ package com.uraltranscom.service.export;
  * Класс записи в файл Excel
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 4.2
  * @create 09.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 25.04.2018
+ *   1. Версия 4.2
  *
  */
 
@@ -19,7 +21,10 @@ import com.uraltranscom.model.Route;
 import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import com.uraltranscom.service.additional.PrefixOfDays;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -103,28 +108,34 @@ public class WriteToFileExcel extends JavaHelperBase {
                 for (int j = 1; j < sheet.getLastRowNum() + 1; j++) {
                     XSSFRow row = sheet.getRow(0);
                     for (int c = 0; c < row.getLastCellNum(); c++) {
-                        if (row.getCell(c).getStringCellValue().trim().equals("Вагон №")) {
+                        if (row.getCell(c).getStringCellValue().trim().equals("Номер вагона")) {
                             XSSFRow xssfRow = sheet.getRow(j);
-                            String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
-                            double valueDouble = xssfRow.getCell(c).getNumericCellValue();
-                            if ((valueDouble - (int) valueDouble) * 1000 == 0) {
-                                val = (int) valueDouble + "";
-                            }
+                            String val = xssfRow.getCell(c).getStringCellValue();
                             for (Map.Entry<WagonFinalInfo, Route> mapForAdd : map.entrySet()) {
                                 if (val.equals(mapForAdd.getKey().getNumberOfWagon())) {
                                     for (int q = 0; q < row.getLastCellNum(); q++) {
-                                        if (row.getCell(q).getStringCellValue().trim().equals("Станция")) {
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Станция погрузки запланированная")) {
+                                            Font fontTitle = sheet.getWorkbook().createFont();
+                                            fontTitle.setColor(HSSFColor.BLACK.index);
+                                            XSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+                                            cellStyle.setFont(fontTitle);
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getNameOfStationDeparture());
+                                            cell.setCellStyle(cellStyle);
                                         }
-                                        if (row.getCell(q).getStringCellValue().trim().equals("Клиент")) {
+                                        if (row.getCell(q).getStringCellValue().trim().equals("Клиент Следующее задание")) {
+                                            Font fontTitle = sheet.getWorkbook().createFont();
+                                            fontTitle.setColor(HSSFColor.BLACK.index);
+                                            XSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+                                            cellStyle.setFont(fontTitle);
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(mapForAdd.getValue().getCustomer());
+                                            cell.setCellStyle(cellStyle);
                                         }
-                                        if (row.getCell(q).getStringCellValue().trim().equals("Примечание")) {
+                                        /*if (row.getCell(q).getStringCellValue().trim().equals("Примечание")) {
                                             Cell cell = xssfRow.createCell(q);
                                             cell.setCellValue(buildText(mapForAdd.getKey().getDistanceEmpty(), mapForAdd.getKey().getCountCircleDays()));
-                                        }
+                                        }*/
                                     }
                                 }
                             }

@@ -44,23 +44,24 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
     private BasicClassLookingForImpl basicClassLookingForImpl;
     @Autowired
     private FillMapsNotVipAndVip fillMapsNotVipAndVip;
+    @Autowired
+    private GetTypeOfCargoImpl getTypeOfCargo;
 
     // Основная мапа
-    private static Map<String, Integer> rootMapWithDistances = new HashMap<>();
+    private Map<String, List<Integer>> rootMapWithDistances = new HashMap<>();
 
     // Мапа с расстояниями больше максимального значения
-    private static Map<String, Integer> rootMapWithDistanceMoreMaxDist = new HashMap<>();
+    private Map<String, List<Integer>> rootMapWithDistanceMoreMaxDist = new HashMap<>();
 
-    // Заполненные мапы Вагонов и Маршрутов
-    private Map<Integer, Route> mapOfRoutes = new HashMap<>();
-    private List<Wagon> listOfWagons = new ArrayList<>();
+    // Мапа хранит классы грузов
+    private Map<String, Integer> rootMapWithTypeOfCargo = new HashMap<>();
 
     @Override
     public void fillMap(String routeId) {
         logger.info("Start process fill map with distances");
 
-        mapOfRoutes = getListOfRoutesImpl.getMapOfRoutes();
-        listOfWagons = getListOfWagonsImpl.getListOfWagons();
+        Map<Integer, Route> mapOfRoutes = new HashMap<>(getListOfRoutesImpl.getMapOfRoutes());
+        List<Wagon> listOfWagons = new ArrayList<>(getListOfWagonsImpl.getListOfWagons());
 
         if (!routeId.isEmpty()) {
             String[] routesId = routeId.split(",");
@@ -77,20 +78,25 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
         while (iterator.hasNext()) {
             Map.Entry<Integer, Route> entry = iterator.next();
             for (int i = 0; i < listOfWagons.size(); i++) {
+
                 String stationCode1 = listOfWagons.get(i).getKeyOfStationDestination();
                 String stationCode2 = entry.getValue().getKeyOfStationDeparture();
-                String cargo = listOfWagons.get(i).getCargo();
-                String key = stationCode1 + "_" + stationCode2 + "_" + cargo;
-                if (!rootMapWithDistances.containsKey(key)) {
-                    if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
-                        int distance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2, cargo);
-                        if (distance != -1) {
-                            if (distance != -20000) {
-                                rootMapWithDistances.put(key, distance);
-                            } else {
-                                rootMapWithDistanceMoreMaxDist.put(key, distance);
-                            }
-                        } else {
+                String keyItemCargo = listOfWagons.get(i).getKeyItemCargo();
+
+                String key = stationCode1 + "_" + stationCode2;
+
+                // Заполняем мапу классами
+                if (!rootMapWithTypeOfCargo.containsKey(keyItemCargo)) {
+                    int type = getTypeOfCargo.getTypeOfCargo(keyItemCargo);
+                    rootMapWithTypeOfCargo.put(keyItemCargo, type);
+                }
+
+                // Заполняем мапы расстояний
+                if (!rootMapWithDistanceMoreMaxDist.containsKey(key)) {
+                    if (!rootMapWithDistances.containsKey(key)) {
+                        List<Integer> listDistance = getDistanceBetweenStations.getDistanceBetweenStations(stationCode1, stationCode2);
+                        int distance = listDistance.get(0);
+                        if (distance == -1) {
                             if (!checkExistKeyOfStationImpl.checkExistKey(stationCode2)) {
                                 basicClassLookingForImpl.getListOfError().add("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
                                 logger.error("Проверьте код станции " + entry.getValue().getKeyOfStationDeparture());
@@ -104,7 +110,12 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
                                 basicClassLookingForImpl.getListOfUndistributedWagons().add(listOfWagons.get(i).getNumberOfWagon());
                                 listOfWagons.remove(i);
                                 break;
-
+                            }
+                        } else {
+                            if (distance != -20000) {
+                                rootMapWithDistances.put(key, listDistance);
+                            } else {
+                                rootMapWithDistanceMoreMaxDist.put(key, listDistance);
                             }
                         }
                     }
@@ -117,44 +128,28 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
         } catch (NullPointerException e) {
             logger.error("Map must not empty");
         }
+
+        // Заменяем список вагонов после получения расстояний
+        getListOfWagonsImpl.replaceListOfWagon(listOfWagons);
+
         logger.info("Stop process fill map with distances");
     }
 
-    public Map<String, Integer> getRootMapWithDistances() {
+    public Map<String, List<Integer>> getRootMapWithDistances() {
         return rootMapWithDistances;
     }
 
-    public void setRootMapWithDistances(Map<String, Integer> rootMapWithDistances) {
-        GetListOfDistanceImpl.rootMapWithDistances = rootMapWithDistances;
+    public void setRootMapWithDistances(Map<String, List<Integer>> rootMapWithDistances) {
+        this.rootMapWithDistances = rootMapWithDistances;
     }
 
-    public Map<String, Integer> getRootMapWithDistanceMoreMaxDist() {
+    public Map<String, List<Integer>> getRootMapWithDistanceMoreMaxDist() {
         return rootMapWithDistanceMoreMaxDist;
     }
 
-    public void setRootMapWithDistanceMoreMaxDist(Map<String, Integer> rootMapWithDistanceMoreMaxDist) {
-        GetListOfDistanceImpl.rootMapWithDistanceMoreMaxDist = rootMapWithDistanceMoreMaxDist;
+    public void setRootMapWithDistanceMoreMaxDist(Map<String, List<Integer>> rootMapWithDistanceMoreMaxDist) {
+        this.rootMapWithDistanceMoreMaxDist = rootMapWithDistanceMoreMaxDist;
     }
-
-    public Map<Integer, Route> getMapOfRoutes() {
-        return mapOfRoutes;
-    }
-
-    public void setMapOfRoutes(Map<Integer, Route> mapOfRoutes) {
-        this.mapOfRoutes = mapOfRoutes;
-    }
-
-    public List<Wagon> getListOfWagons() {
-        return listOfWagons;
-    }
-
-    public void setListOfWagons(List<Wagon> listOfWagons) {
-        this.listOfWagons = listOfWagons;
-    }
-
-    /*public static void setConnection(Connection connection) {
-        GetListOfDistanceImpl.connection = connection;
-    }*/
 
     public GetListOfRoutesImpl getGetListOfRoutesImpl() {
         return getListOfRoutesImpl;
@@ -172,5 +167,11 @@ public class GetListOfDistanceImpl extends JavaHelperBase implements GetListOfDi
         this.getListOfWagonsImpl = getListOfWagonsImpl;
     }
 
+    public Map<String, Integer> getRootMapWithTypeOfCargo() {
+        return rootMapWithTypeOfCargo;
+    }
 
+    public void setRootMapWithTypeOfCargo(Map<String, Integer> rootMapWithTypeOfCargo) {
+        this.rootMapWithTypeOfCargo = rootMapWithTypeOfCargo;
+    }
 }

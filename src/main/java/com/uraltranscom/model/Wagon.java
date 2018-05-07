@@ -1,6 +1,7 @@
 package com.uraltranscom.model;
 
 import com.uraltranscom.model.additional_model.WagonType;
+import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ import java.util.Objects;
  *
  */
 
-public class Wagon {
+public class Wagon extends JavaHelperBase {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(Wagon.class);
 
@@ -33,14 +34,16 @@ public class Wagon {
     private String nameOfStationDestination; // Название станции назначения
     private int volume; // Объем вагона
     private String cargo; // Груз
+    private String keyItemCargo; // Код груза
 
-    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo) {
+    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo, String keyItemCargo) {
         this.numberOfWagon = numberOfWagon;
-        this.wagonType = new WagonType("КР");
+        this.wagonType = new WagonType(TYPE_OF_WAGON_KR);
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.volume = volume;
         this.cargo = cargo;
+        this.keyItemCargo = keyItemCargo;
     }
 
     public String getNumberOfWagon() {
@@ -91,6 +94,14 @@ public class Wagon {
         this.cargo = cargo;
     }
 
+    public String getKeyItemCargo() {
+        return keyItemCargo;
+    }
+
+    public void setKeyItemCargo(String keyItemCargo) {
+        this.keyItemCargo = keyItemCargo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,13 +112,14 @@ public class Wagon {
                 Objects.equals(wagonType, wagon.wagonType) &&
                 Objects.equals(keyOfStationDestination, wagon.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination) &&
-                Objects.equals(cargo, wagon.cargo);
+                Objects.equals(cargo, wagon.cargo) &&
+                Objects.equals(keyItemCargo, wagon.keyItemCargo);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo);
+        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo);
     }
 
     @Override
@@ -117,6 +129,7 @@ public class Wagon {
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
                 ", " + volume +
-                ", " + cargo;
+                ", " + cargo +
+                ", " + keyItemCargo;
     }
 }
