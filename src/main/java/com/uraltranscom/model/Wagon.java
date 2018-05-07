@@ -12,7 +12,7 @@ import java.util.Objects;
  * Класс Вагон
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 4.2
  * @create 17.11.2017
  *
  * 12.01.2018
@@ -21,6 +21,8 @@ import java.util.Objects;
  *   1. Версия 4.0
  * 19.04.2018
  *   1. Версия 4.1
+ * 04.05.2018
+ *   1. Версия 4.2
  *
  */
 
