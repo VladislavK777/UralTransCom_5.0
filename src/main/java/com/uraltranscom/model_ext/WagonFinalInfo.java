@@ -3,8 +3,6 @@ package com.uraltranscom.model_ext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 /**
  *
  * Класс для формирвоания итоговой информации для вагона
@@ -28,6 +26,7 @@ public class WagonFinalInfo {
     private String nameOfStationDepartureOfWagon; // Станция, куда едет вагон порожний
     private String route; // Маршрут
     private String cargo; // Груз
+    private int cargoType; // Класс груза
 
     public WagonFinalInfo(String numberOfWagon, int countCircleDays, int distanceEmpty) {
         this.numberOfWagon = numberOfWagon;
@@ -35,13 +34,14 @@ public class WagonFinalInfo {
         this.distanceEmpty = distanceEmpty;
     }
 
-    public WagonFinalInfo(String numberOfWagon, int countCircleDays, int distanceEmpty, String nameOfStationDepartureOfWagon, String route, String cargo) {
+    public WagonFinalInfo(String numberOfWagon, int countCircleDays, int distanceEmpty, String nameOfStationDepartureOfWagon, String route, String cargo, int cargoType) {
         this.numberOfWagon = numberOfWagon;
         this.countCircleDays = countCircleDays;
         this.distanceEmpty = distanceEmpty;
         this.nameOfStationDepartureOfWagon = nameOfStationDepartureOfWagon;
         this.route = route;
         this.cargo = cargo;
+        this.cargoType = cargoType;
     }
 
     public String getNumberOfWagon() {
@@ -92,32 +92,11 @@ public class WagonFinalInfo {
         this.cargo = cargo;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WagonFinalInfo that = (WagonFinalInfo) o;
-        return countCircleDays == that.countCircleDays &&
-                distanceEmpty == that.distanceEmpty &&
-                Objects.equals(numberOfWagon, that.numberOfWagon) &&
-                Objects.equals(nameOfStationDepartureOfWagon, that.nameOfStationDepartureOfWagon) &&
-                Objects.equals(route, that.route) &&
-                Objects.equals(cargo, that.cargo);
+    public int getCargoType() {
+        return cargoType;
     }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(numberOfWagon, countCircleDays, distanceEmpty, nameOfStationDepartureOfWagon, route, cargo);
-    }
-
-    @Override
-    public String toString() {
-        return  numberOfWagon +
-                ", " + nameOfStationDepartureOfWagon +
-                ", " + route +
-                ", " + countCircleDays +
-                ", " + distanceEmpty +
-                ", " + cargo;
+    public void setCargoType(int cargoType) {
+        this.cargoType = cargoType;
     }
 }
