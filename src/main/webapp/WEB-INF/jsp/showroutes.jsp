@@ -129,7 +129,6 @@
                 <th>Расстояние, км</th>
                 <th>Приоритет</th>
             </tr>
-            <br><br>
             <c:if test="${!empty listRoute}">
                 <c:forEach items="${listRoute}" var="list">
                     <tr>

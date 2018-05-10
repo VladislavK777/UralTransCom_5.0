@@ -198,7 +198,6 @@
                         <th>Из под груза</th>
                         <th>Класс груза</th>
                     </tr>
-                    <br><br>
                      <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
                          <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
                             <tr>
