@@ -144,11 +144,10 @@
         <input type="button" value="Создать отчет" onclick="showPopup()" class="bot1" style="visibility:visible">
     </c:if>
 
-    <form action="/uraltranscom" method="get">
-        <input type="submit" value="Очистить форму" class="bot1">
-    </form>
-
     <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+        <form action="/uraltranscom" method="get" style="visibility:visible">
+            <input type="submit" value="Очистить форму" class="bot1">
+        </form>
         <form action="export" method="post" style="visibility:visible">
             <input type="submit" value="Скачать отчет" class="bot1">
         </form>
@@ -178,7 +177,7 @@
         </tr>
     </table>
 
-    <div class="container">
+    <div>
         <div class="tabs">
             <input id="tab1" type="radio" name="tabs" checked>
             <label for="tab1" title="Распределенные рейсы">Распределенные заявки</label>
