@@ -8,11 +8,13 @@ import org.slf4j.LoggerFactory;
  * Класс для формирвоания итоговой информации для вагона
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 5.0
  * @create 04.04.2018
  *
  * 24.04.2018
  *   1. Версия 4.1
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

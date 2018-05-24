@@ -13,11 +13,13 @@ import java.util.Properties;
  * Зачитывает свойства из db-common.properties в Properties
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 5.0
  * @create 03.04.2018
  *
  * 03.04.2018
  *   1. Версия 4.1
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

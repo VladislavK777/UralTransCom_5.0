@@ -7,13 +7,15 @@ import java.util.List;
  * Класс сортировки
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 5.0
  * @create 06.11.2017
  *
  * 12.01.2018
  *   1. Версия 3.0
  * 14.03.2018
  *   1. Версия 4.0
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

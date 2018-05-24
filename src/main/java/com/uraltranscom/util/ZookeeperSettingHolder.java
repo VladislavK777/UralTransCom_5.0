@@ -19,11 +19,13 @@ import java.util.Properties;
  * Все настройки, значения которых приложение получает из Zookeeper
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 5.0
  * @create 03.04.2018
  *
  * 03.04.2018
  *   1. Версия 4.1
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

@@ -5,7 +5,7 @@ package com.uraltranscom.service.impl;
  * Класс получения списка маршрутов
  *
  * @author Vladislav Klochkov
- * @version 4.2
+ * @version 5.0
  * @create 25.10.2017
  *
  * 17.11.2017
@@ -18,6 +18,8 @@ package com.uraltranscom.service.impl;
  *   1. Версия 4.1
  * 24.04.2018
  *   1. Версия 4.2
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

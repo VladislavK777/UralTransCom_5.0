@@ -15,7 +15,7 @@ import java.util.List;
  * Класс получения расстояния между станциями
  *
  * @author Vladislav Klochkov
- * @version 4.2
+ * @version 5.0
  * @create 25.10.2017
  *
  * 12.01.2018
@@ -26,6 +26,8 @@ import java.util.List;
  *   1. Версия 4.1
  * 03.05.2018
  *   1. Версия 4.2
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

@@ -7,7 +7,7 @@ import javax.sql.DataSource;
  * Класс получения DataSource
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 5.0
  * @create 25.10.2017
  *
  * 13.11.2017
@@ -18,6 +18,8 @@ import javax.sql.DataSource;
  *   1. Версия 4.0
  * 03.04.2018
  *   1. Версия 4.1
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

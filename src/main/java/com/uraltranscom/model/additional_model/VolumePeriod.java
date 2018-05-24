@@ -5,11 +5,13 @@ package com.uraltranscom.model.additional_model;
  * Класс объем вагона с/до
  *
  * @author Vladislav Klochkov
- * @version 4.1
+ * @version 5.0
  * @create 19.04.2018
  *
  * 19.04.2018
  *   1. Версия 4.1
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

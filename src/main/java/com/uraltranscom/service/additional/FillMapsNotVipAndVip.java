@@ -13,11 +13,13 @@ import java.util.Map;
  * Класс разделения рейсов VIP - неVIP
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 5.0
  * @create 28.03.2018
  *
  * 28.03.2018
  *   1. Версия 4.0
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

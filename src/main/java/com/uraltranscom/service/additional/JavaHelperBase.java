@@ -5,11 +5,13 @@ package com.uraltranscom.service.additional;
  * Класс-помощник содержит основные константы
  *
  * @author Vladislav Klochkov
- * @version 4.0
+ * @version 5.0
  * @create 25.03.2018
  *
  * 25.03.2018
  *   1. Версия 4.0
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

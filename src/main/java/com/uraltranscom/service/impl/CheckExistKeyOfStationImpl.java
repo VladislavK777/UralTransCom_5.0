@@ -5,7 +5,7 @@ package com.uraltranscom.service.impl;
  * Класс проверки корректности кода станции
  *
  * @author Vladislav Klochkov
- * @version 4.2
+ * @version 5.0
  * @create 12.01.2018
  *
  * 12.01.2018
@@ -16,6 +16,8 @@ package com.uraltranscom.service.impl;
  *   1. Версия 4.1
  * 04.05.2018
  *   1. Версия 4.2
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 

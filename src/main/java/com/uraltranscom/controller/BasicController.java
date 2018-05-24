@@ -5,7 +5,7 @@ package com.uraltranscom.controller;
  * Контроллер
  *
  * @author Vladislav Klochkov
- * @version 4.2
+ * @version 5.0
  * @create 12.01.2018
  *
  * 12.01.2018
@@ -14,6 +14,8 @@ package com.uraltranscom.controller;
  *   1. Версия 4.0
  * 09.04.2018
  *   1. Версия 4.2
+ * 24.05.2018
+ *   1. Версия 5.0
  *
  */
 
