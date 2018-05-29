@@ -1,4 +1,4 @@
-package com.uraltranscom.service.additional;
+package com.uraltranscom.util;
 
 /**
  *
@@ -21,15 +21,17 @@ package com.uraltranscom.service.additional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class MultipartFileToFile {
+@Service
+public class MultipartFileToFileUtil {
     // Подключаем логгер
-    private static Logger logger = LoggerFactory.getLogger(MultipartFileToFile.class);
+    private static Logger logger = LoggerFactory.getLogger(MultipartFileToFileUtil.class);
 
     public static File convertToFile;
 

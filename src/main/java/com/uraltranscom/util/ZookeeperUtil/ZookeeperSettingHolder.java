@@ -1,4 +1,4 @@
-package com.uraltranscom.util;
+package com.uraltranscom.util.ZookeeperUtil;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;

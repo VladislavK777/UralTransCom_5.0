@@ -1,4 +1,4 @@
-package com.uraltranscom.util;
+package com.uraltranscom.util.ZookeeperUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

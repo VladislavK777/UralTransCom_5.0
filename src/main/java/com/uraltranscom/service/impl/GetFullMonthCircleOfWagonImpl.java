@@ -2,6 +2,7 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.service.GetFullMonthCircleOfWagon;
 import com.uraltranscom.service.additional.JavaHelperBase;
+import com.uraltranscom.service.additional.PrepareDistanceOfDay;
 import com.uraltranscom.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,19 +41,19 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
 
     @Override
     public int fullDays(String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
-        float distanceOfDay = Float.parseFloat(propertyUtil.getProperty("distanceday"));
+
+        int fullMonthCircle = 0;
         int loadingOfWagonKR = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr"));
         int loadingOfWagonPV = Integer.parseInt(propertyUtil.getProperty("loadingwagonpv"));
         int unloadingOfWagon = Integer.parseInt(propertyUtil.getProperty("unloadingwagon"));
-        int fullMonthCircle = 0;
 
-        fullMonthCircle += Math.round(distanceOfEmpty / distanceOfDay + 1f);
+        fullMonthCircle += Math.ceil(distanceOfEmpty / PrepareDistanceOfDay.getDistanceOfDay(distanceOfEmpty));
         if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
             fullMonthCircle += loadingOfWagonKR;
         } else {
             fullMonthCircle += loadingOfWagonPV;
         }
-        fullMonthCircle += Math.round(Integer.parseInt(distanceOfRoute) / distanceOfDay + 1);
+        fullMonthCircle += Math.ceil(Integer.parseInt(distanceOfRoute) / PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceOfRoute)));
         fullMonthCircle += unloadingOfWagon;
 
         return fullMonthCircle;

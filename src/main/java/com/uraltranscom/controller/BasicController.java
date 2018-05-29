@@ -19,7 +19,7 @@ package com.uraltranscom.controller;
  *
  */
 
-import com.uraltranscom.service.additional.MultipartFileToFile;
+import com.uraltranscom.util.MultipartFileToFileUtil;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import com.uraltranscom.service.impl.BasicClassLookingForImpl;
 import com.uraltranscom.service.impl.GetListOfRoutesImpl;
@@ -54,8 +54,8 @@ public class BasicController {
     @RequestMapping(value = "/routes", method = RequestMethod.POST)
     public String routeList(@RequestParam(value = "routes") MultipartFile routeFile,
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
-        basicClassLookingForImpl.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFile.multipartToFile(routeFile));
-        basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFile.multipartToFile(wagonFile));
+        basicClassLookingForImpl.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFileUtil.multipartToFile(routeFile));
+        basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFileUtil.multipartToFile(wagonFile));
         model.addAttribute("listRoute", getListOfRoutes.getMapOfRoutes());
         return "showroutes";
     }

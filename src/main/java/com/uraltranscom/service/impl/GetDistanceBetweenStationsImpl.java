@@ -1,7 +1,7 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.service.GetDistanceBetweenStations;
-import com.uraltranscom.util.ConnectionDB;
+import com.uraltranscom.util.ConnectUtil.ConnectionDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

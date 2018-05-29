@@ -1,4 +1,4 @@
-package com.uraltranscom.util;
+package com.uraltranscom.util.ConnectUtil;
 
 import javax.sql.DataSource;
 
