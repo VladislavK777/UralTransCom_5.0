@@ -146,7 +146,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                         Map.Entry<Integer, Route> entry = it.next();
                         for (int j = 0; j < tempMapOfRouteForDelete.size(); j++) {
                             // Находим маршрут для вагона
-                            if (tempMapOfRouteForDelete.get(j).equals(route) && entry.getValue().getCountOrders() > 0) {
+                            if (tempMapOfRouteForDelete.get(j).equals(route)) {
                                 if (tempMapOfRouteForDelete.get(j).equals(entry.getValue())) {
                                     if (wagon.getVolume() >= entry.getValue().getVolumePeriod().getVolumeFrom() && wagon.getVolume() <= entry.getValue().getVolumePeriod().getVolumeTo()) {
 
@@ -177,16 +177,17 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                                                 tempMapOfRoutes.get(entry.getKey()).getNameOfStationDestination(),
                                                 tempMapOfRoutes.get(entry.getKey()).getDistanceOfWay(),
                                                 tempMapOfRoutes.get(entry.getKey()).getCustomer(),
-                                                tempMapOfRoutes.get(entry.getKey()).getCountOrders() - 1,
                                                 tempMapOfRoutes.get(entry.getKey()).getVolumePeriod(),
                                                 tempMapOfRoutes.get(entry.getKey()).getNumberOrder(),
                                                 tempMapOfRoutes.get(entry.getKey()).getCargo(),
                                                 tempMapOfRoutes.get(entry.getKey()).getWagonType()));
 
+                                        /**
                                         // Удаляем маршрут, если по нему 0 рейсов
                                         if (tempMapOfRoutes.get(entry.getKey()).getCountOrders() == 0) {
                                             it.remove();
                                         }
+                                         */
 
                                         basicClassLookingFor.getListOfDistributedRoutesAndWagons().add(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue(), nameOfStationDepartureOfWagon, tempMapOfRouteForDelete.get(j).getNameOfStationDeparture() + " - " + tempMapOfRouteForDelete.get(j).getNameOfStationDestination(), wagon.getCargo().trim(), getListOfDistance.getRootMapWithTypeOfCargo().get(wagon.getKeyItemCargo())));
                                         basicClassLookingFor.getTotalMapWithWagonNumberAndRoute().put(new WagonFinalInfo(wagon.getNumberOfWagon(), countCircleDays, mapDistanceSortFirstElement.getValue()), tempMapOfRouteForDelete.get(j));

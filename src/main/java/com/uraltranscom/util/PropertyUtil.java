@@ -22,7 +22,6 @@ import java.util.Properties;
  *
  */
 
-@Service
 public class PropertyUtil {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(PropertyUtil.class);

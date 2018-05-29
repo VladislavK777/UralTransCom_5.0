@@ -132,9 +132,7 @@
                 <th>Станция отправления</th>
                 <th>Станция назначения</th>
                 <th>Контрагент</th>
-                <th>Кол.вагонов</th>
                 <th>Расстояние</th>
-                <!-- <th>Приоритет</th> -->
             </tr>
             <c:if test="${!empty listRoute}">
                 <c:forEach items="${listRoute}" var="list">
@@ -143,9 +141,7 @@
                         <td style="background: #ffffff; color: #364274;">${list.value.getNameOfStationDeparture()}</td>
                         <td style="background: #ffffff; color: #364274;">${list.value.getNameOfStationDestination()}</td>
                         <td style="background: #ffffff; color: #364274;">${list.value.getCustomer()}</td>
-                        <td style="background: #ffffff; color: #364274;">${list.value.getCountOrders()}</td>
                         <td style="background: #ffffff; color: #364274;">${list.value.getDistanceOfWay()}</td>
-                        <!-- <td style="background: #ffffff; color: #364274;"><input type="checkbox" name="routeId" value="${list.key}" /></td> -->
                     </tr>
                 </c:forEach>
             </c:if>
@@ -156,7 +152,7 @@
 <br><br><br>
 
 <div align="center" id="footer">
-    Create by Vladislav Klochkov. All rights reserved, <span id="copy">(ver. 5.0)</span>
+    Create by Vladislav Klochkov. All rights reserved, <span id="copy"></span>(ver. 5.0)
 </div>
 
 </body>

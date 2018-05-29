@@ -259,7 +259,7 @@
 <br><br><br>
 
 <div align="center" id="footer">
-    Create by Vladislav Klochkov. All rights reserved, <span id="copy">(ver. 5.0)</span>
+    Create by Vladislav Klochkov. All rights reserved, <span id="copy"></span>(ver. 5.0)
 </div>
 
 </body>

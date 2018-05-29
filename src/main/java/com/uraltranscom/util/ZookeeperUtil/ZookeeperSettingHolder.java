@@ -1,11 +1,13 @@
 package com.uraltranscom.util.ZookeeperUtil;
 
+import com.uraltranscom.util.PropertyUtil;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,11 +36,9 @@ public class ZookeeperSettingHolder implements InitializingBean {
     private static Logger logger = LoggerFactory.getLogger(ZookeeperSettingHolder.class);
 
     private static final String ZOOKEEPER_CHARSET_NAME = "UTF-8";
-    private static final String PROPERTY_NAME_ZOOKEEPER_CONNECTION_STRING = "db-common/zookeeperConnectString";
-    private static final String PROPERTY_FOR_SECRET_KEY = "db-common/secretKey";
+    private static final String PROPERTY_NAME_ZOOKEEPER_CONNECTION_STRING = "common.zookeeperhost";
+    private static final String PROPERTY_FOR_SECRET_KEY = "common.secretkey";
     private static final String DB_SETTINGS_ROOT = "/zookeeper/DB_CONNECT";
-
-    private CommonPropertiesAccessor commonPropertiesAccessor;
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
@@ -63,11 +63,11 @@ public class ZookeeperSettingHolder implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Properties connectProperties = commonPropertiesAccessor.getCommonProperties();
-        String connectionString = connectProperties.getProperty(PROPERTY_NAME_ZOOKEEPER_CONNECTION_STRING);
-        secretKey = connectProperties.getProperty(PROPERTY_FOR_SECRET_KEY);
+        PropertyUtil propertyUtil = new PropertyUtil();
+        String zookeeperhost = propertyUtil.getProperty(PROPERTY_NAME_ZOOKEEPER_CONNECTION_STRING);
+        secretKey = propertyUtil.getProperty(PROPERTY_FOR_SECRET_KEY);
 
-        try (CuratorFramework client = CuratorFrameworkFactory.newClient(connectionString, new ExponentialBackoffRetry(1000,3))) {
+        try (CuratorFramework client = CuratorFrameworkFactory.newClient(zookeeperhost, new ExponentialBackoffRetry(1000,3))) {
             client.start();
             Field[] fields = getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -105,14 +105,6 @@ public class ZookeeperSettingHolder implements InitializingBean {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public CommonPropertiesAccessor getCommonPropertiesAccessor() {
-        return commonPropertiesAccessor;
-    }
-
-    public void setCommonPropertiesAccessor(CommonPropertiesAccessor commonPropertiesAccessor) {
-        this.commonPropertiesAccessor = commonPropertiesAccessor;
     }
 
     public String getSecretKey() {
