@@ -42,7 +42,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -53,34 +52,10 @@ public class WriteToFileExcel extends JavaHelperBase {
     // Успешная выгрузка
     private static boolean isOk = false;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat();
-    private static XSSFWorkbook xssfWorkbook;
 
     private static File file;
 
     private WriteToFileExcel() {
-    }
-
-    public static void downloadFileExcel(HttpServletResponse response, List<String>... listOfFinal) {
-        try {
-            xssfWorkbook = new XSSFWorkbook();
-            xssfWorkbook.createSheet("Распределенные рейсы");
-            xssfWorkbook.createSheet("Нераспределенные рейсы");
-            xssfWorkbook.createSheet("Нераспределенные вагоны");
-            xssfWorkbook.createSheet("Ошибки");
-
-            String fileName = "Report_" + dateFormat.format(new Date()) + ".xlsx";
-            response.setHeader("Content-Disposition", "inline; filename=" + fileName);
-            response.setContentType("application/vnd.ms-excel");
-
-            writeToFileExcel(response, listOfFinal);
-
-            xssfWorkbook.close();
-            isOk = true;
-        } catch (IOException e) {
-            logger.error("Ошибка записи в файл - {}", e.getMessage());
-            isOk = false;
-        }
-
     }
 
     public static void downloadFileExcel(HttpServletResponse response, Map<WagonFinalInfo, Route> map) {
@@ -160,31 +135,6 @@ public class WriteToFileExcel extends JavaHelperBase {
         XSSFCellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         cellStyle.setFont(fontTitle);
         return cellStyle;
-    }
-
-    // Метод записи в файл
-    public static synchronized void writeToFileExcel(HttpServletResponse response, List<String>... listOfFinalArray) {
-        try {
-            ServletOutputStream outputStream = response.getOutputStream();
-            for (int i = 0; i < xssfWorkbook.getNumberOfSheets(); i++) {
-                XSSFSheet sheet = xssfWorkbook.getSheetAt(i);
-                XSSFRow row;
-                Cell cell;
-
-                // Заполняем данными
-                for (String list : listOfFinalArray[i]) {
-                    int rowCount = sheet.getPhysicalNumberOfRows() - 1;
-                    row = sheet.createRow(rowCount + 1);
-                    cell = row.createCell(0);
-                    cell.setCellValue(list);
-                }
-            }
-            xssfWorkbook.write(outputStream);
-            outputStream.flush();
-            outputStream.close();
-        } catch (Exception e) {
-            logger.error("Ошибка записи в файл - {}", e.getMessage());
-        }
     }
 
     public static boolean isIsOk() {

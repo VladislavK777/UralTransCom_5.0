@@ -2,8 +2,10 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.service.GetFullMonthCircleOfWagon;
 import com.uraltranscom.service.additional.JavaHelperBase;
+import com.uraltranscom.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,21 +32,28 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
 
+    @Autowired
+    PropertyUtil propertyUtil;
+
     private GetFullMonthCircleOfWagonImpl() {
     }
 
     @Override
     public int fullDays(String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
+        float distanceOfDay = Float.parseFloat(propertyUtil.getProperty("distanceday"));
+        int loadingOfWagonKR = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr"));
+        int loadingOfWagonPV = Integer.parseInt(propertyUtil.getProperty("loadingwagonpv"));
+        int unloadingOfWagon = Integer.parseInt(propertyUtil.getProperty("unloadingwagon"));
         int fullMonthCircle = 0;
 
-        fullMonthCircle += Math.round(distanceOfEmpty / 300f + 1);
+        fullMonthCircle += Math.round(distanceOfEmpty / distanceOfDay + 1f);
         if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
-            fullMonthCircle += LOADING_OF_WAGON_KR;
+            fullMonthCircle += loadingOfWagonKR;
         } else {
-            fullMonthCircle += LOADING_OF_WAGON_PV;
+            fullMonthCircle += loadingOfWagonPV;
         }
-        fullMonthCircle += Math.round(Integer.parseInt(distanceOfRoute) / 300f + 1);
-        fullMonthCircle += UNLOADING_OF_WAGON;
+        fullMonthCircle += Math.round(Integer.parseInt(distanceOfRoute) / distanceOfDay + 1);
+        fullMonthCircle += unloadingOfWagon;
 
         return fullMonthCircle;
     }

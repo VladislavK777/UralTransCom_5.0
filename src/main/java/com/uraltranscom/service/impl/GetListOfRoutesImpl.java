@@ -28,12 +28,14 @@ import com.uraltranscom.model.additional_model.VolumePeriod;
 import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.additional.JavaHelperBase;
+import com.uraltranscom.util.PropertyUtil;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -57,6 +59,9 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
     // Переменные для работы с Excel файлом(формат XLSX)
     private XSSFWorkbook xssfWorkbook;
     private XSSFSheet sheet;
+
+    @Autowired
+    PropertyUtil propertyUtil;
 
     private GetListOfRoutesImpl() {
     }
@@ -91,23 +96,23 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                 String wagonType = null;
 
                 for (int c = 1; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код ЕСР ст. отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.keystationdeparture"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Ст. отправления")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.namestationdeparture"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код ЕСР ст.назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.keystationdestination"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Ст. назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.namestationdestination"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Расстояние, км")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.distanceway"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         String val = Double.toString(xssfRow.getCell(c).getNumericCellValue());
                         double valueDouble = xssfRow.getCell(c).getNumericCellValue();
@@ -116,34 +121,34 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                         }
                         distanceOfWay = val;
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Контрагент")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.customer"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Кол-во ПС")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.countorders"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
                         if (countOrders < 0) {
                             countOrders = countOrders * (-1);
                         }
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Объем от")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.volumefrom"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volumeFrom = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Объем до")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.volumeto"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volumeTo = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Тип парка")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.wagontype"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         wagonType = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Номер заявки")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.numberorder"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         numberOrder = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Груз")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.cargo"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }

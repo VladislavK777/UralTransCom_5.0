@@ -19,11 +19,6 @@ public class JavaHelperBase {
     // Максимальное количетво дней в обороте вагона
     public static final int MAX_FULL_CIRCLE_DAYS = 31;
 
-    // Параметры загрузки вагонов
-    public static final int LOADING_OF_WAGON_KR = 7; // Крытый вагон
-    public static final int LOADING_OF_WAGON_PV = 4; // Полувагон
-    public static final int UNLOADING_OF_WAGON = 4; // Выгрузка вагонов
-
     // Типы вагонов
     public static final String TYPE_OF_WAGON_KR = "КР";
     public static final String TYPE_OF_WAGON_PV = "ПВ";

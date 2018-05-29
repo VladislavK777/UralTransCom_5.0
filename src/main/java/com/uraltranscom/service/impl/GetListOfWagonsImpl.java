@@ -3,6 +3,7 @@ package com.uraltranscom.service.impl;
 import com.uraltranscom.model.Wagon;
 import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.export.WriteToFileExcel;
+import com.uraltranscom.util.PropertyUtil;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -63,6 +64,8 @@ public class GetListOfWagonsImpl implements GetList {
 
     @Autowired
     private WriteToFileExcel writeToFileExcel;
+    @Autowired
+    private PropertyUtil propertyUtil;
 
     private GetListOfWagonsImpl() {
     }
@@ -93,27 +96,27 @@ public class GetListOfWagonsImpl implements GetList {
                 String keyItemCargo = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
-                    if (row.getCell(c).getStringCellValue().trim().equals("Номер вагона")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.numberwagon"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         numberOfWagon = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Станция назначения")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.namestationdestination"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         nameOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код станции назначения(6)")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keystationdestination"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Обьем вагона")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.volume"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volume = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Груз")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.cargo"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals("Код груза ЕТСНГ")) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keyitemcargo"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyItemCargo = xssfRow.getCell(c).getStringCellValue();
                     }
