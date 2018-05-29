@@ -28,7 +28,7 @@ public class PrepareDistanceOfDay {
         String paramSplit [] = stringDistanceOfDay.split(";");
         for (String s : paramSplit) {
             String paramDistSplit [] = s.split("_");
-            if (Integer.parseInt(paramDistSplit[0]) <= distance && distance <= Integer.parseInt(paramDistSplit[1])) {
+            if (Integer.parseInt(paramDistSplit[0]) <= distance && distance < Integer.parseInt(paramDistSplit[1])) {
                 distanceOfDay = Float.parseFloat(paramDistSplit[2]) * 1f;
             }
         }
