@@ -36,6 +36,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -61,7 +62,7 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
     private XSSFSheet sheet;
 
     @Autowired
-    PropertyUtil propertyUtil;
+    private PropertyUtil propertyUtil;
 
     private GetListOfRoutesImpl() {
     }
@@ -88,7 +89,6 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                 String nameOfStationDestination = null;
                 String distanceOfWay = null;
                 String customer = null;
-                int countOrders = 0;
                 int volumeFrom = 0;
                 int volumeTo = 0;
                 String numberOrder = null;
@@ -125,13 +125,6 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.countorders"))) {
-                        XSSFRow xssfRow = sheet.getRow(j);
-                        countOrders = (int) xssfRow.getCell(c).getNumericCellValue();
-                        if (countOrders < 0) {
-                            countOrders = countOrders * (-1);
-                        }
-                    }
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.volumefrom"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volumeFrom = (int) xssfRow.getCell(c).getNumericCellValue();
@@ -154,7 +147,7 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                     }
                 }
                 if (wagonType.equals(TYPE_OF_WAGON_KR)) {
-                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, countOrders, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
                     i++;
                 }
             }

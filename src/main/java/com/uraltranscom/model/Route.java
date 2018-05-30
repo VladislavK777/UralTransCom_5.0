@@ -39,20 +39,18 @@ public class Route {
     private String distanceOfWay; // Расстояние маршрута
     private String VIP = "0"; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
     private String customer; // Заказчик
-    private int countOrders; // Количество заявок на маршрут
     private VolumePeriod volumePeriod; // Возможны объем вагона в заявке
     private String numberOrder; // Номер заявки
     private String cargo; // Груз
     private WagonType wagonType; // Тип вагона
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, int countOrders, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType) {
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
         this.distanceOfWay = distanceOfWay;
         this.customer = customer;
-        this.countOrders = countOrders;
         this.volumePeriod = volumePeriod;
         this.numberOrder = numberOrder;
         this.cargo = cargo;
@@ -115,14 +113,6 @@ public class Route {
         this.customer = customer;
     }
 
-    public int getCountOrders() {
-        return countOrders;
-    }
-
-    public void setCountOrders(int countOrders) {
-        this.countOrders = countOrders;
-    }
-
     public VolumePeriod getVolumePeriod() {
         return volumePeriod;
     }
@@ -160,8 +150,7 @@ public class Route {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Route route = (Route) o;
-        return countOrders == route.countOrders &&
-                Objects.equals(keyOfStationDeparture, route.keyOfStationDeparture) &&
+        return Objects.equals(keyOfStationDeparture, route.keyOfStationDeparture) &&
                 Objects.equals(nameOfStationDeparture, route.nameOfStationDeparture) &&
                 Objects.equals(keyOfStationDestination, route.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, route.nameOfStationDestination) &&
@@ -177,7 +166,7 @@ public class Route {
     @Override
     public int hashCode() {
 
-        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, countOrders, volumePeriod, numberOrder, cargo, wagonType);
+        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, volumePeriod, numberOrder, cargo, wagonType);
     }
 
     @Override
@@ -190,7 +179,6 @@ public class Route {
                 ", " + distanceOfWay +
                 ", " + VIP +
                 ", " + customer +
-                ", " + countOrders +
                 ", " + wagonType +
                 ", " + cargo +
                 ", " + volumePeriod;

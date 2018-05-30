@@ -64,6 +64,7 @@ public class GetListOfWagonsImpl implements GetList {
 
     @Autowired
     private WriteToFileExcel writeToFileExcel;
+
     @Autowired
     private PropertyUtil propertyUtil;
 

@@ -32,9 +32,8 @@ import org.springframework.stereotype.Service;
 public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements GetFullMonthCircleOfWagon {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
-
     @Autowired
-    PropertyUtil propertyUtil;
+    private PropertyUtil propertyUtil;
 
     private GetFullMonthCircleOfWagonImpl() {
     }
