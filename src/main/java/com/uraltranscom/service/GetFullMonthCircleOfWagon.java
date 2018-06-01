@@ -2,7 +2,7 @@ package com.uraltranscom.service;
 
 /**
  *
- * Интерфейс расчета количества дней, затраченных вагоном за один цикл. По вагонам количесво дней суммируется
+ * Интерфейс расчета количества дней, затраченных вагоном за один цикл.
  *
  * @author Vladislav Klochkov
  * @version 5.0
@@ -18,6 +18,15 @@ package com.uraltranscom.service;
  */
 
 public interface GetFullMonthCircleOfWagon {
-    int fullDays(String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute);
+
+    /**
+     * Расчет оборото-дней для получения доходности
+     * @param typeOfWagon - тип вагона
+     * @param distanceOfRoute1 - расстояние текущего рейса вагона
+     * @param distanceOfEmpty1 - порожнее расстоняние до станции погрузки
+     * @param distanceOfRoute2 - расстоние второго рейса
+     * @param distanceOfEmpty2 - порожнее расстояние до опорной станции погрузки
+     */
+    int fullDaysForYield(String typeOfWagon, String distanceOfRoute1, Integer distanceOfEmpty1, String distanceOfRoute2, Integer distanceOfEmpty2);
 }
 

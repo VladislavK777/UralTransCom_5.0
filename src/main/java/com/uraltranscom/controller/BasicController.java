@@ -54,17 +54,17 @@ public class BasicController {
     @RequestMapping(value = "/routes", method = RequestMethod.POST)
     public String routeList(@RequestParam(value = "routes") MultipartFile routeFile,
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
-        basicClassLookingForImpl.getGetListOfDistance().getGetListOfRoutesImpl().setFile(MultipartFileToFileUtil.multipartToFile(routeFile));
-        basicClassLookingForImpl.getGetListOfDistance().getGetListOfWagonsImpl().setFile(MultipartFileToFileUtil.multipartToFile(wagonFile));
+        basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfRoutesImpl().setFile(MultipartFileToFileUtil.multipartToFile(routeFile));
+        basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfWagonsImpl().setFile(MultipartFileToFileUtil.multipartToFile(wagonFile));
         model.addAttribute("listRoute", getListOfRoutes.getMapOfRoutes());
         return "showroutes";
     }
 
     @RequestMapping(value = "/reports", method = RequestMethod.POST)
-    public String reportList(@RequestParam(value = "routeId", defaultValue = "") String routeId, Model model) {
-        basicClassLookingForImpl.fillMapRouteIsOptimal(routeId);
-        model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getListOfDistributedRoutesAndWagons());
-        model.addAttribute("reportListOfError", basicClassLookingForImpl.getListOfError());
+    public String reportList(Model model) {
+        basicClassLookingForImpl.fillMapRouteIsOptimal();
+        model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getTotal());
+        //model.addAttribute("reportListOfError", basicClassLookingForImpl.getListOfError());
         return "welcome";
     }
 

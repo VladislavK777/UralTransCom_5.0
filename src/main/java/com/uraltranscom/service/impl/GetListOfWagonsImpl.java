@@ -22,6 +22,7 @@ import java.util.List;
 /**
  *
  * Класс получения списка вагонов
+ * Implementation for {@link GetList} interface
  *
  * @author Vladislav Klochkov
  * @version 5.0
@@ -95,6 +96,8 @@ public class GetListOfWagonsImpl implements GetList {
                 int volume = 0;
                 String cargo = null;
                 String keyItemCargo = null;
+                Double rate = 0.00;
+                String keyOfStationDep = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.numberwagon"))) {
@@ -121,8 +124,19 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyItemCargo = xssfRow.getCell(c).getStringCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.rate"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        rate = xssfRow.getCell(c).getNumericCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keystationdep"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        keyOfStationDep = xssfRow.getCell(c).getStringCellValue();
+                    }
                 }
-                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo));
+                if (rate == 0.00) {
+                    rate = 55000.00;
+                }
+                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo, rate, keyOfStationDep));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {

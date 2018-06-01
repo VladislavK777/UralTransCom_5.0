@@ -1,6 +1,6 @@
 package com.uraltranscom.service.additional;
 
-import java.util.List;
+import com.uraltranscom.model.Route;
 
 /**
  *
@@ -20,18 +20,18 @@ import java.util.List;
  */
 
 public class CompareMapValue implements Comparable {
-    public List<Object> wagon;
-    public Integer distance;
+    public Route route;
+    public double yield;
 
-    public CompareMapValue(List<Object> wagon, Integer distance) {
-        this.wagon = wagon;
-        this.distance = distance;
+    public CompareMapValue(Route route, double yield) {
+        this.route = route;
+        this.yield = yield;
     }
 
     public int compareTo(Object o) {
         if (o instanceof CompareMapValue) {
-            final int diff = distance - ((CompareMapValue) o).distance;
-            return Integer.compare(diff, 0);
+            final double diff = yield - ((CompareMapValue) o).yield;
+            return Double.compare(0, diff);
         } else {
             return 0;
         }

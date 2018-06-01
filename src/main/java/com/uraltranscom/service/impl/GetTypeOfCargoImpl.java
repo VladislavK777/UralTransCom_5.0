@@ -14,6 +14,7 @@ import java.sql.SQLException;
 /**
  *
  * Класс получения класса груза
+ * Implementation for {@link GetTypeOfCargo} interface
  *
  * @author Vladislav Klochkov
  * @version 5.0

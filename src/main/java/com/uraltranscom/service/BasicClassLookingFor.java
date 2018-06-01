@@ -22,5 +22,5 @@ package com.uraltranscom.service;
  */
 
 public interface BasicClassLookingFor {
-    void fillMapRouteIsOptimal(String routeId);
+    void fillMapRouteIsOptimal();
 }

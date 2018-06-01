@@ -11,7 +11,10 @@
 
     <!-- Инициализация бина zookeeper -->
     <bean id="zkSettingsHolder" class="com.uraltranscom.util.ZookeeperUtil.ZookeeperSettingHolder" />
+
     <bean id="propertyUtil" class="com.uraltranscom.util.PropertyUtil" />
+
+    <bean id="yieldCalculation" class="com.uraltranscom.service.impl.YieldCalculationImpl" />
 
     <!-- дешифровка пароля -->
     <bean id="decodedPassword" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

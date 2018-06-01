@@ -39,8 +39,12 @@ public class Wagon extends JavaHelperBase {
     private int volume; // Объем вагона
     private String cargo; // Груз
     private String keyItemCargo; // Код груза
+    private Double rate; // Ставка
 
-    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo, String keyItemCargo) {
+    //TODO удалить после тестов и добавить реальное расстояние
+    private String keyOfStationDep; // Код станции отправления
+
+    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo, String keyItemCargo, Double rate, String keyOfStationDep) {
         this.numberOfWagon = numberOfWagon;
         this.wagonType = new WagonType(TYPE_OF_WAGON_KR);
         this.keyOfStationDestination = keyOfStationDestination;
@@ -48,6 +52,8 @@ public class Wagon extends JavaHelperBase {
         this.volume = volume;
         this.cargo = cargo;
         this.keyItemCargo = keyItemCargo;
+        this.rate = rate * 1.00;
+        this.keyOfStationDep = keyOfStationDep;
     }
 
     public String getNumberOfWagon() {
@@ -106,6 +112,22 @@ public class Wagon extends JavaHelperBase {
         this.keyItemCargo = keyItemCargo;
     }
 
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
+    public String getKeyOfStationDep() {
+        return keyOfStationDep;
+    }
+
+    public void setKeyOfStationDep(String keyOfStationDep) {
+        this.keyOfStationDep = keyOfStationDep;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,13 +139,15 @@ public class Wagon extends JavaHelperBase {
                 Objects.equals(keyOfStationDestination, wagon.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination) &&
                 Objects.equals(cargo, wagon.cargo) &&
-                Objects.equals(keyItemCargo, wagon.keyItemCargo);
+                Objects.equals(keyItemCargo, wagon.keyItemCargo) &&
+                Objects.equals(rate, wagon.rate) &&
+                Objects.equals(keyOfStationDep, wagon.keyOfStationDep);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo);
+        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo, rate, keyOfStationDep);
     }
 
     @Override
@@ -134,6 +158,7 @@ public class Wagon extends JavaHelperBase {
                 ", " + nameOfStationDestination +
                 ", " + volume +
                 ", " + cargo +
-                ", " + keyItemCargo;
+                ", " + keyItemCargo +
+                ", " + rate;
     }
 }

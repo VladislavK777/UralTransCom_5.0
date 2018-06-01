@@ -6,12 +6,12 @@ import com.uraltranscom.service.additional.PrepareDistanceOfDay;
 import com.uraltranscom.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Класс расчета количества дней, затраченных вагоном за один цикл. По вагонам количесво дней суммируется
+ * Класс расчета количества дней, затраченных вагоном за один цикл.
+ * Implementation for {@link GetFullMonthCircleOfWagon} interface
  *
  * @author Vladislav Klochkov
  * @version 5.0
@@ -32,28 +32,48 @@ import org.springframework.stereotype.Service;
 public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements GetFullMonthCircleOfWagon {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
-    @Autowired
-    private PropertyUtil propertyUtil;
+    private PropertyUtil propertyUtil = new PropertyUtil();
+
+    private final int LOADING_WAGON_KR = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr"));
+    private final int LOADING_WAGON_KR2 = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr2")); // Вторая выгрузка вагона.
+    private final int LOADING_WAGON_PV = Integer.parseInt(propertyUtil.getProperty("loadingwagonpv"));
+    private final int UNLOADING_WAGON = Integer.parseInt(propertyUtil.getProperty("unloadingwagon"));
 
     private GetFullMonthCircleOfWagonImpl() {
     }
 
     @Override
-    public int fullDays(String typeOfWagon, Integer distanceOfEmpty, String distanceOfRoute) {
+    public int fullDaysForYield(String typeOfWagon, String distanceOfRoute1, Integer distanceOfEmpty1, String distanceOfRoute2, Integer distanceOfEmpty2) {
 
         int fullMonthCircle = 0;
-        int loadingOfWagonKR = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr"));
-        int loadingOfWagonPV = Integer.parseInt(propertyUtil.getProperty("loadingwagonpv"));
-        int unloadingOfWagon = Integer.parseInt(propertyUtil.getProperty("unloadingwagon"));
 
-        fullMonthCircle += Math.ceil(distanceOfEmpty / PrepareDistanceOfDay.getDistanceOfDay(distanceOfEmpty));
+        // В зависимости от типа вагона, прибавляем количество дней первой погрузки, на станции отправления текущего рейса(настраивается в application.properties)
         if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
-            fullMonthCircle += loadingOfWagonKR;
+            fullMonthCircle += LOADING_WAGON_KR;
         } else {
-            fullMonthCircle += loadingOfWagonPV;
+            fullMonthCircle += LOADING_WAGON_PV;
         }
-        fullMonthCircle += Math.ceil(Integer.parseInt(distanceOfRoute) / PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceOfRoute)));
-        fullMonthCircle += unloadingOfWagon;
+        // Расчитываем количество дней текущего рейса
+        fullMonthCircle += Math.ceil(Integer.parseInt(distanceOfRoute1) / PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceOfRoute1)));
+        // Прибавляем количество дней выгрузки
+        fullMonthCircle += UNLOADING_WAGON;
+        // Прибавляем количество дней порожнего расстояния до станции отпраления следующего рейса
+        fullMonthCircle += Math.ceil(distanceOfEmpty1 / PrepareDistanceOfDay.getDistanceOfDay(distanceOfEmpty1));
+
+
+        // Прибавляем второй цикл
+        // В зависимости от типа вагона, прибавляем количество дней второй погрузки(настраивается в application.properties)
+        if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
+            fullMonthCircle += LOADING_WAGON_KR2;
+        } else {
+            fullMonthCircle += LOADING_WAGON_PV;
+        }
+        // Расчитываем количество дней следующего рейса
+        fullMonthCircle += Math.ceil(Integer.parseInt(distanceOfRoute2) / PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceOfRoute2)));
+        // Прибавляем количество дней выгрузки
+        fullMonthCircle += UNLOADING_WAGON;
+        // Прибавляем количество дней порожнего расстояния до опорной станци погрузки
+        fullMonthCircle += Math.ceil(distanceOfEmpty2 / PrepareDistanceOfDay.getDistanceOfDay(distanceOfEmpty2));
 
         return fullMonthCircle;
     }

@@ -126,7 +126,7 @@
 <form method="post" action="reports">
     <input type="submit" value="Запустить распределение" class="bot1" id="startProcess" onclick="lockScreen();">
     <div>
-        <table class="table_report">
+        <table class="table_load_file">
             <tr>
                 <th>Номер заявки</th>
                 <th>Станция отправления</th>

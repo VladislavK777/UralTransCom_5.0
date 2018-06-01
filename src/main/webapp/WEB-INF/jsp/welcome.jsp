@@ -156,9 +156,9 @@
         </form>
     </c:if>
 
-    <table class="table_report">
+    <table class="table_load_file">
         <tr>
-            <td class="td_report">
+            <td class="td_load_file">
                 <div id="popup"
                      style="position: absolute; height: 100%; width: 100%; top: 0; left: 0; display: none;">
                     <div id="popup_bg"
@@ -192,49 +192,48 @@
              <div>
                 <table class="table_report">
                     <tr>
-                        <th>Номер вагона</th>
-                        <th>Станция распределения</th>
-                        <th>Рейс</th>
-                        <th>Порожнее расстояние</th>
-                        <th>Оборот дней</th>
-                        <th>Из под груза</th>
-                        <th>Класс груза</th>
+                        <th>Вагон</th>
+                        <th>Выгодный рейс</th>
                     </tr>
-                     <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
-                         <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
-                            <tr>
-                                <c:choose>
-                                    <c:when test="${reportList.getCargo() == 'СБ.ПОВАГ.ОТП'}">
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getNumberOfWagon()}</td>
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getNameOfStationDepartureOfWagon()}</td>
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getRoute()}</td>
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getDistanceEmpty()}</td>
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getCountCircleDays()}</td>
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getCargo()}</td>
-                                        <td style="background: #364274; color: #ffffff;">${reportList.getCargoType()}</td>
-                                    </c:when>
-                                    <c:when test="${reportList.getCountCircleDays() > 30}">
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getNumberOfWagon()}</td>
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getNameOfStationDepartureOfWagon()}</td>
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getRoute()}</td>
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getDistanceEmpty()}</td>
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getCountCircleDays()}</td>
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getCargo()}</td>
-                                        <td style="background: #ff0000; color: #ffffff;">${reportList.getCargoType()}</td>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getNumberOfWagon()}</td>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getNameOfStationDepartureOfWagon()}</td>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getRoute()}</td>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getDistanceEmpty()}</td>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getCountCircleDays()}</td>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getCargo()}</td>
-                                        <td style="background: #ffffff; color: #364274;">${reportList.getCargoType()}</td>
-                                    </c:otherwise>
-                                </c:choose>
-                            </tr>
-                         </c:forEach>
-                     </c:if>
+                    <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+                        <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
+                        <tr>
+                            <td class="td_report">${reportList.key}</td>
+                            <td class="td_report">
+                                <table class="table_total">
+                                    <tr>
+                                        <th>Рейс</th>
+                                        <th>Расстояние</th>
+                                        <th>Заказчик</th>
+                                        <th>Груз</th>
+                                        <th>Ставка</th>
+                                    </tr>
+                                    <c:forEach items="${reportList.value}" var="var" begin="0" end="2">
+                                    <tr>
+                                        <td>${var.key.getNameOfStationDeparture()} - ${var.key.getNameOfStationDestination()}</td>
+                                        <td>${var.key.getDistanceOfWay()}</td>
+                                        <td>${var.key.getCustomer()}</td>
+                                        <td>${var.key.getCargo()}</td>
+                                        <td>${var.key.getRate()}</td>
+                                    </tr>
+                                    </c:forEach>
+                                </table>
+                            </td>
+                            <td class="td_report">
+                                <table class="table_total">
+                                    <tr>
+                                        <th>Доходность</th>
+                                    </tr>
+                                    <c:forEach items="${reportList.value}" var="var" begin="0" end="2">
+                                    <tr>
+                                        <td>${var.value}</td>
+                                    </tr>
+                                    </c:forEach>
+                                </table>
+                            </td>
+                        </tr>
+                        </c:forEach>
+                    </c:if>
                 </table>
              </div>
             </section>

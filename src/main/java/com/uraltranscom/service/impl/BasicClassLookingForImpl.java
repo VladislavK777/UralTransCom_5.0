@@ -1,21 +1,23 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
-import com.uraltranscom.model.Wagon;
 import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.BasicClassLookingFor;
-import com.uraltranscom.service.additional.FillMapsNotVipAndVip;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * Основной класс
+ * Implementation for {@link BasicClassLookingFor} interface
  *
  * @author Vladislav Klochkov
  * @version 5.0
@@ -40,12 +42,6 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     private static Logger logger = LoggerFactory.getLogger(BasicClassLookingForImpl.class);
 
     @Autowired
-    private GetListOfWagonsImpl getListOfWagons;
-    @Autowired
-    private GetListOfDistanceImpl getListOfDistance;
-    @Autowired
-    private FillMapsNotVipAndVip fillMapsNotVipAndVip;
-    @Autowired
     private ClassHandlerLookingForImpl classHandlerLookingFor;
 
     // Мапа для записи в файл Вагона + Станция назначения.
@@ -54,6 +50,8 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     // Массив распределенных маршрутов и вагонов
     private List<WagonFinalInfo> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
+    private Map<String, Map<Route, Double>> total = new HashMap<>();
+
     // Массив ошибок
     private List<String> listOfError = new ArrayList<>();
 
@@ -61,34 +59,14 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     }
 
     @Override
-    public void fillMapRouteIsOptimal(String routeId) {
+    public void fillMapRouteIsOptimal() {
         // Очищаем массивы итоговые
         totalMapWithWagonNumberAndRoute.clear();
         listOfDistributedRoutesAndWagons.clear();
         listOfError.clear();
+        total.clear();
 
-        // Запускаем метод заполненеия первоначальной мапы расстояний
-        getListOfDistance.fillMap(routeId);
-
-        // Заполняем мапы
-        Map<Integer, Route> tempMapRoutesVip = fillMapsNotVipAndVip.getMapVIP();
-        Map<Integer, Route> tempMapRoutesNotVip = fillMapsNotVipAndVip.getMapNotVIP();
-        List<Wagon> tempListOfWagons = getListOfWagons.getListOfWagons();
-
-        // Запускаем распределение для VIP
-        if (!tempMapRoutesVip.isEmpty()) {
-            classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesVip, tempListOfWagons);
-        }
-
-        // Запускаем распределение для неVIP
-        if (!tempMapRoutesNotVip.isEmpty()) {
-            classHandlerLookingFor.lookingForOptimalMapOfRoute(tempMapRoutesNotVip, tempListOfWagons);
-        }
-
-        // очищаем мапы
-        tempListOfWagons.clear();
-        tempMapRoutesVip.clear();
-        tempMapRoutesNotVip.clear();
+        classHandlerLookingFor.lookingForOptimalMapOfRoute();
     }
 
     public Map<WagonFinalInfo, Route> getTotalMapWithWagonNumberAndRoute() {
@@ -115,11 +93,19 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         this.listOfError = listOfError;
     }
 
-    public GetListOfDistanceImpl getGetListOfDistance() {
-        return getListOfDistance;
+    public Map<String, Map<Route, Double>> getTotal() {
+        return total;
     }
 
-    public void setGetListOfDistance(GetListOfDistanceImpl getListOfDistance) {
-        this.getListOfDistance = getListOfDistance;
+    public void setTotal(Map<String, Map<Route, Double>> total) {
+        this.total = total;
+    }
+
+    public ClassHandlerLookingForImpl getClassHandlerLookingFor() {
+        return classHandlerLookingFor;
+    }
+
+    public void setClassHandlerLookingFor(ClassHandlerLookingForImpl classHandlerLookingFor) {
+        this.classHandlerLookingFor = classHandlerLookingFor;
     }
 }

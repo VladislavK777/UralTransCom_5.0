@@ -37,14 +37,14 @@ public class Route {
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Станция назначения
     private String distanceOfWay; // Расстояние маршрута
-    private String VIP = "0"; // Флаг приоритера 1 - Приоритетный, 0 - Неприоритетный
     private String customer; // Заказчик
     private VolumePeriod volumePeriod; // Возможны объем вагона в заявке
     private String numberOrder; // Номер заявки
     private String cargo; // Груз
     private WagonType wagonType; // Тип вагона
+    private Double rate; // Ставка
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType) {
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType, Double rate) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;
@@ -55,6 +55,7 @@ public class Route {
         this.numberOrder = numberOrder;
         this.cargo = cargo;
         this.wagonType = wagonType;
+        this.rate = rate;
     }
 
     public String getKeyOfStationDeparture() {
@@ -97,14 +98,6 @@ public class Route {
         this.distanceOfWay = distanceOfWay;
     }
 
-    public String getVIP() {
-        return VIP;
-    }
-
-    public void setVIP(String VIP) {
-        this.VIP = VIP;
-    }
-
     public String getCustomer() {
         return customer;
     }
@@ -145,6 +138,14 @@ public class Route {
         this.wagonType = wagonType;
     }
 
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -155,18 +156,18 @@ public class Route {
                 Objects.equals(keyOfStationDestination, route.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, route.nameOfStationDestination) &&
                 Objects.equals(distanceOfWay, route.distanceOfWay) &&
-                Objects.equals(VIP, route.VIP) &&
                 Objects.equals(customer, route.customer) &&
                 Objects.equals(volumePeriod, route.volumePeriod) &&
                 Objects.equals(numberOrder, route.numberOrder) &&
                 Objects.equals(cargo, route.cargo) &&
-                Objects.equals(wagonType, route.wagonType);
+                Objects.equals(wagonType, route.wagonType) &&
+                Objects.equals(rate, route.rate);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, VIP, customer, volumePeriod, numberOrder, cargo, wagonType);
+        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, volumePeriod, numberOrder, cargo, wagonType, rate);
     }
 
     @Override
@@ -177,10 +178,10 @@ public class Route {
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
                 ", " + distanceOfWay +
-                ", " + VIP +
                 ", " + customer +
                 ", " + wagonType +
                 ", " + cargo +
-                ", " + volumePeriod;
+                ", " + volumePeriod +
+                ", " + rate;
     }
 }

@@ -1,8 +1,30 @@
 package com.uraltranscom.service.impl;
 
+import com.uraltranscom.model.Route;
+import com.uraltranscom.model.additional_model.VolumePeriod;
+import com.uraltranscom.model.additional_model.WagonType;
+import com.uraltranscom.service.GetList;
+import com.uraltranscom.service.additional.JavaHelperBase;
+import com.uraltranscom.util.PropertyUtil;
+import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * Класс получения списка маршрутов
+ * Implementation for {@link GetList} interface
  *
  * @author Vladislav Klochkov
  * @version 5.0
@@ -22,28 +44,6 @@ package com.uraltranscom.service.impl;
  *   1. Версия 5.0
  *
  */
-
-import com.uraltranscom.model.Route;
-import com.uraltranscom.model.additional_model.VolumePeriod;
-import com.uraltranscom.model.additional_model.WagonType;
-import com.uraltranscom.service.GetList;
-import com.uraltranscom.service.additional.JavaHelperBase;
-import com.uraltranscom.util.PropertyUtil;
-import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
@@ -94,6 +94,7 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                 String numberOrder = null;
                 String cargo = null;
                 String wagonType = null;
+                Double rate = 0.00;
 
                 for (int c = 1; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.keystationdeparture"))) {
@@ -145,9 +146,16 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         cargo = xssfRow.getCell(c).getStringCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.rate"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        rate = xssfRow.getCell(c).getNumericCellValue();
+                    }
+                }
+                if (rate == 0.00) {
+                    rate = 55000.00;
                 }
                 if (wagonType.equals(TYPE_OF_WAGON_KR)) {
-                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType)));
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType), rate));
                     i++;
                 }
             }

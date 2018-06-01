@@ -22,9 +22,8 @@ package com.uraltranscom.service;
  */
 
 import java.sql.SQLException;
-import java.util.List;
 
 public interface GetDistanceBetweenStations {
-    List<Integer> getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) throws SQLException;
+    int getDistanceBetweenStations(String keyOfStationDeparture, String keyOfStationDestination) throws SQLException;
 
 }
