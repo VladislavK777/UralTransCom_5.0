@@ -1,6 +1,9 @@
 package com.uraltranscom.service.additional;
 
 import com.uraltranscom.model.Route;
+import com.uraltranscom.model_ext.TotalCalculateRoute;
+
+import java.util.Map;
 
 /**
  *
@@ -20,10 +23,10 @@ import com.uraltranscom.model.Route;
  */
 
 public class CompareMapValue implements Comparable {
-    public Route route;
+    public Map<Route, TotalCalculateRoute> route;
     public double yield;
 
-    public CompareMapValue(Route route, double yield) {
+    public CompareMapValue(Map<Route, TotalCalculateRoute> route, double yield) {
         this.route = route;
         this.yield = yield;
     }

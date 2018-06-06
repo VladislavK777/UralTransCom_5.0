@@ -1,6 +1,8 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
+import com.uraltranscom.model.Wagon;
+import com.uraltranscom.model_ext.TotalCalculateRoute;
 import com.uraltranscom.model_ext.WagonFinalInfo;
 import com.uraltranscom.service.BasicClassLookingFor;
 import com.uraltranscom.service.additional.JavaHelperBase;
@@ -50,7 +52,7 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
     // Массив распределенных маршрутов и вагонов
     private List<WagonFinalInfo> listOfDistributedRoutesAndWagons = new ArrayList<>();
 
-    private Map<String, Map<Route, Double>> total = new HashMap<>();
+    private Map<Wagon, Map<Map<Route, TotalCalculateRoute>, Double>> total = new HashMap<>();
 
     // Массив ошибок
     private List<String> listOfError = new ArrayList<>();
@@ -93,11 +95,11 @@ public class BasicClassLookingForImpl extends JavaHelperBase implements BasicCla
         this.listOfError = listOfError;
     }
 
-    public Map<String, Map<Route, Double>> getTotal() {
+    public Map<Wagon, Map<Map<Route, TotalCalculateRoute>, Double>> getTotal() {
         return total;
     }
 
-    public void setTotal(Map<String, Map<Route, Double>> total) {
+    public void setTotal(Map<Wagon, Map<Map<Route, TotalCalculateRoute>, Double>> total) {
         this.total = total;
     }
 

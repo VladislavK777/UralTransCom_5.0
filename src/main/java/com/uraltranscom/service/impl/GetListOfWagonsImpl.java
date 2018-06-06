@@ -98,6 +98,8 @@ public class GetListOfWagonsImpl implements GetList {
                 String keyItemCargo = null;
                 Double rate = 0.00;
                 String keyOfStationDep = null;
+                String customer = null;
+                String nameOfStationDeparture = null;
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.numberwagon"))) {
@@ -132,11 +134,16 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDep = xssfRow.getCell(c).getStringCellValue();
                     }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.customer"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        customer = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.namestationdep"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
+                    }
                 }
-                if (rate == 0.00) {
-                    rate = 55000.00;
-                }
-                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo, rate, keyOfStationDep));
+                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo, rate, keyOfStationDep, customer, nameOfStationDeparture));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {

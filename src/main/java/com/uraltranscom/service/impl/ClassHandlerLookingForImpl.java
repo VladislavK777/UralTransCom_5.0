@@ -2,9 +2,11 @@ package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
 import com.uraltranscom.model.Wagon;
+import com.uraltranscom.model_ext.TotalCalculateRoute;
 import com.uraltranscom.service.ClassHandlerLookingFor;
 import com.uraltranscom.service.additional.CompareMapValue;
 import com.uraltranscom.service.additional.JavaHelperBase;
+import com.uraltranscom.service.additional.PrepareDistanceOfDay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,7 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
     private YieldCalculationImpl yieldCalculation;
 
     // Основная мапа
-    private Map<String, Map<Route, Double>> rootMap = new HashMap<>();
+    private Map<Wagon, Map<Map<Route, TotalCalculateRoute>, Double>> rootMap = new HashMap<>();
 
     private ClassHandlerLookingForImpl() {
     }
@@ -68,16 +70,26 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
         List<Wagon> listOfWagons = new ArrayList<>(getListOfWagonsImpl.getListOfWagons());
 
         for (int i = 0; i < listOfWagons.size(); i++) {
-            Map<Route, Double> mapRoute = new HashMap<>();
+            Map<Map<Route, TotalCalculateRoute>, Double> mapRoute = new HashMap<>();
             String keyStationDep = listOfWagons.get(i).getKeyOfStationDep();
+            String nameStationDep = listOfWagons.get(i).getNameOfStationDeparture();
             String keyStationDestination = listOfWagons.get(i).getKeyOfStationDestination();
+            String nameStationDestination = listOfWagons.get(i).getNameOfStationDestination();
+            String currentCargo = listOfWagons.get(i).getCargo();
             String distanceCurrentRoute = String.valueOf(getDistanceBetweenStations.getDistanceBetweenStations(keyStationDep, keyStationDestination));
             double rateCurrentRoute = listOfWagons.get(i).getRate();
+            if (rateCurrentRoute == 0.00) {
+                rateCurrentRoute = 55000.00;
+            }
             for (int j = 0; j < mapOfRoutes.size(); j++) {
+                Map<Route, TotalCalculateRoute> mapRouteAndTotalCalculate = new HashMap<>();
                 Route route = mapOfRoutes.get(j);
                 if (listOfWagons.get(i).getVolume() >= route.getVolumePeriod().getVolumeFrom() && listOfWagons.get(i).getVolume() <= route.getVolumePeriod().getVolumeTo()) {
                     String keyStationDepartureRoute = route.getKeyOfStationDeparture();
+                    String nameStationDepartureRoute = route.getNameOfStationDeparture();
                     String keyStationDestinationRoute = route.getKeyOfStationDestination();
+                    String nameStationDestinationRoute = route.getNameOfStationDestination();
+                    String cargoRoute = route.getCargo();
                     if (keyStationDestinationRoute.equals("")) {
                         keyStationDestinationRoute = mapOfRoutes.get(new Random().nextInt(200)).getKeyOfStationDeparture();
                         if (keyStationDestinationRoute.equals(keyStationDepartureRoute)) {
@@ -85,33 +97,58 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                         }
                     }
                     String distanceRoute = route.getDistanceOfWay();
-                    String keyStationOporn = getReturnStation.getReturnStation(keyStationDestinationRoute, listOfWagons.get(i).getVolume());
-                    logger.info("Code station return: {}", keyStationOporn);
+                    String keyStationOporn = getReturnStation.getReturnStation(keyStationDestinationRoute, listOfWagons.get(i).getVolume()); //TODO изменить имя переменной
 
                     double rateRoute = route.getRate();
+                    if (rateRoute == 0.00) {
+                        rateRoute = 55000.00;
+                    }
                     int distanceEmpty1 = getDistanceBetweenStations.getDistanceBetweenStations(keyStationDestination, keyStationDepartureRoute);
                     double tariff1 = distanceEmpty1 * 4.83;
                     int distanceEmpty2 = getDistanceBetweenStations.getDistanceBetweenStations(keyStationDestinationRoute, keyStationOporn);
                     double tariff2 = distanceEmpty2 * 4.83;
                     int fullDays = getFullMonthCircleOfWagon.fullDaysForYield("КР", distanceCurrentRoute, distanceEmpty1, distanceRoute, distanceEmpty2);
                     double yieldDay = yieldCalculation.yieldCalculation(rateCurrentRoute, tariff1, rateRoute, tariff2, fullDays);
-                    mapRoute.put(route, yieldDay);
+                    mapRouteAndTotalCalculate.put(route, new TotalCalculateRoute(nameStationDep,
+                            nameStationDestination,
+                            currentCargo,
+                            distanceCurrentRoute,
+                            rateCurrentRoute,
+                            Math.ceil(Integer.parseInt(distanceCurrentRoute)/PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceCurrentRoute))),
+                            nameStationDestination,
+                            nameStationDepartureRoute,
+                            String.valueOf(distanceEmpty1),
+                            tariff1,
+                            Math.ceil(distanceEmpty1/PrepareDistanceOfDay.getDistanceOfDay(distanceEmpty1)),
+                            nameStationDepartureRoute,
+                            nameStationDestinationRoute,
+                            cargoRoute,
+                            distanceRoute,
+                            rateRoute,
+                            Math.ceil(Integer.parseInt(distanceRoute)/PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceRoute))),
+                            nameStationDestinationRoute,
+                            keyStationOporn,
+                            String.valueOf(distanceEmpty2),
+                            tariff2,
+                            Math.ceil(distanceEmpty2/PrepareDistanceOfDay.getDistanceOfDay(distanceEmpty2))
+                            ));
+                    mapRoute.put(mapRouteAndTotalCalculate, yieldDay);
                 }
             }
             // Сортируем мапу по значению
-            Map<Route, Double> mapYieldSort = new LinkedHashMap<>();
+            Map<Map<Route, TotalCalculateRoute>, Double> mapYieldSort = new LinkedHashMap<>();
 
             int index = mapRoute.size();
             CompareMapValue[] compareMapValues = new CompareMapValue[index];
             index = 0;
-            for (Map.Entry<Route, Double> entry : mapRoute.entrySet()) {
+            for (Map.Entry<Map<Route, TotalCalculateRoute>, Double> entry : mapRoute.entrySet()) {
                 compareMapValues[index++] = new CompareMapValue(entry.getKey(), entry.getValue());
             }
             Arrays.sort(compareMapValues);
             for (CompareMapValue cmv : compareMapValues) {
                 mapYieldSort.put(cmv.route, cmv.yield);
             }
-            rootMap.put(listOfWagons.get(i).getNumberOfWagon(), mapYieldSort);
+            rootMap.put(listOfWagons.get(i), mapYieldSort);
         }
 
         basicClassLookingForImpl.setTotal(rootMap);

@@ -151,9 +151,6 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                         rate = xssfRow.getCell(c).getNumericCellValue();
                     }
                 }
-                if (rate == 0.00) {
-                    rate = 55000.00;
-                }
                 if (wagonType.equals(TYPE_OF_WAGON_KR)) {
                     mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType), rate));
                     i++;

@@ -38,9 +38,20 @@
         }
     </script>
 
+    <!-- Блокировка экрана -->
+        <script type="text/javascript">
+            function lockScreen() {
+                var lock = document.getElementById('lockPane');
+                if (lock)
+                    lock.className = 'lockScreenOn';
+                    $('body').addClass('stop-scrolling');
+                    document.body.scrollTop = document.documentElement.scrollTop = 0;
+            }
+        </script>
+
     <style>
         body {
-            font: 14px/1 "Open Sans", sans-serif;
+            font: 16px "Calibri Light", sans-serif;
         }
         /* Настрйка вкладок*/
         /* Стили секций с содержанием */
@@ -120,6 +131,120 @@
                 padding: 15px;
             }
         }
+        /* Блокировка экрана */
+        .lockScreenOff {
+            display: none;
+            visibility: hidden;
+        }
+        .lockScreenOn {
+            display: block;
+            visibility: visible;
+            position: absolute;
+            z-index: 999;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: #ccc;
+            text-align: center;
+            filter: alpha(opacity=75);
+            opacity: 0.75;
+        }
+        .stop-scrolling {
+            height: 100%;
+            overflow: hidden;
+        }
+        /* Стили лоадера */
+        .hide {
+            display: none;
+        }
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #364274;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            position: relative;
+            top: 40%;
+            left: 45%;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .poster {
+            position:relative;
+            background:#ff6600;
+            height:10px;
+            width:10px;
+        }
+
+        .descr {
+            display:none;
+            margin-left:-350px;
+            padding:10px;
+            margin-top:17px;
+            background:#f3f3f3;
+            height:205px;
+            -moz-box-shadow:0 5px 5px rgba(0,0,0,0.3);
+            -webkit-box-shadow:0 5px 5px rgba(0,0,0,0.3);
+            box-shadow:0 5px 5px rgba(0,0,0,0.3);
+        }
+
+        .poster:hover .descr {
+            display:block;
+            position:fixed;
+            top: 200px;
+            right: 80px;
+            z-index: 9999;
+            width: 1355px;
+        }
+
+        .td_table {
+            border-width: 0px 1px 1px 1px;
+            border-top-style: initial;
+            border-right-style: solid;
+            border-bottom-style: solid;
+            border-left-style: initial;
+            border-top-color: initial;
+            border-right-color: rgb(136, 136, 136);
+            border-bottom-color: rgb(136, 136, 136);
+            border-left-color: initial;
+            border-image: initial;
+            padding: 3px;
+            min-width: 25px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: rgb(255, 255, 153);
+        }
+
+        .td_table2 {
+            border: 1px solid rgb(136, 136, 136);
+            padding: 3px;
+            min-width: 25px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .td_table3 {
+            border-width: 1px 1px 0px 0px;
+            border-top-style: solid;
+            border-right-style: solid;
+            border-bottom-style: initial;
+            border-left-style: initial;
+            border-top-color: rgb(136, 136, 136);
+            border-right-color: rgb(136, 136, 136);
+            border-bottom-color: initial;
+            border-left-color: initial;
+            border-image: initial;
+            padding: 3px;
+            min-width: 25px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: rgb(204, 255, 204);
+        }
     </style>
 </head>
 
@@ -151,9 +276,6 @@
         <form action="/uraltranscom" method="get" style="visibility:visible">
             <input type="submit" value="Очистить форму" class="bot1">
         </form>
-        <form action="export" method="post" style="visibility:visible">
-            <input type="submit" value="Скачать отчет" class="bot1">
-        </form>
     </c:if>
 
     <table class="table_load_file">
@@ -165,13 +287,13 @@
                          style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
                     </div>
                     <div class="form">
-                        <form enctype="multipart/form-data" method="post" action="routes">
+                        <form enctype="multipart/form-data" method="post" action="reports">
                             <p>Файл заявок</p>
                             <input type="file" name="routes" multiple accept="xlsx">
                             <p>Файл дислокации вагонов</p>
                             <input type="file" name="wagons" multiple accept="xlsx">
                             <p>
-                                <input type="submit" value="Загрузить" class="bot1">
+                                <input type="submit" value="Запустить распределение" class="bot1" id="startProcess" onclick="lockScreen();">
                             </p>
                         </form>
                     </div>
@@ -180,78 +302,162 @@
         </tr>
     </table>
 
-    <div>
-        <div class="tabs">
-            <input id="tab1" type="radio" name="tabs" checked>
-            <label for="tab1" title="Распределенные рейсы">Распределенные заявки</label>
+    <form action="export" method="post">
+    <br>
+        <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+            <input type="submit" value="Скачать отчет" class="bot1">
+        </c:if>
+        <div>
+            <div class="tabs">
+                <input id="tab1" type="radio" name="tabs" checked>
+                <label for="tab1" title="Распределенные рейсы">Распределенные заявки</label>
 
-            <input id="tab2" type="radio" name="tabs">
-            <label for="tab2" title="Ошибки">Ошибки в кодах станций</label>
+                <section id="content-tab1">
+                 <div>
+                    <table class="table_report">
+                        <tr>
+                            <th class="td_report">Вагон</th>
+                            <th class="td_report">Станция назначения вагона</th>
+                            <th class="td_report">Текущий клиент</th>
+                            <th class="td_report" align="center">Выгодные направления</th>
+                        </tr>
+                        <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+                            <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
+                            <tr>
+                                <td class="td_report1">${reportList.key.getNumberOfWagon()}</td>
+                                <td class="td_report2">${reportList.key.getNameOfStationDestination()}</td>
+                                <td class="td_report3">${reportList.key.getCustomer()}</td>
+                                <td class="td_report4">
+                                    <div class="div">
+                                        <table class="table_total">
+                                            <c:forEach items="${reportList.value}" var="var" begin="0" end="2">
+                                                <c:forEach items="${var.key}" var="route">
+                                                <tr>
+                                                    <td class="td_total_report1">${route.key.getNameOfStationDeparture()}</td>
+                                                    <td class="td_total_report2">${route.key.getNameOfStationDeparture()} - ${route.key.getNameOfStationDestination()}</td>
+                                                    <td class="td_total_report3">${route.key.getCustomer()}</td>
+                                                    <td class="td_total_report4">${var.value}р.</td>
+                                                    <td class="td_total_report5"><input type="checkbox" name="routeIds" value="${route.key.getNumberOrder()}_${reportList.key.getNumberOfWagon()}" /></td>
+                                                    <td class="td_total_report6">Скачать</td>
+                                                    <td class="td_total_report7">
 
-            <section id="content-tab1">
-             <div>
-                <table class="table_report">
-                    <tr>
-                        <th>Вагон</th>
-                        <th>Выгодный рейс</th>
-                    </tr>
-                    <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
-                        <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
-                        <tr>
-                            <td class="td_report">${reportList.key}</td>
-                            <td class="td_report">
-                                <table class="table_total">
-                                    <tr>
-                                        <th>Рейс</th>
-                                        <th>Расстояние</th>
-                                        <th>Заказчик</th>
-                                        <th>Груз</th>
-                                        <th>Ставка</th>
-                                    </tr>
-                                    <c:forEach items="${reportList.value}" var="var" begin="0" end="2">
-                                    <tr>
-                                        <td>${var.key.getNameOfStationDeparture()} - ${var.key.getNameOfStationDestination()}</td>
-                                        <td>${var.key.getDistanceOfWay()}</td>
-                                        <td>${var.key.getCustomer()}</td>
-                                        <td>${var.key.getCargo()}</td>
-                                        <td>${var.key.getRate()}</td>
-                                    </tr>
-                                    </c:forEach>
-                                </table>
-                            </td>
-                            <td class="td_report">
-                                <table class="table_total">
-                                    <tr>
-                                        <th>Доходность</th>
-                                    </tr>
-                                    <c:forEach items="${reportList.value}" var="var" begin="0" end="2">
-                                    <tr>
-                                        <td>${var.value}</td>
-                                    </tr>
-                                    </c:forEach>
-                                </table>
-                            </td>
-                        </tr>
-                        </c:forEach>
-                    </c:if>
-                </table>
-             </div>
-            </section>
-            <section id="content-tab2">
-                <p>
-                    <c:if test="${!empty reportListOfError}">
-                <table>
-                    <c:forEach items="${reportListOfError}" var="Error">
-                        <tr>
-                            <td style="background: #ffffff; color: #364274;">${Error}</td>
-                        </tr>
-                    </c:forEach>
-                </table>
-                </c:if>
-                </p>
-            </section>
+                                                        <div class="poster">
+                                                            <div class="descr">
+                                                                <table style="border: 1px solid rgb(136, 136, 136); border-collapse: collapse; table-layout: fixed;">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="td_table" rowspan="3">Станция отправления</td>
+                                                                            <td class="td_table" rowspan="3">Станция назначения</td>
+                                                                            <td class="td_table" rowspan="3">Наименование груза</td>
+                                                                            <td class="td_table" rowspan="3">Расст., км</td>
+                                                                            <td class="td_table" rowspan="3">Время в пути, сут</td>
+                                                                            <td class="td_table" rowspan="3">Погр. / выгр.</td>
+                                                                            <td class="td_table" rowspan="3">Оборот, сут.</td>
+                                                                            <td class="td_table" rowspan="3">ВО</td>
+                                                                            <td class="td_table" rowspan="2">ДОХОД</td>
+                                                                            <td class="td_table">РАСХОД</td>
+                                                                            <td class="td_table" colspan="2">ПРИБЫЛЬ</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table">Тариф в собств. вагонах</td>
+                                                                            <td class="td_table">За нахождение в пути</td>
+                                                                            <td class="td_table">В сутки</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table">руб/ваг.</td>
+                                                                            <td class="td_table">руб/ваг.</td>
+                                                                            <td class="td_table">руб/ваг.</td>
+                                                                            <td class="td_table">руб/ваг/сут.</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table2">${route.value.getCurrentNameStationDeparture()}</td>
+                                                                            <td class="td_table2">${route.value.getCurrentNameStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getCurrentCargo()}</td>
+                                                                            <td class="td_table2">${route.value.getCurrentDistance()}</td>
+                                                                            <td class="td_table2">${route.value.getCurrentCountDays()}</td>
+                                                                            <td class="td_table2">7.0</td>
+                                                                            <td class="td_table2">${route.value.getCurrentCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">поваг</td>
+                                                                            <td class="td_table2">${route.value.getCurrentRate()}</td>
+                                                                            <td class="td_table2"></td>
+                                                                            <td class="td_table2">${route.value.getCurrentRate()}</td>
+                                                                            <td class="td_table2"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table2">${route.value.getEmptyNameStationDeparture()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptyNameStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptyCargo()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptyDistance()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptyCountDays()}</td>
+                                                                            <td class="td_table2">4.0</td>
+                                                                            <td class="td_table2">${route.value.getEmptyCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">поваг</td>
+                                                                            <td class="td_table2"></td>
+                                                                            <td class="td_table2">${route.value.getEmptyTariff()}</td>
+                                                                            <td class="td_table2">-${route.value.getEmptyTariff()}</td>
+                                                                            <td class="td_table2"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table2">${route.value.getSecondNameStationDeparture()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondNameStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondCargo()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondDistance()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondCountDays()}</td>
+                                                                            <td class="td_table2">10.0</td>
+                                                                            <td class="td_table2">${route.value.getSecondCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">поваг</td>
+                                                                            <td class="td_table2">${route.value.getSecondRate()}</td>
+                                                                            <td class="td_table2"></td>
+                                                                            <td class="td_table2">${route.value.getSecondRate()}</td>
+                                                                            <td class="td_table2"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table2">${route.value.getEmptySecondNameStationDeparture()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondCargo()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondDistance()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondCountDays()}</td>
+                                                                            <td class="td_table2">4.0</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">поваг</td>
+                                                                            <td class="td_table2"></td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondTariff()}</td>
+                                                                            <td class="td_table2">-${route.value.getEmptySecondTariff()}</td>
+                                                                            <td class="td_table2"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="td_table3" colspan="3"></td>
+                                                                            <td class="td_table3">${route.value.getDistanceSummary()}</td>
+                                                                            <td class="td_table3">${route.value.getCountDaysSummary()}</td>
+                                                                            <td class="td_table3">25.0</td>
+                                                                            <td class="td_table3">${route.value.getCountDaysSummaryMinLoad()}</td>
+                                                                            <td class="td_table3"></td>
+                                                                            <td class="td_table3"></td>
+                                                                            <td class="td_table3"></td>
+                                                                            <td class="td_table3">${route.value.getTotalSummary()}</td>
+                                                                            <td class="td_table3">${var.value}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                                </c:forEach>
+                                            </c:forEach>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            </c:forEach>
+                        </c:if>
+                    </table>
+                 </div>
+                </section>
+            </div>
         </div>
-    </div>
+    </form>
     <br>
 </div>
 

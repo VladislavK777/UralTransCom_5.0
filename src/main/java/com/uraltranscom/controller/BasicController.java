@@ -19,10 +19,9 @@ package com.uraltranscom.controller;
  *
  */
 
-import com.uraltranscom.util.MultipartFileToFileUtil;
 import com.uraltranscom.service.export.WriteToFileExcel;
 import com.uraltranscom.service.impl.BasicClassLookingForImpl;
-import com.uraltranscom.service.impl.GetListOfRoutesImpl;
+import com.uraltranscom.util.MultipartFileToFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,34 +42,24 @@ public class BasicController {
     @Autowired
     private BasicClassLookingForImpl basicClassLookingForImpl;
 
-    @Autowired
-    private GetListOfRoutesImpl getListOfRoutes;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
         return "welcome";
     }
 
-    @RequestMapping(value = "/routes", method = RequestMethod.POST)
+    @RequestMapping(value = "/reports", method = RequestMethod.POST)
     public String routeList(@RequestParam(value = "routes") MultipartFile routeFile,
                              @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
         basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfRoutesImpl().setFile(MultipartFileToFileUtil.multipartToFile(routeFile));
         basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfWagonsImpl().setFile(MultipartFileToFileUtil.multipartToFile(wagonFile));
-        model.addAttribute("listRoute", getListOfRoutes.getMapOfRoutes());
-        return "showroutes";
-    }
-
-    @RequestMapping(value = "/reports", method = RequestMethod.POST)
-    public String reportList(Model model) {
         basicClassLookingForImpl.fillMapRouteIsOptimal();
         model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getTotal());
-        //model.addAttribute("reportListOfError", basicClassLookingForImpl.getListOfError());
         return "welcome";
     }
 
     // Выгрузка в Excel
     @RequestMapping(value = "/export", method = RequestMethod.POST)
-    public void getXLS(HttpServletResponse response, Model model) {
-        WriteToFileExcel.downloadFileExcel(response, basicClassLookingForImpl.getTotalMapWithWagonNumberAndRoute());
+    public void getXLS(@RequestParam(value = "routeIds", defaultValue = "") String routeIds, HttpServletResponse response, Model model) {
+        WriteToFileExcel.downloadFileExcel(response, basicClassLookingForImpl.getTotal(), routeIds);
     }
 }

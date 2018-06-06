@@ -49,7 +49,7 @@ public class GetReturnStationImpl extends ConnectionDB implements GetReturnStati
             while (resultSet.next()) {
                 returnStation = resultSet.getString(1);
             }
-            logger.info("Подбираем станцию возврата для станции: {}, объем: {}", keyOfStation, volume);
+            logger.debug("Подбираем станцию возврата для станции: {}, объем: {}", keyOfStation, volume);
         } catch (SQLException ex) {
             logger.error("Ошибка запроса: {}: Станция: {}, Объем: {}", ex.getMessage(), keyOfStation, volume);
         }
