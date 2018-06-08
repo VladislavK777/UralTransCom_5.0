@@ -34,8 +34,10 @@ public class Route {
 
     private String keyOfStationDeparture; // Код станции отправления
     private String nameOfStationDeparture; // Станция отправления
+    private String roadOfStationDeparture; // Дорога отправления
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Станция назначения
+    private String roadOfStationDestination; // Дорога назначения
     private String distanceOfWay; // Расстояние маршрута
     private String customer; // Заказчик
     private VolumePeriod volumePeriod; // Возможны объем вагона в заявке
@@ -44,11 +46,13 @@ public class Route {
     private WagonType wagonType; // Тип вагона
     private Double rate; // Ставка
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String distanceOfWay, String customer, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType, Double rate) {
+    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String roadOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String roadOfStationDestination, String distanceOfWay, String customer, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType, Double rate) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
+        this.roadOfStationDeparture = roadOfStationDeparture;
         this.keyOfStationDestination = keyOfStationDestination;
         this.nameOfStationDestination = nameOfStationDestination;
+        this.roadOfStationDestination = roadOfStationDestination;
         this.distanceOfWay = distanceOfWay;
         this.customer = customer;
         this.volumePeriod = volumePeriod;
@@ -146,6 +150,22 @@ public class Route {
         this.rate = rate;
     }
 
+    public String getRoadOfStationDeparture() {
+        return roadOfStationDeparture;
+    }
+
+    public void setRoadOfStationDeparture(String roadOfStationDeparture) {
+        this.roadOfStationDeparture = roadOfStationDeparture;
+    }
+
+    public String getRoadOfStationDestination() {
+        return roadOfStationDestination;
+    }
+
+    public void setRoadOfStationDestination(String roadOfStationDestination) {
+        this.roadOfStationDestination = roadOfStationDestination;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -153,8 +173,10 @@ public class Route {
         Route route = (Route) o;
         return Objects.equals(keyOfStationDeparture, route.keyOfStationDeparture) &&
                 Objects.equals(nameOfStationDeparture, route.nameOfStationDeparture) &&
+                Objects.equals(roadOfStationDeparture, route.roadOfStationDeparture) &&
                 Objects.equals(keyOfStationDestination, route.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, route.nameOfStationDestination) &&
+                Objects.equals(roadOfStationDestination, route.roadOfStationDestination) &&
                 Objects.equals(distanceOfWay, route.distanceOfWay) &&
                 Objects.equals(customer, route.customer) &&
                 Objects.equals(volumePeriod, route.volumePeriod) &&
@@ -167,7 +189,7 @@ public class Route {
     @Override
     public int hashCode() {
 
-        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, keyOfStationDestination, nameOfStationDestination, distanceOfWay, customer, volumePeriod, numberOrder, cargo, wagonType, rate);
+        return Objects.hash(keyOfStationDeparture, nameOfStationDeparture, roadOfStationDeparture, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, distanceOfWay, customer, volumePeriod, numberOrder, cargo, wagonType, rate);
     }
 
     @Override
@@ -175,8 +197,10 @@ public class Route {
         return  numberOrder +
                 ", " + keyOfStationDeparture +
                 ", " + nameOfStationDeparture +
+                ", " + roadOfStationDeparture +
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
+                ", " + roadOfStationDestination +
                 ", " + distanceOfWay +
                 ", " + customer +
                 ", " + wagonType +

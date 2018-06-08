@@ -57,9 +57,15 @@ public class BasicController {
         return "welcome";
     }
 
-    // Выгрузка в Excel
+    // Выгрузка в Excel общего очтета
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void getXLS(@RequestParam(value = "routeIds", defaultValue = "") String routeIds, HttpServletResponse response, Model model) {
         WriteToFileExcel.downloadFileExcel(response, basicClassLookingForImpl.getTotal(), routeIds);
+    }
+
+    // Выгрузка в Excel отдельного расчета
+    @RequestMapping(value = "/calc", method = RequestMethod.POST)
+    public void getCalcXLS(@RequestParam(value = "nameFile") String nameFile, HttpServletResponse response, Model model) {
+        WriteToFileExcel.downloadFileCalcExcel(response, basicClassLookingForImpl.getTotal(), nameFile);
     }
 }

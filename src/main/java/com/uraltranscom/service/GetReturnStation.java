@@ -1,5 +1,7 @@
 package com.uraltranscom.service;
 
+import java.util.List;
+
 /**
  *
  * Интерфейс подбора станции возврата
@@ -24,8 +26,8 @@ public interface GetReturnStation {
      *
      * @param keyOfStation - Код станции назначения второго рейса
      * @param volume - Объем вагона
-     * @return - Возвращает код станции возврата
+     * @return - Возвращает список (код станции возврата, дорога, название станции)
      */
-    String getReturnStation(String keyOfStation, int volume);
+    List<String> getReturnStation(String keyOfStation, int volume);
 }
 

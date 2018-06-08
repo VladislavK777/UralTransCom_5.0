@@ -173,78 +173,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .poster {
-            position:relative;
-            background:#ff6600;
-            height:10px;
-            width:10px;
-        }
-
-        .descr {
-            display:none;
-            margin-left:-350px;
-            padding:10px;
-            margin-top:17px;
-            background:#f3f3f3;
-            height:205px;
-            -moz-box-shadow:0 5px 5px rgba(0,0,0,0.3);
-            -webkit-box-shadow:0 5px 5px rgba(0,0,0,0.3);
-            box-shadow:0 5px 5px rgba(0,0,0,0.3);
-        }
-
-        .poster:hover .descr {
-            display:block;
-            position:fixed;
-            top: 200px;
-            right: 80px;
-            z-index: 9999;
-            width: 1355px;
-        }
-
-        .td_table {
-            border-width: 0px 1px 1px 1px;
-            border-top-style: initial;
-            border-right-style: solid;
-            border-bottom-style: solid;
-            border-left-style: initial;
-            border-top-color: initial;
-            border-right-color: rgb(136, 136, 136);
-            border-bottom-color: rgb(136, 136, 136);
-            border-left-color: initial;
-            border-image: initial;
-            padding: 3px;
-            min-width: 25px;
-            text-align: center;
-            vertical-align: middle;
-            background-color: rgb(255, 255, 153);
-        }
-
-        .td_table2 {
-            border: 1px solid rgb(136, 136, 136);
-            padding: 3px;
-            min-width: 25px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .td_table3 {
-            border-width: 1px 1px 0px 0px;
-            border-top-style: solid;
-            border-right-style: solid;
-            border-bottom-style: initial;
-            border-left-style: initial;
-            border-top-color: rgb(136, 136, 136);
-            border-right-color: rgb(136, 136, 136);
-            border-bottom-color: initial;
-            border-left-color: initial;
-            border-image: initial;
-            padding: 3px;
-            min-width: 25px;
-            text-align: center;
-            vertical-align: middle;
-            background-color: rgb(204, 255, 204);
-        }
     </style>
 </head>
 
@@ -257,7 +185,7 @@
 <div class="one">
     <h1>сервис распределения вагонов</h1>
     <div class="train">
-    		<img src="resources/train.jpg">
+    		<img src="resources/train.jpg" width="auto">
     </div>
 </div>
 
@@ -336,47 +264,51 @@
                                                     <td class="td_total_report1">${route.key.getNameOfStationDeparture()}</td>
                                                     <td class="td_total_report2">${route.key.getNameOfStationDeparture()} - ${route.key.getNameOfStationDestination()}</td>
                                                     <td class="td_total_report3">${route.key.getCustomer()}</td>
-                                                    <td class="td_total_report4">${var.value}р.</td>
+                                                    <td class="td_total_report4">${var.value}</td>
                                                     <td class="td_total_report5"><input type="checkbox" name="routeIds" value="${route.key.getNumberOrder()}_${reportList.key.getNumberOfWagon()}" /></td>
-                                                    <td class="td_total_report6">Скачать</td>
+                                                    <form action="calc" method="post" id="calc">
+                                                        <td class="td_total_report6">
+                                                            <input type="image" form="calc" src="resources/excel.png" width="25px" height="25px" name="nameFile" value="${route.key.getNumberOrder()}_${reportList.key.getNumberOfWagon()}" />
+                                                        </td>
+                                                    </form>
                                                     <td class="td_total_report7">
-
                                                         <div class="poster">
+                                                            <img src="resources/magnifier.png" width="20px" height="20px">
                                                             <div class="descr">
-                                                                <table style="border: 1px solid rgb(136, 136, 136); border-collapse: collapse; table-layout: fixed;">
+                                                                <table class="table_calculate">
                                                                     <tbody>
                                                                         <tr>
-                                                                            <td class="td_table" rowspan="3">Станция отправления</td>
-                                                                            <td class="td_table" rowspan="3">Станция назначения</td>
-                                                                            <td class="td_table" rowspan="3">Наименование груза</td>
-                                                                            <td class="td_table" rowspan="3">Расст., км</td>
-                                                                            <td class="td_table" rowspan="3">Время в пути, сут</td>
-                                                                            <td class="td_table" rowspan="3">Погр. / выгр.</td>
-                                                                            <td class="td_table" rowspan="3">Оборот, сут.</td>
-                                                                            <td class="td_table" rowspan="3">ВО</td>
-                                                                            <td class="td_table" rowspan="2">ДОХОД</td>
-                                                                            <td class="td_table">РАСХОД</td>
-                                                                            <td class="td_table" colspan="2">ПРИБЫЛЬ</td>
+                                                                            <td class="td_table1" rowspan="3">Станция отправления</td>
+                                                                            <td class="td_table1" rowspan="3">Станция назначения</td>
+                                                                            <td class="td_table1" rowspan="3">Наименование груза</td>
+                                                                            <td class="td_table1" rowspan="3">Расст., км</td>
+                                                                            <td class="td_table1" rowspan="3">Время в пути, сут</td>
+                                                                            <td class="td_table1" rowspan="3">Погр. / выгр.</td>
+                                                                            <td class="td_table1" rowspan="3">Оборот, сут.</td>
+                                                                            <td class="td_table1" rowspan="3">ВО</td>
+                                                                            <td class="td_table1" rowspan="2">ДОХОД</td>
+                                                                            <td class="td_table1">РАСХОД</td>
+                                                                            <td class="td_table1" colspan="2">ПРИБЫЛЬ</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="td_table">Тариф в собств. вагонах</td>
-                                                                            <td class="td_table">За нахождение в пути</td>
-                                                                            <td class="td_table">В сутки</td>
+                                                                            <td class="td_table1">Тариф в собств. вагонах</td>
+                                                                            <td class="td_table1">За нахождение в пути</td>
+                                                                            <td class="td_table1">В сутки</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="td_table">руб/ваг.</td>
-                                                                            <td class="td_table">руб/ваг.</td>
-                                                                            <td class="td_table">руб/ваг.</td>
-                                                                            <td class="td_table">руб/ваг/сут.</td>
+                                                                            <td class="td_table1">руб/ваг.</td>
+                                                                            <td class="td_table1">руб/ваг.</td>
+                                                                            <td class="td_table1">руб/ваг.</td>
+                                                                            <td class="td_table1">руб/ваг/сут.</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="td_table2">${route.value.getCurrentNameStationDeparture()}</td>
-                                                                            <td class="td_table2">${route.value.getCurrentNameStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getCurrentNameStationDeparture()} (${route.value.getCurrentRoadStationDeparture()})</td>
+                                                                            <td class="td_table2">${route.value.getCurrentNameStationDestination()} (${route.value.getCurrentRoadStationDestination()})</td>
                                                                             <td class="td_table2">${route.value.getCurrentCargo()}</td>
                                                                             <td class="td_table2">${route.value.getCurrentDistance()}</td>
                                                                             <td class="td_table2">${route.value.getCurrentCountDays()}</td>
-                                                                            <td class="td_table2">7.0</td>
-                                                                            <td class="td_table2">${route.value.getCurrentCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">${route.value.getFirstLoadingWagon()}</td>
+                                                                            <td class="td_table2">${route.value.getCurrentCountDaysWithLoad()}</td>
                                                                             <td class="td_table2">поваг</td>
                                                                             <td class="td_table2">${route.value.getCurrentRate()}</td>
                                                                             <td class="td_table2"></td>
@@ -384,13 +316,13 @@
                                                                             <td class="td_table2"></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="td_table2">${route.value.getEmptyNameStationDeparture()}</td>
-                                                                            <td class="td_table2">${route.value.getEmptyNameStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptyNameStationDeparture()} (${route.value.getEmptyRoadStationDeparture()})</td>
+                                                                            <td class="td_table2">${route.value.getEmptyNameStationDestination()} (${route.value.getEmptyRoadStationDestination()})</td>
                                                                             <td class="td_table2">${route.value.getEmptyCargo()}</td>
                                                                             <td class="td_table2">${route.value.getEmptyDistance()}</td>
                                                                             <td class="td_table2">${route.value.getEmptyCountDays()}</td>
-                                                                            <td class="td_table2">4.0</td>
-                                                                            <td class="td_table2">${route.value.getEmptyCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">${route.value.getUnloadingWagon()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptyCountDaysWithLoad()}</td>
                                                                             <td class="td_table2">поваг</td>
                                                                             <td class="td_table2"></td>
                                                                             <td class="td_table2">${route.value.getEmptyTariff()}</td>
@@ -398,13 +330,13 @@
                                                                             <td class="td_table2"></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="td_table2">${route.value.getSecondNameStationDeparture()}</td>
-                                                                            <td class="td_table2">${route.value.getSecondNameStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondNameStationDeparture()} (${route.value.getSecondRoadStationDeparture()})</td>
+                                                                            <td class="td_table2">${route.value.getSecondNameStationDestination()} (${route.value.getSecondRoadStationDestination()})</td>
                                                                             <td class="td_table2">${route.value.getSecondCargo()}</td>
                                                                             <td class="td_table2">${route.value.getSecondDistance()}</td>
                                                                             <td class="td_table2">${route.value.getSecondCountDays()}</td>
-                                                                            <td class="td_table2">10.0</td>
-                                                                            <td class="td_table2">${route.value.getSecondCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondLoadingWagon()}</td>
+                                                                            <td class="td_table2">${route.value.getSecondCountDaysWithLoad()}</td>
                                                                             <td class="td_table2">поваг</td>
                                                                             <td class="td_table2">${route.value.getSecondRate()}</td>
                                                                             <td class="td_table2"></td>
@@ -412,13 +344,13 @@
                                                                             <td class="td_table2"></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="td_table2">${route.value.getEmptySecondNameStationDeparture()}</td>
-                                                                            <td class="td_table2">${route.value.getEmptySecondStationDestination()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondNameStationDeparture()} (${route.value.getEmptySecondRoadStationDeparture()})</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondNameStationDestination()} (${route.value.getEmptySecondRoadStationDestination()})</td>
                                                                             <td class="td_table2">${route.value.getEmptySecondCargo()}</td>
                                                                             <td class="td_table2">${route.value.getEmptySecondDistance()}</td>
                                                                             <td class="td_table2">${route.value.getEmptySecondCountDays()}</td>
-                                                                            <td class="td_table2">4.0</td>
-                                                                            <td class="td_table2">${route.value.getEmptySecondCountDaysMinLoad()}</td>
+                                                                            <td class="td_table2">${route.value.getUnloadingWagon()}</td>
+                                                                            <td class="td_table2">${route.value.getEmptySecondCountDaysWithLoad()}</td>
                                                                             <td class="td_table2">поваг</td>
                                                                             <td class="td_table2"></td>
                                                                             <td class="td_table2">${route.value.getEmptySecondTariff()}</td>
@@ -429,8 +361,8 @@
                                                                             <td class="td_table3" colspan="3"></td>
                                                                             <td class="td_table3">${route.value.getDistanceSummary()}</td>
                                                                             <td class="td_table3">${route.value.getCountDaysSummary()}</td>
-                                                                            <td class="td_table3">25.0</td>
-                                                                            <td class="td_table3">${route.value.getCountDaysSummaryMinLoad()}</td>
+                                                                            <td class="td_table3">${route.value.getSummaryLoading()}</td>
+                                                                            <td class="td_table3">${route.value.getCountDaysSummaryWithLoad()}</td>
                                                                             <td class="td_table3"></td>
                                                                             <td class="td_table3"></td>
                                                                             <td class="td_table3"></td>
@@ -441,7 +373,6 @@
                                                                 </table>
                                                             </div>
                                                         </div>
-
                                                     </td>
                                                 </tr>
                                                 </c:forEach>

@@ -3,7 +3,6 @@ package com.uraltranscom.service.impl;
 import com.uraltranscom.service.GetFullMonthCircleOfWagon;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import com.uraltranscom.service.additional.PrepareDistanceOfDay;
-import com.uraltranscom.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,12 +31,6 @@ import org.springframework.stereotype.Service;
 public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements GetFullMonthCircleOfWagon {
     // Подключаем логгер
     private static Logger logger = LoggerFactory.getLogger(GetFullMonthCircleOfWagonImpl.class);
-    private PropertyUtil propertyUtil = new PropertyUtil();
-
-    private final int LOADING_WAGON_KR = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr"));
-    private final int LOADING_WAGON_KR2 = Integer.parseInt(propertyUtil.getProperty("loadingwagonkr2")); // Вторая выгрузка вагона.
-    private final int LOADING_WAGON_PV = Integer.parseInt(propertyUtil.getProperty("loadingwagonpv"));
-    private final int UNLOADING_WAGON = Integer.parseInt(propertyUtil.getProperty("unloadingwagon"));
 
     private GetFullMonthCircleOfWagonImpl() {
     }
@@ -49,7 +42,7 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
 
         // В зависимости от типа вагона, прибавляем количество дней первой погрузки, на станции отправления текущего рейса(настраивается в application.properties)
         if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
-            fullMonthCircle += LOADING_WAGON_KR;
+            fullMonthCircle += FIRST_LOADING_WAGON_KR;
         } else {
             fullMonthCircle += LOADING_WAGON_PV;
         }
@@ -64,7 +57,7 @@ public class GetFullMonthCircleOfWagonImpl extends JavaHelperBase implements Get
         // Прибавляем второй цикл
         // В зависимости от типа вагона, прибавляем количество дней второй погрузки(настраивается в application.properties)
         if (typeOfWagon.equals(TYPE_OF_WAGON_KR)) {
-            fullMonthCircle += LOADING_WAGON_KR2;
+            fullMonthCircle += SECOND_LOADING_WAGON_KR;
         } else {
             fullMonthCircle += LOADING_WAGON_PV;
         }

@@ -36,17 +36,19 @@ public class Wagon extends JavaHelperBase {
     private WagonType wagonType; // Тип вагона
     private String keyOfStationDestination; // Код станции назначения
     private String nameOfStationDestination; // Название станции назначения
+    private String roadOfStationDestination; // Дорога станции назначения
+    private String nameOfStationDeparture; // Код станции отправления
+    private String roadOfStationDeparture; // Дорога станции отправления
     private int volume; // Объем вагона
     private String cargo; // Груз
     private String keyItemCargo; // Код груза
     private Double rate; // Ставка
     private String customer; // Текущий клиент
-    private String nameOfStationDeparture; // Код станции отправления
 
     //TODO удалить после тестов и добавить реальное расстояние
     private String keyOfStationDep; // Код станции отправления
 
-    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, int volume, String cargo, String keyItemCargo, Double rate, String keyOfStationDep, String customer, String nameOfStationDeparture) {
+    public Wagon(String numberOfWagon, String keyOfStationDestination, String nameOfStationDestination, String roadOfStationDestination, String nameOfStationDeparture, String roadOfStationDeparture, int volume, String cargo, String keyItemCargo, Double rate, String keyOfStationDep, String customer) {
         this.numberOfWagon = numberOfWagon;
         this.wagonType = new WagonType(TYPE_OF_WAGON_KR);
         this.keyOfStationDestination = keyOfStationDestination;
@@ -54,10 +56,12 @@ public class Wagon extends JavaHelperBase {
         this.volume = volume;
         this.cargo = cargo;
         this.keyItemCargo = keyItemCargo;
-        this.rate = rate * 1.00;
+        this.rate = rate;
         this.keyOfStationDep = keyOfStationDep;
         this.customer = customer;
         this.nameOfStationDeparture = nameOfStationDeparture;
+        this.roadOfStationDeparture = roadOfStationDeparture;
+        this.roadOfStationDestination = roadOfStationDestination;
     }
 
     public String getNumberOfWagon() {
@@ -148,6 +152,22 @@ public class Wagon extends JavaHelperBase {
         this.nameOfStationDeparture = nameOfStationDeparture;
     }
 
+    public String getRoadOfStationDestination() {
+        return roadOfStationDestination;
+    }
+
+    public void setRoadOfStationDestination(String roadOfStationDestination) {
+        this.roadOfStationDestination = roadOfStationDestination;
+    }
+
+    public String getRoadOfStationDeparture() {
+        return roadOfStationDeparture;
+    }
+
+    public void setRoadOfStationDeparture(String roadOfStationDeparture) {
+        this.roadOfStationDeparture = roadOfStationDeparture;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -158,18 +178,20 @@ public class Wagon extends JavaHelperBase {
                 Objects.equals(wagonType, wagon.wagonType) &&
                 Objects.equals(keyOfStationDestination, wagon.keyOfStationDestination) &&
                 Objects.equals(nameOfStationDestination, wagon.nameOfStationDestination) &&
+                Objects.equals(roadOfStationDestination, wagon.roadOfStationDestination) &&
+                Objects.equals(nameOfStationDeparture, wagon.nameOfStationDeparture) &&
+                Objects.equals(roadOfStationDeparture, wagon.roadOfStationDeparture) &&
                 Objects.equals(cargo, wagon.cargo) &&
                 Objects.equals(keyItemCargo, wagon.keyItemCargo) &&
                 Objects.equals(rate, wagon.rate) &&
                 Objects.equals(customer, wagon.customer) &&
-                Objects.equals(nameOfStationDeparture, wagon.nameOfStationDeparture) &&
                 Objects.equals(keyOfStationDep, wagon.keyOfStationDep);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo, rate, customer, nameOfStationDeparture, keyOfStationDep);
+        return Objects.hash(numberOfWagon, wagonType, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, nameOfStationDeparture, roadOfStationDeparture, volume, cargo, keyItemCargo, rate, customer, keyOfStationDep);
     }
 
     @Override
@@ -178,11 +200,13 @@ public class Wagon extends JavaHelperBase {
                 ", " + wagonType.toString() +
                 ", " + keyOfStationDestination +
                 ", " + nameOfStationDestination +
+                ", " + roadOfStationDestination +
+                ", " + nameOfStationDeparture +
+                ", " + roadOfStationDeparture +
                 ", " + volume +
                 ", " + cargo +
                 ", " + keyItemCargo +
                 ", " + rate +
-                ", " + customer +
-                ", " + nameOfStationDeparture;
+                ", " + customer;
     }
 }

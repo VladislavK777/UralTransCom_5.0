@@ -1,5 +1,7 @@
 package com.uraltranscom.model_ext;
 
+import com.uraltranscom.service.additional.JavaHelperBase;
+
 import java.util.Objects;
 
 /**
@@ -15,81 +17,109 @@ import java.util.Objects;
  *
  */
 
-public class TotalCalculateRoute {
+public class TotalCalculateRoute extends JavaHelperBase {
 
-    // Параметры текущейго положения вагона
+    // Параметры текущего положения вагона
     private String currentNameStationDeparture;
+    private String currentRoadStationDeparture;
     private String currentNameStationDestination;
+    private String currentRoadStationDestination;
     private String currentCargo;
     private String currentDistance;
     private double currentRate;
     private double currentCountDays;
-    private double currentCountDaysMinLoad;
+    private double currentCountDaysWithLoad;
 
     // Параметры порожнего рейса
     private String emptyNameStationDeparture;
+    private String emptyRoadStationDeparture;
     private String emptyNameStationDestination;
+    private String emptyRoadStationDestination;
     private String emptyDistance;
-    private String emptyCargo = "порожняк";
+    private String emptyCargo;
     private double emptyTariff;
     private double emptyCountDays;
-    private double emptyCountDaysMinLoad;
+    private double emptyCountDaysWithLoad;
 
     // Парметры второго рейса
     private String secondNameStationDeparture;
+    private String secondRoadStationDeparture;
     private String secondNameStationDestination;
+    private String secondRoadStationDestination;
     private String secondCargo;
     private String secondDistance;
     private double secondRate;
     private double secondCountDays;
-    private double secondCountDaysMinLoad;
+    private double secondCountDaysWithLoad;
 
     // Параметры второго порожнего рейса
     private String emptySecondNameStationDeparture;
-    private String emptySecondStationDestination;
+    private String emptySecondRoadStationDeparture;
+    private String emptySecondNameStationDestination;
+    private String emptySecondRoadStationDestination;
     private String emptySecondDistance;
-    private String emptySecondCargo = "порожняк";
+    private String emptySecondCargo;
     private double emptySecondTariff;
     private double emptySecondCountDays;
-    private double emptySecondCountDaysMinLoad;
+    private double emptySecondCountDaysWithLoad;
 
     // Итоговые суммы
     private int distanceSummary;
     private double countDaysSummary;
-    private double countDaysSummaryMinLoad;
+    private double countDaysSummaryWithLoad;
     private double totalSummary;
 
-    public TotalCalculateRoute(String currentNameStationDeparture, String currentNameStationDestination, String currentCargo, String currentDistance, double currentRate, double currentCountDays, String emptyNameStationDeparture, String emptyNameStationDestination, String emptyDistance, double emptyTariff, double emptyCountDays, String secondNameStationDeparture, String secondNameStationDestination, String secondCargo, String secondDistance, double secondRate, double secondCountDays, String emptySecondNameStationDeparture, String emptySecondStationDestination, String emptySecondDistance, double emptySecondTariff, double emptySecondCountDays) {
+    // Параметры выгрузки/погрузки
+    private double firstLoadingWagon;
+    private double secondLoadingWagon;
+    private double unloadingWagon;
+    private double summaryLoading;
+
+    public TotalCalculateRoute(String currentNameStationDeparture, String currentRoadStationDeparture, String currentNameStationDestination, String currentRoadStationDestination, String currentCargo, String currentDistance, double currentRate, double currentCountDays, String emptyNameStationDeparture, String emptyRoadStationDeparture, String emptyNameStationDestination, String emptyRoadStationDestination, String emptyDistance, double emptyTariff, double emptyCountDays, String secondNameStationDeparture, String secondRoadStationDeparture, String secondNameStationDestination, String secondRoadStationDestination, String secondCargo, String secondDistance, double secondRate, double secondCountDays, String emptySecondNameStationDeparture, String emptySecondRoadStationDeparture, String emptySecondNameStationDestination, String emptySecondRoadStationDestination, String emptySecondDistance, double emptySecondTariff, double emptySecondCountDays) {
         this.currentNameStationDeparture = currentNameStationDeparture;
+        this.currentRoadStationDeparture = currentRoadStationDeparture;
         this.currentNameStationDestination = currentNameStationDestination;
+        this.currentRoadStationDestination = currentRoadStationDestination;
         this.currentCargo = currentCargo;
         this.currentDistance = currentDistance;
-        this.currentRate = currentRate;
+        this.currentRate = Math.round(currentRate * 100) / 100.00d;
         this.currentCountDays = currentCountDays;
         this.emptyNameStationDeparture = emptyNameStationDeparture;
+        this.emptyRoadStationDeparture = emptyRoadStationDeparture;
         this.emptyNameStationDestination = emptyNameStationDestination;
+        this.emptyRoadStationDestination = emptyRoadStationDestination;
         this.emptyDistance = emptyDistance;
-        this.emptyTariff = emptyTariff;
+        this.emptyTariff = Math.round(emptyTariff * 100) / 100.00d;
         this.emptyCountDays = emptyCountDays;
         this.secondNameStationDeparture = secondNameStationDeparture;
+        this.secondRoadStationDeparture = secondRoadStationDeparture;
         this.secondNameStationDestination = secondNameStationDestination;
+        this.secondRoadStationDestination = secondRoadStationDestination;
         this.secondCargo = secondCargo;
         this.secondDistance = secondDistance;
-        this.secondRate = secondRate;
+        this.secondRate = Math.round(secondRate * 100) / 100.00d;
         this.secondCountDays = secondCountDays;
         this.emptySecondNameStationDeparture = emptySecondNameStationDeparture;
-        this.emptySecondStationDestination = emptySecondStationDestination;
+        this.emptySecondRoadStationDeparture = emptySecondRoadStationDeparture;
+        this.emptySecondNameStationDestination = emptySecondNameStationDestination;
+        this.emptySecondRoadStationDestination = emptySecondRoadStationDestination;
         this.emptySecondDistance = emptySecondDistance;
-        this.emptySecondTariff = emptySecondTariff;
+        this.emptySecondTariff = Math.round(emptySecondTariff * 100) / 100.00d;
         this.emptySecondCountDays = emptySecondCountDays;
-        this.totalSummary = currentRate - emptyTariff + secondRate - emptySecondTariff;
-        this.currentCountDaysMinLoad = currentCountDays + 7;
-        this.emptyCountDaysMinLoad = emptyCountDays + 4;
-        this.secondCountDaysMinLoad = secondCountDays + 10;
-        this.emptySecondCountDaysMinLoad = emptyCountDays + 4;
+        this.totalSummary = Math.round((currentRate - emptyTariff + secondRate - emptySecondTariff) * 100) / 100.00d;
+        this.currentCountDaysWithLoad = currentCountDays + FIRST_LOADING_WAGON_KR;
+        this.emptyCountDaysWithLoad = emptyCountDays + UNLOADING_WAGON;
+        this.secondCountDaysWithLoad = secondCountDays + SECOND_LOADING_WAGON_KR;
+        this.emptySecondCountDaysWithLoad = emptySecondCountDays + UNLOADING_WAGON;
         this.distanceSummary = Integer.parseInt(currentDistance) + Integer.parseInt(emptyDistance) + Integer.parseInt(secondDistance) + Integer.parseInt(emptySecondDistance);
         this.countDaysSummary = currentCountDays + emptyCountDays + secondCountDays + emptySecondCountDays;
-        this.countDaysSummaryMinLoad = this.currentCountDaysMinLoad + this.emptyCountDaysMinLoad + this.secondCountDaysMinLoad + this.emptySecondCountDaysMinLoad;
+        this.countDaysSummaryWithLoad = this.currentCountDaysWithLoad + this.emptyCountDaysWithLoad + this.secondCountDaysWithLoad + this.emptySecondCountDaysWithLoad;
+        this.firstLoadingWagon = FIRST_LOADING_WAGON_KR;
+        this.secondLoadingWagon = SECOND_LOADING_WAGON_KR;
+        this.unloadingWagon = UNLOADING_WAGON;
+        this.summaryLoading = this.firstLoadingWagon + this.unloadingWagon + this.secondLoadingWagon + this.unloadingWagon;
+        this.emptyCargo = "порожняк";
+        this.emptySecondCargo = "порожняк";
     }
 
     public String getCurrentNameStationDeparture() {
@@ -100,12 +130,28 @@ public class TotalCalculateRoute {
         this.currentNameStationDeparture = currentNameStationDeparture;
     }
 
+    public String getCurrentRoadStationDeparture() {
+        return currentRoadStationDeparture;
+    }
+
+    public void setCurrentRoadStationDeparture(String currentRoadStationDeparture) {
+        this.currentRoadStationDeparture = currentRoadStationDeparture;
+    }
+
     public String getCurrentNameStationDestination() {
         return currentNameStationDestination;
     }
 
     public void setCurrentNameStationDestination(String currentNameStationDestination) {
         this.currentNameStationDestination = currentNameStationDestination;
+    }
+
+    public String getCurrentRoadStationDestination() {
+        return currentRoadStationDestination;
+    }
+
+    public void setCurrentRoadStationDestination(String currentRoadStationDestination) {
+        this.currentRoadStationDestination = currentRoadStationDestination;
     }
 
     public String getCurrentCargo() {
@@ -140,6 +186,14 @@ public class TotalCalculateRoute {
         this.currentCountDays = currentCountDays;
     }
 
+    public double getCurrentCountDaysWithLoad() {
+        return currentCountDaysWithLoad;
+    }
+
+    public void setCurrentCountDaysWithLoad(double currentCountDaysWithLoad) {
+        this.currentCountDaysWithLoad = currentCountDaysWithLoad;
+    }
+
     public String getEmptyNameStationDeparture() {
         return emptyNameStationDeparture;
     }
@@ -148,12 +202,28 @@ public class TotalCalculateRoute {
         this.emptyNameStationDeparture = emptyNameStationDeparture;
     }
 
+    public String getEmptyRoadStationDeparture() {
+        return emptyRoadStationDeparture;
+    }
+
+    public void setEmptyRoadStationDeparture(String emptyRoadStationDeparture) {
+        this.emptyRoadStationDeparture = emptyRoadStationDeparture;
+    }
+
     public String getEmptyNameStationDestination() {
         return emptyNameStationDestination;
     }
 
     public void setEmptyNameStationDestination(String emptyNameStationDestination) {
         this.emptyNameStationDestination = emptyNameStationDestination;
+    }
+
+    public String getEmptyRoadStationDestination() {
+        return emptyRoadStationDestination;
+    }
+
+    public void setEmptyRoadStationDestination(String emptyRoadStationDestination) {
+        this.emptyRoadStationDestination = emptyRoadStationDestination;
     }
 
     public String getEmptyDistance() {
@@ -188,6 +258,14 @@ public class TotalCalculateRoute {
         this.emptyCountDays = emptyCountDays;
     }
 
+    public double getEmptyCountDaysWithLoad() {
+        return emptyCountDaysWithLoad;
+    }
+
+    public void setEmptyCountDaysWithLoad(double emptyCountDaysWithLoad) {
+        this.emptyCountDaysWithLoad = emptyCountDaysWithLoad;
+    }
+
     public String getSecondNameStationDeparture() {
         return secondNameStationDeparture;
     }
@@ -196,12 +274,28 @@ public class TotalCalculateRoute {
         this.secondNameStationDeparture = secondNameStationDeparture;
     }
 
+    public String getSecondRoadStationDeparture() {
+        return secondRoadStationDeparture;
+    }
+
+    public void setSecondRoadStationDeparture(String secondRoadStationDeparture) {
+        this.secondRoadStationDeparture = secondRoadStationDeparture;
+    }
+
     public String getSecondNameStationDestination() {
         return secondNameStationDestination;
     }
 
     public void setSecondNameStationDestination(String secondNameStationDestination) {
         this.secondNameStationDestination = secondNameStationDestination;
+    }
+
+    public String getSecondRoadStationDestination() {
+        return secondRoadStationDestination;
+    }
+
+    public void setSecondRoadStationDestination(String secondRoadStationDestination) {
+        this.secondRoadStationDestination = secondRoadStationDestination;
     }
 
     public String getSecondCargo() {
@@ -236,6 +330,14 @@ public class TotalCalculateRoute {
         this.secondCountDays = secondCountDays;
     }
 
+    public double getSecondCountDaysWithLoad() {
+        return secondCountDaysWithLoad;
+    }
+
+    public void setSecondCountDaysWithLoad(double secondCountDaysWithLoad) {
+        this.secondCountDaysWithLoad = secondCountDaysWithLoad;
+    }
+
     public String getEmptySecondNameStationDeparture() {
         return emptySecondNameStationDeparture;
     }
@@ -244,12 +346,28 @@ public class TotalCalculateRoute {
         this.emptySecondNameStationDeparture = emptySecondNameStationDeparture;
     }
 
-    public String getEmptySecondStationDestination() {
-        return emptySecondStationDestination;
+    public String getEmptySecondRoadStationDeparture() {
+        return emptySecondRoadStationDeparture;
     }
 
-    public void setEmptySecondStationDestination(String emptySecondStationDestination) {
-        this.emptySecondStationDestination = emptySecondStationDestination;
+    public void setEmptySecondRoadStationDeparture(String emptySecondRoadStationDeparture) {
+        this.emptySecondRoadStationDeparture = emptySecondRoadStationDeparture;
+    }
+
+    public String getEmptySecondNameStationDestination() {
+        return emptySecondNameStationDestination;
+    }
+
+    public void setEmptySecondNameStationDestination(String emptySecondNameStationDestination) {
+        this.emptySecondNameStationDestination = emptySecondNameStationDestination;
+    }
+
+    public String getEmptySecondRoadStationDestination() {
+        return emptySecondRoadStationDestination;
+    }
+
+    public void setEmptySecondRoadStationDestination(String emptySecondRoadStationDestination) {
+        this.emptySecondRoadStationDestination = emptySecondRoadStationDestination;
     }
 
     public String getEmptySecondDistance() {
@@ -280,36 +398,16 @@ public class TotalCalculateRoute {
         return emptySecondCountDays;
     }
 
-    public double getCurrentCountDaysMinLoad() {
-        return currentCountDaysMinLoad;
+    public void setEmptySecondCountDays(double emptySecondCountDays) {
+        this.emptySecondCountDays = emptySecondCountDays;
     }
 
-    public void setCurrentCountDaysMinLoad(double currentCountDaysMinLoad) {
-        this.currentCountDaysMinLoad = currentCountDaysMinLoad;
+    public double getEmptySecondCountDaysWithLoad() {
+        return emptySecondCountDaysWithLoad;
     }
 
-    public double getEmptyCountDaysMinLoad() {
-        return emptyCountDaysMinLoad;
-    }
-
-    public void setEmptyCountDaysMinLoad(double emptyCountDaysMinLoad) {
-        this.emptyCountDaysMinLoad = emptyCountDaysMinLoad;
-    }
-
-    public double getSecondCountDaysMinLoad() {
-        return secondCountDaysMinLoad;
-    }
-
-    public void setSecondCountDaysMinLoad(double secondCountDaysMinLoad) {
-        this.secondCountDaysMinLoad = secondCountDaysMinLoad;
-    }
-
-    public double getEmptySecondCountDaysMinLoad() {
-        return emptySecondCountDaysMinLoad;
-    }
-
-    public void setEmptySecondCountDaysMinLoad(double emptySecondCountDaysMinLoad) {
-        this.emptySecondCountDaysMinLoad = emptySecondCountDaysMinLoad;
+    public void setEmptySecondCountDaysWithLoad(double emptySecondCountDaysWithLoad) {
+        this.emptySecondCountDaysWithLoad = emptySecondCountDaysWithLoad;
     }
 
     public int getDistanceSummary() {
@@ -328,12 +426,12 @@ public class TotalCalculateRoute {
         this.countDaysSummary = countDaysSummary;
     }
 
-    public double getCountDaysSummaryMinLoad() {
-        return countDaysSummaryMinLoad;
+    public double getCountDaysSummaryWithLoad() {
+        return countDaysSummaryWithLoad;
     }
 
-    public void setCountDaysSummaryMinLoad(double countDaysSummaryMinLoad) {
-        this.countDaysSummaryMinLoad = countDaysSummaryMinLoad;
+    public void setCountDaysSummaryWithLoad(double countDaysSummaryWithLoad) {
+        this.countDaysSummaryWithLoad = countDaysSummaryWithLoad;
     }
 
     public double getTotalSummary() {
@@ -344,8 +442,36 @@ public class TotalCalculateRoute {
         this.totalSummary = totalSummary;
     }
 
-    public void setEmptySecondCountDays(double emptySecondCountDays) {
-        this.emptySecondCountDays = emptySecondCountDays;
+    public double getFirstLoadingWagon() {
+        return firstLoadingWagon;
+    }
+
+    public void setFirstLoadingWagon(double firstLoadingWagon) {
+        this.firstLoadingWagon = firstLoadingWagon;
+    }
+
+    public double getSecondLoadingWagon() {
+        return secondLoadingWagon;
+    }
+
+    public void setSecondLoadingWagon(double secondLoadingWagon) {
+        this.secondLoadingWagon = secondLoadingWagon;
+    }
+
+    public double getUnloadingWagon() {
+        return unloadingWagon;
+    }
+
+    public void setUnloadingWagon(double unloadingWagon) {
+        this.unloadingWagon = unloadingWagon;
+    }
+
+    public double getSummaryLoading() {
+        return summaryLoading;
+    }
+
+    public void setSummaryLoading(double summaryLoading) {
+        this.summaryLoading = summaryLoading;
     }
 
     @Override
@@ -355,34 +481,46 @@ public class TotalCalculateRoute {
         TotalCalculateRoute that = (TotalCalculateRoute) o;
         return Double.compare(that.currentRate, currentRate) == 0 &&
                 Double.compare(that.currentCountDays, currentCountDays) == 0 &&
-                Double.compare(that.currentCountDaysMinLoad, currentCountDaysMinLoad) == 0 &&
+                Double.compare(that.currentCountDaysWithLoad, currentCountDaysWithLoad) == 0 &&
                 Double.compare(that.emptyTariff, emptyTariff) == 0 &&
                 Double.compare(that.emptyCountDays, emptyCountDays) == 0 &&
-                Double.compare(that.emptyCountDaysMinLoad, emptyCountDaysMinLoad) == 0 &&
+                Double.compare(that.emptyCountDaysWithLoad, emptyCountDaysWithLoad) == 0 &&
                 Double.compare(that.secondRate, secondRate) == 0 &&
                 Double.compare(that.secondCountDays, secondCountDays) == 0 &&
-                Double.compare(that.secondCountDaysMinLoad, secondCountDaysMinLoad) == 0 &&
+                Double.compare(that.secondCountDaysWithLoad, secondCountDaysWithLoad) == 0 &&
                 Double.compare(that.emptySecondTariff, emptySecondTariff) == 0 &&
                 Double.compare(that.emptySecondCountDays, emptySecondCountDays) == 0 &&
-                Double.compare(that.emptySecondCountDaysMinLoad, emptySecondCountDaysMinLoad) == 0 &&
+                Double.compare(that.emptySecondCountDaysWithLoad, emptySecondCountDaysWithLoad) == 0 &&
                 distanceSummary == that.distanceSummary &&
                 Double.compare(that.countDaysSummary, countDaysSummary) == 0 &&
-                Double.compare(that.countDaysSummaryMinLoad, countDaysSummaryMinLoad) == 0 &&
+                Double.compare(that.countDaysSummaryWithLoad, countDaysSummaryWithLoad) == 0 &&
                 Double.compare(that.totalSummary, totalSummary) == 0 &&
+                Double.compare(that.firstLoadingWagon, firstLoadingWagon) == 0 &&
+                Double.compare(that.secondLoadingWagon, secondLoadingWagon) == 0 &&
+                Double.compare(that.unloadingWagon, unloadingWagon) == 0 &&
+                Double.compare(that.summaryLoading, summaryLoading) == 0 &&
                 Objects.equals(currentNameStationDeparture, that.currentNameStationDeparture) &&
+                Objects.equals(currentRoadStationDeparture, that.currentRoadStationDeparture) &&
                 Objects.equals(currentNameStationDestination, that.currentNameStationDestination) &&
+                Objects.equals(currentRoadStationDestination, that.currentRoadStationDestination) &&
                 Objects.equals(currentCargo, that.currentCargo) &&
                 Objects.equals(currentDistance, that.currentDistance) &&
                 Objects.equals(emptyNameStationDeparture, that.emptyNameStationDeparture) &&
+                Objects.equals(emptyRoadStationDeparture, that.emptyRoadStationDeparture) &&
                 Objects.equals(emptyNameStationDestination, that.emptyNameStationDestination) &&
+                Objects.equals(emptyRoadStationDestination, that.emptyRoadStationDestination) &&
                 Objects.equals(emptyDistance, that.emptyDistance) &&
                 Objects.equals(emptyCargo, that.emptyCargo) &&
                 Objects.equals(secondNameStationDeparture, that.secondNameStationDeparture) &&
+                Objects.equals(secondRoadStationDeparture, that.secondRoadStationDeparture) &&
                 Objects.equals(secondNameStationDestination, that.secondNameStationDestination) &&
+                Objects.equals(secondRoadStationDestination, that.secondRoadStationDestination) &&
                 Objects.equals(secondCargo, that.secondCargo) &&
                 Objects.equals(secondDistance, that.secondDistance) &&
                 Objects.equals(emptySecondNameStationDeparture, that.emptySecondNameStationDeparture) &&
-                Objects.equals(emptySecondStationDestination, that.emptySecondStationDestination) &&
+                Objects.equals(emptySecondRoadStationDeparture, that.emptySecondRoadStationDeparture) &&
+                Objects.equals(emptySecondNameStationDestination, that.emptySecondNameStationDestination) &&
+                Objects.equals(emptySecondRoadStationDestination, that.emptySecondRoadStationDestination) &&
                 Objects.equals(emptySecondDistance, that.emptySecondDistance) &&
                 Objects.equals(emptySecondCargo, that.emptySecondCargo);
     }
@@ -390,44 +528,56 @@ public class TotalCalculateRoute {
     @Override
     public int hashCode() {
 
-        return Objects.hash(currentNameStationDeparture, currentNameStationDestination, currentCargo, currentDistance, currentRate, currentCountDays, currentCountDaysMinLoad, emptyNameStationDeparture, emptyNameStationDestination, emptyDistance, emptyCargo, emptyTariff, emptyCountDays, emptyCountDaysMinLoad, secondNameStationDeparture, secondNameStationDestination, secondCargo, secondDistance, secondRate, secondCountDays, secondCountDaysMinLoad, emptySecondNameStationDeparture, emptySecondStationDestination, emptySecondDistance, emptySecondCargo, emptySecondTariff, emptySecondCountDays, emptySecondCountDaysMinLoad, distanceSummary, countDaysSummary, countDaysSummaryMinLoad, totalSummary);
+        return Objects.hash(currentNameStationDeparture, currentRoadStationDeparture, currentNameStationDestination, currentRoadStationDestination, currentCargo, currentDistance, currentRate, currentCountDays, currentCountDaysWithLoad, emptyNameStationDeparture, emptyRoadStationDeparture, emptyNameStationDestination, emptyRoadStationDestination, emptyDistance, emptyCargo, emptyTariff, emptyCountDays, emptyCountDaysWithLoad, secondNameStationDeparture, secondRoadStationDeparture, secondNameStationDestination, secondRoadStationDestination, secondCargo, secondDistance, secondRate, secondCountDays, secondCountDaysWithLoad, emptySecondNameStationDeparture, emptySecondRoadStationDeparture, emptySecondNameStationDestination, emptySecondRoadStationDestination, emptySecondDistance, emptySecondCargo, emptySecondTariff, emptySecondCountDays, emptySecondCountDaysWithLoad, distanceSummary, countDaysSummary, countDaysSummaryWithLoad, totalSummary, firstLoadingWagon, secondLoadingWagon, unloadingWagon, summaryLoading);
     }
 
     @Override
     public String toString() {
         return "TotalCalculateRoute{" +
                 "currentNameStationDeparture='" + currentNameStationDeparture + '\'' +
+                ", currentRoadStationDeparture='" + currentRoadStationDeparture + '\'' +
                 ", currentNameStationDestination='" + currentNameStationDestination + '\'' +
+                ", currentRoadStationDestination='" + currentRoadStationDestination + '\'' +
                 ", currentCargo='" + currentCargo + '\'' +
                 ", currentDistance='" + currentDistance + '\'' +
                 ", currentRate=" + currentRate +
                 ", currentCountDays=" + currentCountDays +
-                ", currentCountDaysMinLoad=" + currentCountDaysMinLoad +
+                ", currentCountDaysWithLoad=" + currentCountDaysWithLoad +
                 ", emptyNameStationDeparture='" + emptyNameStationDeparture + '\'' +
+                ", emptyRoadStationDeparture='" + emptyRoadStationDeparture + '\'' +
                 ", emptyNameStationDestination='" + emptyNameStationDestination + '\'' +
+                ", emptyRoadStationDestination='" + emptyRoadStationDestination + '\'' +
                 ", emptyDistance='" + emptyDistance + '\'' +
                 ", emptyCargo='" + emptyCargo + '\'' +
                 ", emptyTariff=" + emptyTariff +
                 ", emptyCountDays=" + emptyCountDays +
-                ", emptyCountDaysMinLoad=" + emptyCountDaysMinLoad +
+                ", emptyCountDaysWithLoad=" + emptyCountDaysWithLoad +
                 ", secondNameStationDeparture='" + secondNameStationDeparture + '\'' +
+                ", secondRoadStationDeparture='" + secondRoadStationDeparture + '\'' +
                 ", secondNameStationDestination='" + secondNameStationDestination + '\'' +
+                ", secondRoadStationDestination='" + secondRoadStationDestination + '\'' +
                 ", secondCargo='" + secondCargo + '\'' +
                 ", secondDistance='" + secondDistance + '\'' +
                 ", secondRate=" + secondRate +
                 ", secondCountDays=" + secondCountDays +
-                ", secondCountDaysMinLoad=" + secondCountDaysMinLoad +
+                ", secondCountDaysWithLoad=" + secondCountDaysWithLoad +
                 ", emptySecondNameStationDeparture='" + emptySecondNameStationDeparture + '\'' +
-                ", emptySecondStationDestination='" + emptySecondStationDestination + '\'' +
+                ", emptySecondRoadStationDeparture='" + emptySecondRoadStationDeparture + '\'' +
+                ", emptySecondNameStationDestination='" + emptySecondNameStationDestination + '\'' +
+                ", emptySecondRoadStationDestination='" + emptySecondRoadStationDestination + '\'' +
                 ", emptySecondDistance='" + emptySecondDistance + '\'' +
                 ", emptySecondCargo='" + emptySecondCargo + '\'' +
                 ", emptySecondTariff=" + emptySecondTariff +
                 ", emptySecondCountDays=" + emptySecondCountDays +
-                ", emptySecondCountDaysMinLoad=" + emptySecondCountDaysMinLoad +
+                ", emptySecondCountDaysWithLoad=" + emptySecondCountDaysWithLoad +
                 ", distanceSummary=" + distanceSummary +
                 ", countDaysSummary=" + countDaysSummary +
-                ", countDaysSummaryMinLoad=" + countDaysSummaryMinLoad +
+                ", countDaysSummaryWithLoad=" + countDaysSummaryWithLoad +
                 ", totalSummary=" + totalSummary +
+                ", firstLoadingWagon=" + firstLoadingWagon +
+                ", secondLoadingWagon=" + secondLoadingWagon +
+                ", unloadingWagon=" + unloadingWagon +
+                ", summaryLoading=" + summaryLoading +
                 '}';
     }
 }

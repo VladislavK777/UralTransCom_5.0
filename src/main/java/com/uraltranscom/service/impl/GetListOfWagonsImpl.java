@@ -93,13 +93,16 @@ public class GetListOfWagonsImpl implements GetList {
                 String numberOfWagon = null;
                 String keyOfStationDestination = null;
                 String nameOfStationDestination = null;
+                String roadOfStationDestination = null;
+                String nameOfStationDeparture = null;
+                String roadOfStationDeparture = null;
                 int volume = 0;
                 String cargo = null;
                 String keyItemCargo = null;
-                Double rate = 0.00;
+                Double rate = 0.00d;
                 String keyOfStationDep = null;
                 String customer = null;
-                String nameOfStationDeparture = null;
+
 
                 for (int c = 0; c < row.getLastCellNum(); c++) {
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.numberwagon"))) {
@@ -113,6 +116,18 @@ public class GetListOfWagonsImpl implements GetList {
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keystationdestination"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDestination = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.roadstationdestination"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        roadOfStationDestination = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.namestationdeparture"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.roadstationdeparture"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        roadOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.volume"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
@@ -130,7 +145,7 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         rate = xssfRow.getCell(c).getNumericCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keystationdep"))) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keystationdeparture"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
                         keyOfStationDep = xssfRow.getCell(c).getStringCellValue();
                     }
@@ -138,12 +153,9 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         customer = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.namestationdep"))) {
-                        XSSFRow xssfRow = sheet.getRow(j);
-                        nameOfStationDeparture = xssfRow.getCell(c).getStringCellValue();
-                    }
+
                 }
-                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, volume, cargo, keyItemCargo, rate, keyOfStationDep, customer, nameOfStationDeparture));
+                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, nameOfStationDeparture, roadOfStationDeparture, volume, cargo, keyItemCargo, rate, keyOfStationDep, customer));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {

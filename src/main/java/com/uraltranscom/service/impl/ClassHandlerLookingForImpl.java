@@ -71,12 +71,16 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
 
         for (int i = 0; i < listOfWagons.size(); i++) {
             Map<Map<Route, TotalCalculateRoute>, Double> mapRoute = new HashMap<>();
-            String keyStationDep = listOfWagons.get(i).getKeyOfStationDep();
-            String nameStationDep = listOfWagons.get(i).getNameOfStationDeparture();
+
+            String keyStationDeparture = listOfWagons.get(i).getKeyOfStationDep();
+            String nameStationDeparture = listOfWagons.get(i).getNameOfStationDeparture();
+            String roadStationDeparture = listOfWagons.get(i).getRoadOfStationDeparture();
             String keyStationDestination = listOfWagons.get(i).getKeyOfStationDestination();
             String nameStationDestination = listOfWagons.get(i).getNameOfStationDestination();
+            String roadStationnDestination = listOfWagons.get(i).getRoadOfStationDestination();
             String currentCargo = listOfWagons.get(i).getCargo();
-            String distanceCurrentRoute = String.valueOf(getDistanceBetweenStations.getDistanceBetweenStations(keyStationDep, keyStationDestination));
+
+            String distanceCurrentRoute = String.valueOf(getDistanceBetweenStations.getDistanceBetweenStations(keyStationDeparture, keyStationDestination));
             double rateCurrentRoute = listOfWagons.get(i).getRate();
             if (rateCurrentRoute == 0.00) {
                 rateCurrentRoute = 55000.00;
@@ -85,10 +89,13 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                 Map<Route, TotalCalculateRoute> mapRouteAndTotalCalculate = new HashMap<>();
                 Route route = mapOfRoutes.get(j);
                 if (listOfWagons.get(i).getVolume() >= route.getVolumePeriod().getVolumeFrom() && listOfWagons.get(i).getVolume() <= route.getVolumePeriod().getVolumeTo()) {
+
                     String keyStationDepartureRoute = route.getKeyOfStationDeparture();
                     String nameStationDepartureRoute = route.getNameOfStationDeparture();
+                    String roadStationDepartureRoute = route.getRoadOfStationDeparture();
                     String keyStationDestinationRoute = route.getKeyOfStationDestination();
                     String nameStationDestinationRoute = route.getNameOfStationDestination();
+                    String roadStationDestinationRoute = route.getRoadOfStationDestination();
                     String cargoRoute = route.getCargo();
                     if (keyStationDestinationRoute.equals("")) {
                         keyStationDestinationRoute = mapOfRoutes.get(new Random().nextInt(200)).getKeyOfStationDeparture();
@@ -97,37 +104,54 @@ public class ClassHandlerLookingForImpl extends JavaHelperBase implements ClassH
                         }
                     }
                     String distanceRoute = route.getDistanceOfWay();
-                    String keyStationOporn = getReturnStation.getReturnStation(keyStationDestinationRoute, listOfWagons.get(i).getVolume()); //TODO изменить имя переменной
-
                     double rateRoute = route.getRate();
                     if (rateRoute == 0.00) {
                         rateRoute = 55000.00;
                     }
+
+                    // Получаем информацию по станции возврата
+                    List<String> returnStationInfo = getReturnStation.getReturnStation(keyStationDestinationRoute, listOfWagons.get(i).getVolume());
+                    String keyStationReturn = returnStationInfo.get(0);
+                    String roadStationReturn = returnStationInfo.get(1);
+                    String nameStationReturn = returnStationInfo.get(2);
+
                     int distanceEmpty1 = getDistanceBetweenStations.getDistanceBetweenStations(keyStationDestination, keyStationDepartureRoute);
-                    double tariff1 = distanceEmpty1 * 4.83;
-                    int distanceEmpty2 = getDistanceBetweenStations.getDistanceBetweenStations(keyStationDestinationRoute, keyStationOporn);
-                    double tariff2 = distanceEmpty2 * 4.83;
+                    double tariff1 = distanceEmpty1 * 4.83d;
+
+                    int distanceEmpty2 = getDistanceBetweenStations.getDistanceBetweenStations(keyStationDestinationRoute, keyStationReturn);
+                    double tariff2 = distanceEmpty2 * 4.83d;
+
                     int fullDays = getFullMonthCircleOfWagon.fullDaysForYield("КР", distanceCurrentRoute, distanceEmpty1, distanceRoute, distanceEmpty2);
+
                     double yieldDay = yieldCalculation.yieldCalculation(rateCurrentRoute, tariff1, rateRoute, tariff2, fullDays);
-                    mapRouteAndTotalCalculate.put(route, new TotalCalculateRoute(nameStationDep,
+
+                    mapRouteAndTotalCalculate.put(route, new TotalCalculateRoute(nameStationDeparture,
+                            roadStationDeparture,
                             nameStationDestination,
+                            roadStationnDestination,
                             currentCargo,
                             distanceCurrentRoute,
                             rateCurrentRoute,
                             Math.ceil(Integer.parseInt(distanceCurrentRoute)/PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceCurrentRoute))),
                             nameStationDestination,
+                            roadStationnDestination,
                             nameStationDepartureRoute,
+                            roadStationDepartureRoute,
                             String.valueOf(distanceEmpty1),
                             tariff1,
                             Math.ceil(distanceEmpty1/PrepareDistanceOfDay.getDistanceOfDay(distanceEmpty1)),
                             nameStationDepartureRoute,
+                            roadStationDepartureRoute,
                             nameStationDestinationRoute,
+                            roadStationDestinationRoute,
                             cargoRoute,
                             distanceRoute,
                             rateRoute,
                             Math.ceil(Integer.parseInt(distanceRoute)/PrepareDistanceOfDay.getDistanceOfDay(Integer.parseInt(distanceRoute))),
                             nameStationDestinationRoute,
-                            keyStationOporn,
+                            roadStationDestinationRoute,
+                            nameStationReturn,
+                            roadStationReturn,
                             String.valueOf(distanceEmpty2),
                             tariff2,
                             Math.ceil(distanceEmpty2/PrepareDistanceOfDay.getDistanceOfDay(distanceEmpty2))

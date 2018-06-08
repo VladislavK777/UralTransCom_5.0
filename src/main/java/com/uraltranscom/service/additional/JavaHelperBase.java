@@ -1,5 +1,7 @@
 package com.uraltranscom.service.additional;
 
+import com.uraltranscom.util.PropertyUtil;
+
 /**
  *
  * Класс-помощник содержит основные константы
@@ -16,6 +18,13 @@ package com.uraltranscom.service.additional;
  */
 
 public class JavaHelperBase {
+    public static PropertyUtil propertyUtil = new PropertyUtil();
+
+    public static final int FIRST_LOADING_WAGON_KR = Integer.parseInt(propertyUtil.getProperty("firstloadingwagonkr"));
+    public static final int SECOND_LOADING_WAGON_KR = Integer.parseInt(propertyUtil.getProperty("secondloadingwagonkr")); // Вторая выгрузка вагона.
+    public static final int LOADING_WAGON_PV = Integer.parseInt(propertyUtil.getProperty("loadingwagonpv"));
+    public static final int UNLOADING_WAGON = Integer.parseInt(propertyUtil.getProperty("unloadingwagon"));
+
     // Максимальное количетво дней в обороте вагона
     public static final int MAX_FULL_CIRCLE_DAYS = 31;
 

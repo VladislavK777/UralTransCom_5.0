@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -39,21 +41,21 @@ public class GetReturnStationImpl extends ConnectionDB implements GetReturnStati
     }
 
     @Override
-    public String getReturnStation(String keyOfStation, int volume) {
+    public List<String> getReturnStation(String keyOfStation, int volume) {
 
-        String returnStation = null;
+        List<String> returnList = new ArrayList<>();
 
         try (Connection connection = getDataSource().getConnection();
              PreparedStatement preparedStatement = createPreparedStatement(connection, keyOfStation, volume);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                returnStation = resultSet.getString(1);
+                returnList.add(resultSet.getString(1));
             }
             logger.debug("Подбираем станцию возврата для станции: {}, объем: {}", keyOfStation, volume);
         } catch (SQLException ex) {
             logger.error("Ошибка запроса: {}: Станция: {}, Объем: {}", ex.getMessage(), keyOfStation, volume);
         }
-        return returnStation;
+        return returnList;
     }
 
     private PreparedStatement createPreparedStatement(Connection connection, String keyOfStation, int volume) throws SQLException {
