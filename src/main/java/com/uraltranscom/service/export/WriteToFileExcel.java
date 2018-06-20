@@ -289,9 +289,9 @@ public class WriteToFileExcel extends JavaHelperBase {
                         }
                     }
                 }
-            xssfWorkbook.write(outputStream);
-            outputStream.flush();
-            outputStream.close();
+                xssfWorkbook.write(outputStream);
+                outputStream.flush();
+                outputStream.close();
             }
         } catch (IOException e) {
             logger.error("Ошибка записи в файл - {}", e.getMessage());

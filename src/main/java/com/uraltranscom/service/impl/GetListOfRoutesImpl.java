@@ -1,8 +1,6 @@
 package com.uraltranscom.service.impl;
 
 import com.uraltranscom.model.Route;
-import com.uraltranscom.model.additional_model.VolumePeriod;
-import com.uraltranscom.model.additional_model.WagonType;
 import com.uraltranscom.service.GetList;
 import com.uraltranscom.service.additional.JavaHelperBase;
 import com.uraltranscom.util.PropertyUtil;
@@ -94,7 +92,8 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                 int volumeFrom = 0;
                 int volumeTo = 0;
                 String numberOrder = null;
-                String cargo = null;
+                String nameCargo = null;
+                String keyCargo = null;
                 String wagonType = null;
                 Double rate = 0.00;
 
@@ -152,9 +151,13 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         numberOrder = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.cargo"))) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.namecargo"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
-                        cargo = xssfRow.getCell(c).getStringCellValue();
+                        nameCargo = xssfRow.getCell(c).getStringCellValue();
+                    }
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.keycargo"))) {
+                        XSSFRow xssfRow = sheet.getRow(j);
+                        keyCargo = xssfRow.getCell(c).getStringCellValue();
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("route.rate"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
@@ -162,7 +165,7 @@ public class GetListOfRoutesImpl extends JavaHelperBase implements GetList {
                     }
                 }
                 if (wagonType.equals(TYPE_OF_WAGON_KR)) {
-                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, roadOfStationDeparture, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, distanceOfWay, customer, new VolumePeriod(volumeFrom, volumeTo), numberOrder, cargo, new WagonType(wagonType), rate));
+                    mapOfRoutes.put(i, new Route(keyOfStationDeparture, nameOfStationDeparture, roadOfStationDeparture, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, distanceOfWay, customer, volumeFrom, volumeTo, numberOrder, nameCargo, keyCargo, wagonType, rate));
                     i++;
                 }
             }

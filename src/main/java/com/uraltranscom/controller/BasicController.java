@@ -47,14 +47,28 @@ public class BasicController {
         return "welcome";
     }
 
-    @RequestMapping(value = "/reports", method = RequestMethod.POST)
-    public String routeList(@RequestParam(value = "routes") MultipartFile routeFile,
-                             @RequestParam(value = "wagons") MultipartFile wagonFile, Model model) {
-        basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfRoutesImpl().setFile(MultipartFileToFileUtil.multipartToFile(routeFile));
-        basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfWagonsImpl().setFile(MultipartFileToFileUtil.multipartToFile(wagonFile));
-        basicClassLookingForImpl.fillMapRouteIsOptimal();
-        model.addAttribute("reportListOfDistributedRoutesAndWagons", basicClassLookingForImpl.getTotal());
-        return "welcome";
+    @RequestMapping(value = "/report", method = RequestMethod.POST)
+    public String reportList(@RequestParam(value = "routes", required = false) MultipartFile routeFile,
+                             @RequestParam(value = "wagons", required = false) MultipartFile wagonFile, Model model) {
+        if (routeFile != null || wagonFile != null) {
+            basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfRoutesImpl().setFile(MultipartFileToFileUtil.multipartToFile(routeFile));
+            basicClassLookingForImpl.getClassHandlerLookingFor().getGetListOfWagonsImpl().setFile(MultipartFileToFileUtil.multipartToFile(wagonFile));
+            basicClassLookingForImpl.getClassHandlerLookingFor().setArrayNeedWashing();
+            if (!(basicClassLookingForImpl.getClassHandlerLookingFor().getNeedWashingRoute().isEmpty()) ||
+                    !(basicClassLookingForImpl.getClassHandlerLookingFor().getNeedWashingWagon().isEmpty())) {
+                model.addAttribute("needWashingRoute", basicClassLookingForImpl.getClassHandlerLookingFor().getNeedWashingRoute());
+                model.addAttribute("needWashingWagon", basicClassLookingForImpl.getClassHandlerLookingFor().getNeedWashingWagon());
+                return "washing";
+            } else {
+                basicClassLookingForImpl.fillMapRouteIsOptimal();
+                model.addAttribute("totalMap", basicClassLookingForImpl.getTotal());
+                return "welcome";
+            }
+        } else {
+            basicClassLookingForImpl.fillMapRouteIsOptimal();
+            model.addAttribute("totalMap", basicClassLookingForImpl.getTotal());
+            return "welcome";
+        }
     }
 
     // Выгрузка в Excel общего очтета

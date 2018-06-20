@@ -1,5 +1,6 @@
 package com.uraltranscom.model;
 
+import com.uraltranscom.model.additional_model.CargoClass;
 import com.uraltranscom.model.additional_model.VolumePeriod;
 import com.uraltranscom.model.additional_model.WagonType;
 import org.slf4j.Logger;
@@ -42,11 +43,24 @@ public class Route {
     private String customer; // Заказчик
     private VolumePeriod volumePeriod; // Возможны объем вагона в заявке
     private String numberOrder; // Номер заявки
-    private String cargo; // Груз
+    private CargoClass cargo; // Груз
     private WagonType wagonType; // Тип вагона
     private Double rate; // Ставка
 
-    public Route(String keyOfStationDeparture, String nameOfStationDeparture, String roadOfStationDeparture, String keyOfStationDestination, String nameOfStationDestination, String roadOfStationDestination, String distanceOfWay, String customer, VolumePeriod volumePeriod, String numberOrder, String cargo, WagonType wagonType, Double rate) {
+
+    public Route(String keyOfStationDeparture,
+                 String nameOfStationDeparture,
+                 String roadOfStationDeparture,
+                 String keyOfStationDestination,
+                 String nameOfStationDestination,
+                 String roadOfStationDestination,
+                 String distanceOfWay,
+                 String customer,
+                 int volumeFrom, int volumeTo,
+                 String numberOrder,
+                 String nameCargo, String keyCargo,
+                 String wagonType,
+                 Double rate) {
         this.keyOfStationDeparture = keyOfStationDeparture;
         this.nameOfStationDeparture = nameOfStationDeparture;
         this.roadOfStationDeparture = roadOfStationDeparture;
@@ -55,10 +69,10 @@ public class Route {
         this.roadOfStationDestination = roadOfStationDestination;
         this.distanceOfWay = distanceOfWay;
         this.customer = customer;
-        this.volumePeriod = volumePeriod;
+        this.volumePeriod = new VolumePeriod(volumeFrom, volumeTo);
         this.numberOrder = numberOrder;
-        this.cargo = cargo;
-        this.wagonType = wagonType;
+        this.cargo = new CargoClass(nameCargo, keyCargo);
+        this.wagonType = new WagonType(wagonType);
         this.rate = rate;
     }
 
@@ -78,6 +92,14 @@ public class Route {
         this.nameOfStationDeparture = nameOfStationDeparture;
     }
 
+    public String getRoadOfStationDeparture() {
+        return roadOfStationDeparture;
+    }
+
+    public void setRoadOfStationDeparture(String roadOfStationDeparture) {
+        this.roadOfStationDeparture = roadOfStationDeparture;
+    }
+
     public String getKeyOfStationDestination() {
         return keyOfStationDestination;
     }
@@ -92,6 +114,14 @@ public class Route {
 
     public void setNameOfStationDestination(String nameOfStationDestination) {
         this.nameOfStationDestination = nameOfStationDestination;
+    }
+
+    public String getRoadOfStationDestination() {
+        return roadOfStationDestination;
+    }
+
+    public void setRoadOfStationDestination(String roadOfStationDestination) {
+        this.roadOfStationDestination = roadOfStationDestination;
     }
 
     public String getDistanceOfWay() {
@@ -126,11 +156,11 @@ public class Route {
         this.numberOrder = numberOrder;
     }
 
-    public String getCargo() {
+    public CargoClass getCargo() {
         return cargo;
     }
 
-    public void setCargo(String cargo) {
+    public void setCargo(CargoClass cargo) {
         this.cargo = cargo;
     }
 
@@ -148,22 +178,6 @@ public class Route {
 
     public void setRate(Double rate) {
         this.rate = rate;
-    }
-
-    public String getRoadOfStationDeparture() {
-        return roadOfStationDeparture;
-    }
-
-    public void setRoadOfStationDeparture(String roadOfStationDeparture) {
-        this.roadOfStationDeparture = roadOfStationDeparture;
-    }
-
-    public String getRoadOfStationDestination() {
-        return roadOfStationDestination;
-    }
-
-    public void setRoadOfStationDestination(String roadOfStationDestination) {
-        this.roadOfStationDestination = roadOfStationDestination;
     }
 
     @Override
@@ -204,8 +218,10 @@ public class Route {
                 ", " + distanceOfWay +
                 ", " + customer +
                 ", " + wagonType +
-                ", " + cargo +
+                ", " + cargo.getNameCargo() +
+                ", " + cargo.getKeyCargo() +
                 ", " + volumePeriod +
-                ", " + rate;
+                ", " + rate +
+                ", " + cargo.isNeedWashingStation();
     }
 }

@@ -24,6 +24,7 @@
     padding: 4px 6px;
     vertical-align: middle;
     text-decoration: none;
+    font: 18px "Calibri Light", sans-serif;
 }
 
 .bot1:hover, .bot1:focus {
@@ -495,3 +496,5 @@
 .hover:hover + .hidden {
     display: block;
 }
+
+

@@ -97,8 +97,8 @@ public class GetListOfWagonsImpl implements GetList {
                 String nameOfStationDeparture = null;
                 String roadOfStationDeparture = null;
                 int volume = 0;
-                String cargo = null;
-                String keyItemCargo = null;
+                String nameCargo = null;
+                String keyCargo = null;
                 Double rate = 0.00d;
                 String keyOfStationDep = null;
                 String customer = null;
@@ -133,13 +133,13 @@ public class GetListOfWagonsImpl implements GetList {
                         XSSFRow xssfRow = sheet.getRow(j);
                         volume = (int) xssfRow.getCell(c).getNumericCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.cargo"))) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.namecargo"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
-                        cargo = xssfRow.getCell(c).getStringCellValue();
+                        nameCargo = xssfRow.getCell(c).getStringCellValue();
                     }
-                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keyitemcargo"))) {
+                    if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.keycargo"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
-                        keyItemCargo = xssfRow.getCell(c).getStringCellValue();
+                        keyCargo = xssfRow.getCell(c).getStringCellValue();
                     }
                     if (row.getCell(c).getStringCellValue().trim().equals(propertyUtil.getProperty("wagon.rate"))) {
                         XSSFRow xssfRow = sheet.getRow(j);
@@ -155,7 +155,7 @@ public class GetListOfWagonsImpl implements GetList {
                     }
 
                 }
-                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, nameOfStationDeparture, roadOfStationDeparture, volume, cargo, keyItemCargo, rate, keyOfStationDep, customer));
+                listOfWagons.add(new Wagon(numberOfWagon, keyOfStationDestination, nameOfStationDestination, roadOfStationDestination, nameOfStationDeparture, roadOfStationDeparture, volume, nameCargo, keyCargo, rate, customer, keyOfStationDep));
             }
             logger.debug("Body wagon: {}", listOfWagons);
         } catch (IOException e) {

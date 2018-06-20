@@ -39,15 +39,15 @@
     </script>
 
     <!-- Блокировка экрана -->
-        <script type="text/javascript">
-            function lockScreen() {
-                var lock = document.getElementById('lockPane');
-                if (lock)
-                    lock.className = 'lockScreenOn';
-                    $('body').addClass('stop-scrolling');
-                    document.body.scrollTop = document.documentElement.scrollTop = 0;
-            }
-        </script>
+    <script type="text/javascript">
+        function lockScreen() {
+            var lock = document.getElementById('lockPane');
+            if (lock)
+                lock.className = 'lockScreenOn';
+                $('body').addClass('stop-scrolling');
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
+        }
+    </script>
 
     <style>
         body {
@@ -196,11 +196,11 @@
 <br><br><br><br><br>
 
 <div>
-    <c:if test="${empty reportListOfDistributedRoutesAndWagons}">
+    <c:if test="${empty totalMap}">
         <input type="button" value="Создать отчет" onclick="showPopup()" class="bot1" style="visibility:visible">
     </c:if>
 
-    <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+    <c:if test="${!empty totalMap}">
         <form action="/uraltranscom" method="get" style="visibility:visible">
             <input type="submit" value="Очистить форму" class="bot1">
         </form>
@@ -215,7 +215,7 @@
                          style="background: rgba(0, 0, 0, 0.2); position: absolute; z-index: 1; height: 100%; width: 100%;">
                     </div>
                     <div class="form">
-                        <form enctype="multipart/form-data" method="post" action="reports">
+                        <form enctype="multipart/form-data" method="post" action="report">
                             <p>Файл заявок</p>
                             <input type="file" name="routes" multiple accept="xlsx">
                             <p>Файл дислокации вагонов</p>
@@ -232,7 +232,7 @@
 
     <form action="export" method="post">
     <br>
-        <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
+        <c:if test="${!empty totalMap}">
             <input type="submit" value="Скачать отчет" class="bot1">
         </c:if>
         <div>
@@ -249,22 +249,22 @@
                             <th class="td_report">Текущий клиент</th>
                             <th class="td_report" align="center">Выгодные направления</th>
                         </tr>
-                        <c:if test="${!empty reportListOfDistributedRoutesAndWagons}">
-                            <c:forEach items="${reportListOfDistributedRoutesAndWagons}" var="reportList">
+                        <c:if test="${!empty totalMap}">
+                            <c:forEach items="${totalMap}" var="map">
                             <tr>
-                                <td class="td_report1">${reportList.key.getNumberOfWagon()}</td>
-                                <td class="td_report2">${reportList.key.getNameOfStationDestination()}</td>
-                                <td class="td_report3">${reportList.key.getCustomer()}</td>
+                                <td class="td_report1">${map.key.getNumberOfWagon()}</td>
+                                <td class="td_report2">${map.key.getNameOfStationDestination()}</td>
+                                <td class="td_report3">${map.key.getCustomer()}</td>
                                 <td class="td_report4">
                                     <div class="div">
                                         <table class="table_total">
-                                            <c:forEach items="${reportList.value}" var="var" begin="0" end="2">
-                                                <c:forEach items="${var.key}" var="route">
+                                            <c:forEach items="${map.value}" var="mapRoute" begin="0" end="2">
+                                                <c:forEach items="${mapRoute.key}" var="route">
                                                 <tr>
                                                     <td class="td_total_report1">${route.key.getNameOfStationDeparture()}</td>
                                                     <td class="td_total_report2">${route.key.getNameOfStationDeparture()} - ${route.key.getNameOfStationDestination()}</td>
                                                     <td class="td_total_report3">${route.key.getCustomer()}</td>
-                                                    <td class="td_total_report4">${var.value}</td>
+                                                    <td class="td_total_report4">${mapRoute.value}</td>
                                                     <td class="td_total_report5"><input type="checkbox" name="routeIds" value="${route.key.getNumberOrder()}_${reportList.key.getNumberOfWagon()}" /></td>
                                                     <form action="calc" method="post" id="calc">
                                                         <td class="td_total_report6">
@@ -367,7 +367,7 @@
                                                                             <td class="td_table3"></td>
                                                                             <td class="td_table3"></td>
                                                                             <td class="td_table3">${route.value.getTotalSummary()}</td>
-                                                                            <td class="td_table3">${var.value}</td>
+                                                                            <td class="td_table3">${mapRoute.value}</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>

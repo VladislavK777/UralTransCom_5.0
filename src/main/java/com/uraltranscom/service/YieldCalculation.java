@@ -18,7 +18,7 @@ public interface YieldCalculation {
      * @param rate1 - ставка текущего рейса
      * @param tariff1 - тариф порожнего маршрута1
      * @param rate2 - ставка следующего рейса
-     * @param tariff2 - тарф порожнего маршрута2
+     * @param tariff2 - тариф порожнего маршрута2
      * @param countDays - число дней, затраченных на весь цикл
      * @return - возвращает ставку суточную
      */
