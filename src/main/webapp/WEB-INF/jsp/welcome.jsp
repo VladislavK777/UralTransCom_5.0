@@ -265,10 +265,10 @@
                                                     <td class="td_total_report2">${route.key.getNameOfStationDeparture()} - ${route.key.getNameOfStationDestination()}</td>
                                                     <td class="td_total_report3">${route.key.getCustomer()}</td>
                                                     <td class="td_total_report4">${mapRoute.value}</td>
-                                                    <td class="td_total_report5"><input type="checkbox" name="routeIds" value="${route.key.getNumberOrder()}_${reportList.key.getNumberOfWagon()}" /></td>
+                                                    <td class="td_total_report5"><input type="checkbox" name="routeIds" value="${route.key.getNumberOrder()}_${map.key.getNumberOfWagon()}" /></td>
                                                     <form action="calc" method="post" id="calc">
                                                         <td class="td_total_report6">
-                                                            <input type="image" form="calc" src="resources/excel.png" width="25px" height="25px" name="nameFile" value="${route.key.getNumberOrder()}_${reportList.key.getNumberOfWagon()}" />
+                                                            <input type="image" form="calc" src="resources/excel.png" width="25px" height="25px" name="nameFile" value="${route.key.getNumberOrder()}_${map.key.getNumberOfWagon()}" />
                                                         </td>
                                                     </form>
                                                     <td class="td_total_report7">

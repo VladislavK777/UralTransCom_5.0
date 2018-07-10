@@ -37,22 +37,6 @@
         }
     </script>
 
-    <script type="text/javascript">
-        $('.dropdown').click(function () {
-            $(this).attr('tabindex', 1).focus();
-            $(this).toggleClass('active');
-            $(this).find('.dropdown-menu').slideToggle(300);
-        });
-        $('.dropdown').focusout(function () {
-            $(this).removeClass('active');
-            $(this).find('.dropdown-menu').slideUp(300);
-        });
-        $('.dropdown .dropdown-menu li').click(function () {
-            $(this).parents('.dropdown').find('span').text($(this).text());
-            $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
-        });
-    </script>
-
     <style>
         body {
             font: 16px "Calibri Light", sans-serif;
@@ -182,7 +166,6 @@
           outline: 0;
           font-family: sans-serif
         }
-        span.msg,
         span.choose {
           color: #555;
           padding: 5px 0 10px;
@@ -190,11 +173,9 @@
         }
         .container {
           width: 500px;
-          margin: 50px auto 0;
           text-align: center
         }
 
-        /*Styling Selectbox*/
         .dropdown {
           width: 300px;
           display: inline-block;
@@ -320,7 +301,6 @@
                                     <td>${wagon.value.getCargo().getNameCargo()}</td>
                                     <td>
                                         <div class="container">
-                                            <span class="choose">Станция промывки</span>
                                             <div class="dropdown">
                                                 <div class="select">
                                                     <span>Выбрать станцию</span>
@@ -364,12 +344,21 @@
                                     <td>${route.value.getCustomer()}</td>
                                     <td>${route.value.getCargo().getNameCargo()}</td>
                                     <td>
-                                        <select>
-                                            <option></option>
-                                            <c:forEach items="${route.key}" var="washingStation">
-                                                <option>(${washingStation.value[0]}) ${washingStation.value[1]} ${washingStation.value[2]}</option>
-                                            </c:forEach>
-                                        </select>
+                                        <div class="container">
+                                            <div class="dropdown">
+                                                <div class="select">
+                                                    <span>Выбрать станцию</span>
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </div>
+                                                <input type="hidden" name="gender">
+                                                <ul class="dropdown-menu">
+                                                    <li>Нет</li>
+                                                    <c:forEach items="${route.key}" var="washingStation">
+                                                        <li>(${washingStation.value[0]}) ${washingStation.value[1]} ${washingStation.value[2]}</li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -383,6 +372,22 @@
     </form>
     <br>
 </div>
+
+<script type="text/javascript">
+    $('.dropdown').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+    $('.dropdown').focusout(function () {
+        $(this).removeClass('active');
+        $(this).find('.dropdown-menu').slideUp(300);
+    });
+    $('.dropdown .dropdown-menu li').click(function () {
+        $(this).parents('.dropdown').find('span').text($(this).text());
+        $(this).parents('.dropdown').find('input').attr('value', $(this).attr('id'));
+    });
+</script>
 
 <br><br><br>
 

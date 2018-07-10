@@ -426,6 +426,8 @@ public class WriteToFileExcel extends JavaHelperBase {
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setFillForegroundColor(new XSSFColor(new Color(204, 255, 204)));
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        XSSFDataFormat dataFormat = sheet.getWorkbook().createDataFormat();
+        cellStyle.setDataFormat(dataFormat.getFormat("0.00"));
         return cellStyle;
     }
 
