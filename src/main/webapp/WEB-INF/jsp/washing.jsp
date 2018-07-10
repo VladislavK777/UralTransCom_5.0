@@ -173,7 +173,6 @@
         }
         .container {
           width: 500px;
-          text-align: center
         }
 
         .dropdown {
